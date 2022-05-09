@@ -3,7 +3,7 @@
 source /usr/local/bin/color.sh
 
 CMAKE_BUILD_DIR='../out'
-PROJECT_NAME='Primary'
+PROJECT_NAME='PrimaryEngine'
 BUILD_TYPE=Debug
 POSTFIX='-d'
 
