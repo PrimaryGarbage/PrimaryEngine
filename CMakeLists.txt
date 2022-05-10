@@ -15,9 +15,12 @@ list(TRANSFORM PRIMARY_SRC PREPEND "src/")
 
 add_executable(${PROJECT_NAME} ${PRIMARY_SRC})
 
-find_package(glfw3 REQUIRED)
-find_package(GLEW REQUIRED)
+target_compile_options(${PROJECT_NAME} PRIVATE -static)
 
-target_link_libraries(${PROJECT_NAME} GL glfw ${GLFW_LIBRARIES} ${GLEW_LIBRARIES})
+add_subdirectory(external/glfw)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
+
+target_link_directories(${PROJECT_NAME} PRIVATE external/glfw/src)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
