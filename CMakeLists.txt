@@ -6,6 +6,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BINARY_DIR}bin)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
+set(glew-cmake_BUILD_SHARED OFF)						# glew stuff
+set(ONLY_LIBS ON)										# glew stuff
+set(PKG_CONFIG_REPRESENTATIVE_TARGET libglew_static)	# glew stuff
+
 set(PRIMARY_SRC
 	main.cpp
 	primary_app.cpp primary_app.hpp
@@ -18,9 +22,15 @@ add_executable(${PROJECT_NAME} ${PRIMARY_SRC})
 target_compile_options(${PROJECT_NAME} PRIVATE -static)
 
 add_subdirectory(external/glfw)
+add_subdirectory(external/glew)
+
+# link statically after generating glfw and glew
+set(CMAKE_LINK_SEARCH_START_STATIC ON)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
 
-target_link_directories(${PROJECT_NAME} PRIVATE external/glfw/src)
+target_include_directories(${PROJECT_NAME} PRIVATE external/glfw/inclue external/glew/include)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
+target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/external/glfw/src ${CMAKE_BINARY_DIR}/external/glew/lib)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE GL glfw libglew_static)

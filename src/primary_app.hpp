@@ -1,5 +1,5 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include "GL/glew.h"
+#include "GLFW/glfw3.h"
 
 class PrimaryApp
 {
@@ -18,4 +18,5 @@ private:
 	const char* WINDOW_NAME = "PrimaryEngine";
 
 	void mainLoop();
+	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 };

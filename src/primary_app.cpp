@@ -16,6 +16,8 @@ PrimaryApp::PrimaryApp()
 
 	glfwMakeContextCurrent(window);
 	glewExperimental = true;
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	if(glewInit() != GLEW_OK)
 	{
 		glfwTerminate();
@@ -41,8 +43,18 @@ void PrimaryApp::mainLoop()
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		// create VAO and set it as the current one
+		GLuint VertexArrayID;
+		glGenVertexArrays(1, &VertexArrayID);
+		glBindVertexArray(VertexArrayID);
+
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+}
+
+void PrimaryApp::framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
 }
