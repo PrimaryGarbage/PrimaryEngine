@@ -1,4 +1,5 @@
 #include "primary_app.hpp"
+#include "input.hpp"
 #include <stdexcept>
 
 PrimaryApp::PrimaryApp()
@@ -24,7 +25,8 @@ PrimaryApp::PrimaryApp()
 		throw std::runtime_error("Failed to initialize glew!");
 	}
 
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+	//glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+	Input::init(window);
 }
 
 PrimaryApp::~PrimaryApp()
