@@ -16,41 +16,45 @@ private:
 	static void joystick_callback(int jid, int event);
 public:
 	static void init(GLFWwindow* window);
-	static void keyPressed(Keys key);
-	static void keyReleased(Keys key);
-	static void keyJustPressed(Keys key);
-	static void keyJustReleased(Keys key);
+	static void update();
+	static bool keyPressed(Key key);
+	static bool keyJustPressed(Key key);
+	static bool keyJustReleased(Key key);
+	static bool gamepadButtonPressed(int gamepadId, GamepadButton button);
+	static bool gamepadButtonJustPressed(int gamepadId, GamepadButton button);
+	static bool gamepadButtonJustReleased(int gamepadId, GamepadButton button);
+	static float gamepadAxis(int gamepadId, GamepadAxis axis);
 };
 
-enum class Keys { 
-	F1 = GLFW_KEY_F1, F2 = GLFW_KEY_F2, F3 = GLFW_KEY_F3, F4 = GLFW_KEY_F4, F5 = GLFW_KEY_F5, F6 = GLFW_KEY_F6, 
-	F7 = GLFW_KEY_F7, F8 = GLFW_KEY_F8, F9 = GLFW_KEY_F9, F10 = GLFW_KEY_F10, F11 = GLFW_KEY_F11, F12 = GLFW_KEY_F12, 
-	PU = GLFW_KEY_PAGE_UP, PD = GLFW_KEY_PAGE_DOWN, Esc = GLFW_KEY_ESCAPE, _0 = GLFW_KEY_0, _1 = GLFW_KEY_1, _2 = GLFW_KEY_2, 
+enum class Key { 
+	f1 = GLFW_KEY_F1, f2 = GLFW_KEY_F2, f3 = GLFW_KEY_F3, f4 = GLFW_KEY_F4, f5 = GLFW_KEY_F5, f6 = GLFW_KEY_F6, 
+	f7 = GLFW_KEY_F7, f8 = GLFW_KEY_F8, f9 = GLFW_KEY_F9, f10 = GLFW_KEY_F10, f11 = GLFW_KEY_F11, f12 = GLFW_KEY_F12, 
+	pageUp = GLFW_KEY_PAGE_UP, pageDown = GLFW_KEY_PAGE_DOWN, esc = GLFW_KEY_ESCAPE, _0 = GLFW_KEY_0, _1 = GLFW_KEY_1, _2 = GLFW_KEY_2, 
 	_3 = GLFW_KEY_3, _4 = GLFW_KEY_4, _5 = GLFW_KEY_5, _6 = GLFW_KEY_6, _7 = GLFW_KEY_7, _8 = GLFW_KEY_8, _9 = GLFW_KEY_9, 
-	_0 = GLFW_KEY_0, Minus = GLFW_KEY_MINUS, Equals = GLFW_KEY_KP_EQUAL, Backspace = GLFW_KEY_BACKSPACE, Tab = GLFW_KEY_TAB, 
-	Q = GLFW_KEY_O, W = GLFW_KEY_P, E = GLFW_KEY_E, R = GLFW_KEY_R, T = GLFW_KEY_T, Y = GLFW_KEY_Y, U = GLFW_KEY_U, I = GLFW_KEY_I, 
-	O = GLFW_KEY_Q, P = GLFW_KEY_Q, LeftBracket = GLFW_KEY_LEFT_BRACKET, RightBracket = GLFW_KEY_RIGHT_BRACKET, Backslash = GLFW_KEY_BACKSLASH,
-	A = GLFW_KEY_A, S = GLFW_KEY_S, D = GLFW_KEY_D, F = GLFW_KEY_F, G = GLFW_KEY_G, H = GLFW_KEY_H, J = GLFW_KEY_J, K = GLFW_KEY_K, 
-	L = GLFW_KEY_L, Semicolon = GLFW_KEY_SEMICOLON, Apostophe = GLFW_KEY_APOSTROPHE, Enter = GLFW_KEY_ENTER, Lefthift = GLFW_KEY_LEFT_SHIFT, Z = GLFW_KEY_Z, 
-	X = GLFW_KEY_X, C = GLFW_KEY_C, V = GLFW_KEY_V, B = GLFW_KEY_B, N = GLFW_KEY_N, M = GLFW_KEY_M, Comma = GLFW_KEY_COMMA, Period = GLFW_KEY_PERIOD, 
-	RightShift = GLFW_KEY_RIGHT_SHIFT, LeftCtrl = GLFW_KEY_LEFT_CONTROL, LeftAlt = GLFW_KEY_LEFT_ALT, Space = GLFW_KEY_SPACE, RightAlt = GLFW_KEY_RIGHT_ALT,
-	RightCtrl = GLFW_KEY_RIGHT_CONTROL, Left = GLFW_KEY_LEFT, Rigth = GLFW_KEY_RIGHT, Up = GLFW_KEY_UP, Down = GLFW_KEY_DOWN, Numlock = GLFW_KEY_NUM_LOCK,
-	Numpad_1 = GLFW_KEY_KP_1, Numpad_2 = GLFW_KEY_KP_2, Numpad_3 = GLFW_KEY_KP_3, Numpad_4 = GLFW_KEY_KP_4, Numpad_5 = GLFW_KEY_KP_5, Numpad_6 = GLFW_KEY_KP_6, 
-	Numpad_7 = GLFW_KEY_KP_7, Numpad_8 = GLFW_KEY_KP_8, Numpad_9 = GLFW_KEY_KP_9, Numpad_0 = GLFW_KEY_KP_0, NumpadDivide = GLFW_KEY_KP_DIVIDE, 
-	NumpadMultiply = GLFW_KEY_KP_MULTIPLY, NumpadMinus = GLFW_KEY_KP_SUBTRACT, NumpadPlus = GLFW_KEY_KP_ADD, NumpadEnter = GLFW_KEY_KP_ENTER,
-	Insert = GLFW_KEY_INSERT, PrintScreen = GLFW_KEY_PRINT_SCREEN, End = GLFW_KEY_END, Delete = GLFW_KEY_DELETE
+	_0 = GLFW_KEY_0, minus = GLFW_KEY_MINUS, equals = GLFW_KEY_KP_EQUAL, backspace = GLFW_KEY_BACKSPACE, tab = GLFW_KEY_TAB, 
+	q = GLFW_KEY_O, w = GLFW_KEY_P, e = GLFW_KEY_E, r = GLFW_KEY_R, t = GLFW_KEY_T, y = GLFW_KEY_Y, u = GLFW_KEY_U, i = GLFW_KEY_I, 
+	o = GLFW_KEY_Q, p = GLFW_KEY_Q, leftBracket = GLFW_KEY_LEFT_BRACKET, rightBracket = GLFW_KEY_RIGHT_BRACKET, backslash = GLFW_KEY_BACKSLASH,
+	a = GLFW_KEY_A, s = GLFW_KEY_S, d = GLFW_KEY_D, f = GLFW_KEY_F, g = GLFW_KEY_G, h = GLFW_KEY_H, j = GLFW_KEY_J, k = GLFW_KEY_K, 
+	l = GLFW_KEY_L, semicolon = GLFW_KEY_SEMICOLON, apostophe = GLFW_KEY_APOSTROPHE, enter = GLFW_KEY_ENTER, leftShift = GLFW_KEY_LEFT_SHIFT, z = GLFW_KEY_Z, 
+	x = GLFW_KEY_X, c = GLFW_KEY_C, v = GLFW_KEY_V, b = GLFW_KEY_B, n = GLFW_KEY_N, m = GLFW_KEY_M, comma = GLFW_KEY_COMMA, period = GLFW_KEY_PERIOD, 
+	rightShift = GLFW_KEY_RIGHT_SHIFT, leftCtrl = GLFW_KEY_LEFT_CONTROL, leftAlt = GLFW_KEY_LEFT_ALT, space = GLFW_KEY_SPACE, rightAlt = GLFW_KEY_RIGHT_ALT,
+	rightCtrl = GLFW_KEY_RIGHT_CONTROL, left = GLFW_KEY_LEFT, rigth = GLFW_KEY_RIGHT, up = GLFW_KEY_UP, down = GLFW_KEY_DOWN, numlock = GLFW_KEY_NUM_LOCK,
+	numpad_1 = GLFW_KEY_KP_1, numpad_2 = GLFW_KEY_KP_2, numpad_3 = GLFW_KEY_KP_3, numpad_4 = GLFW_KEY_KP_4, numpad_5 = GLFW_KEY_KP_5, numpad_6 = GLFW_KEY_KP_6, 
+	numpad_7 = GLFW_KEY_KP_7, numpad_8 = GLFW_KEY_KP_8, numpad_9 = GLFW_KEY_KP_9, numpad_0 = GLFW_KEY_KP_0, numpadDivide = GLFW_KEY_KP_DIVIDE, 
+	numpadMultiply = GLFW_KEY_KP_MULTIPLY, numpadMinus = GLFW_KEY_KP_SUBTRACT, numpadPlus = GLFW_KEY_KP_ADD, numpadEnter = GLFW_KEY_KP_ENTER,
+	insert = GLFW_KEY_INSERT, printScreen = GLFW_KEY_PRINT_SCREEN, end = GLFW_KEY_END, del = GLFW_KEY_DELETE
 };
 
-enum class GamepadButtons {
-	A = GLFW_GAMEPAD_BUTTON_A, B = GLFW_GAMEPAD_BUTTON_B, X = GLFW_GAMEPAD_BUTTON_X, Y  = GLFW_GAMEPAD_BUTTON_X, Y = GLFW_GAMEPAD_BUTTON_Y, LeftBumper = GLFW_GAMEPAD_BUTTON_LEFT_BUMPER,
-	RightBumper = GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER, Back = GLFW_GAMEPAD_BUTTON_BACK, Start = GLFW_GAMEPAD_BUTTON_START, Guide = GLFW_GAMEPAD_BUTTON_GUIDE, 
-	LeftThumb = GLFW_GAMEPAD_BUTTON_LEFT_THUMB, RightThumb = GLFW_GAMEPAD_BUTTON_RIGHT_THUMB, DpadUp = GLFW_GAMEPAD_BUTTON_DPAD_UP, DpadRight = GLFW_GAMEPAD_BUTTON_DPAD_RIGHT,
-	DpadDown = GLFW_GAMEPAD_BUTTON_DPAD_DOWN, DpadLeft = GLFW_GAMEPAD_BUTTON_DPAD_LEFT
+enum class GamepadButton {
+	a = GLFW_GAMEPAD_BUTTON_A, b = GLFW_GAMEPAD_BUTTON_B, x = GLFW_GAMEPAD_BUTTON_X, y = GLFW_GAMEPAD_BUTTON_Y, leftBumper = GLFW_GAMEPAD_BUTTON_LEFT_BUMPER,
+	rightBumper = GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER, back = GLFW_GAMEPAD_BUTTON_BACK, start = GLFW_GAMEPAD_BUTTON_START, guide = GLFW_GAMEPAD_BUTTON_GUIDE, 
+	leftThumb = GLFW_GAMEPAD_BUTTON_LEFT_THUMB, rightThumb = GLFW_GAMEPAD_BUTTON_RIGHT_THUMB, dpadUp = GLFW_GAMEPAD_BUTTON_DPAD_UP, dpadRight = GLFW_GAMEPAD_BUTTON_DPAD_RIGHT,
+	dpadDown = GLFW_GAMEPAD_BUTTON_DPAD_DOWN, dpadLeft = GLFW_GAMEPAD_BUTTON_DPAD_LEFT, buttonCount
 };
  
-enum class GamepadAxes {
+enum class GamepadAxis {
 	LeftX = GLFW_GAMEPAD_AXIS_LEFT_X, LeftY = GLFW_GAMEPAD_AXIS_LEFT_Y, RightX = GLFW_GAMEPAD_AXIS_RIGHT_X, RightY = GLFW_GAMEPAD_AXIS_RIGHT_Y,
-	LeftTrigger = GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, RightTrigger = GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER
+	LeftTrigger = GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, RightTrigger = GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, axisCount = 6
 };
 
 struct KeyInfo
@@ -61,7 +65,9 @@ struct KeyInfo
 
 struct MouseInfo
 {
-	KeyInfo buttons[10]{};
+	static const int buttonCount = 10;
+
+	KeyInfo buttons[buttonCount]{};
 	double x = 0.0;
 	double y = 0.0;
 	double scrollDeltaX = 0.0f;
@@ -70,8 +76,12 @@ struct MouseInfo
 
 struct Gamepad
 {
+	static const int buttonCount = static_cast<int>(GamepadButton::buttonCount);
+	static const int axisCount = static_cast<int>(GamepadAxis::axisCount);
+
 	int id;
-	GLFWgamepadstate state;
+	KeyInfo buttons[buttonCount];
+	float axes[axisCount];
 
 	Gamepad() = default;
 	Gamepad(int id): id(id) {}

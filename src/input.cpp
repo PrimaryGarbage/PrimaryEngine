@@ -63,3 +63,57 @@ void Input::init(GLFWwindow* window)
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 }
+
+// should be called from mainLoop
+void Input::update()
+{
+	for(Gamepad& gamepad : gamepads)
+	{
+		GLFWgamepadstate state;
+		glfwGetGamepadState(gamepad.id, &state);
+		for(int i = 0; i < Gamepad::buttonCount; ++i)
+		{
+			gamepad.buttons[i].just = state.buttons[i] != gamepad.buttons[i].pressed;
+			gamepad.buttons[i].pressed = state.buttons[i] == GLFW_PRESS;
+		}
+		for(int i = 0; i < Gamepad::axisCount; ++i)
+		{
+			gamepad.axes[i] = state.axes[i];
+		}
+	}
+}
+
+bool Input::keyPressed(Key key)
+{
+	return keys[static_cast<int>(key)].pressed;
+}
+
+bool Input::keyJustPressed(Key key)
+{
+	return keys[static_cast<int>(key)].pressed && keys[static_cast<int>(key)].just;
+}
+
+bool Input::keyJustReleased(Key key)
+{
+	return !keys[static_cast<int>(key)].pressed && keys[static_cast<int>(key)].just;
+}
+
+bool Input::gamepadButtonPressed(int gamepadId, GamepadButton button)
+{
+	return gamepads[gamepadId].buttons[static_cast<int>(button)].pressed;
+}
+
+bool Input::gamepadButtonJustPressed(int gamepadId, GamepadButton button)
+{
+	return gamepads[gamepadId].buttons[static_cast<int>(button)].pressed && gamepads[gamepadId].buttons[static_cast<int>(button)].just;
+}
+
+bool Input::gamepadButtonJustReleased(int gamepadId, GamepadButton button)
+{
+	return !gamepads[gamepadId].buttons[static_cast<int>(button)].pressed && gamepads[gamepadId].buttons[static_cast<int>(button)].just;
+}
+
+float Input::gamepadAxis(int gamepadId, GamepadAxis axis)
+{
+	return gamepads[gamepadId].axes[static_cast<int>(axis)];
+}
