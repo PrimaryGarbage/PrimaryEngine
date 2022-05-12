@@ -1,16 +1,19 @@
 #include "GLFW/glfw3.h"
+#include <vector>
 
 class Input final
 {
 private:
 	static KeyInfo keys[200];
 	static MouseInfo mouse;
+	static std::vector<Gamepad> gamepads;
+
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods); 
 	static void char_callback(GLFWwindow* window, unsigned int codepoint);
 	static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 	static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-
+	static void joystick_callback(int jid, int event);
 public:
 	static void init(GLFWwindow* window);
 	static void keyPressed(Keys key);
@@ -38,14 +41,20 @@ enum class Keys {
 	Insert = GLFW_KEY_INSERT, PrintScreen = GLFW_KEY_PRINT_SCREEN, End = GLFW_KEY_END, Delete = GLFW_KEY_DELETE
 };
 
-enum class MouseButtons {
-	Left = GLFW_MOUSE_BUTTON_LEFT, Right = GLFW_MOUSE_BUTTON_RIGHT, Middle = GLFW_MOUSE_BUTTON_MIDDLE, _1 = GLFW_MOUSE_BUTTON_1, 
-	_2 = GLFW_MOUSE_BUTTON_2, _3 = GLFW_MOUSE_BUTTON_3, _4 = GLFW_MOUSE_BUTTON_4, _5 = GLFW_MOUSE_BUTTON_5, _6 = GLFW_MOUSE_BUTTON_6, 
-	_7 = GLFW_MOUSE_BUTTON_7, _8 = GLFW_MOUSE_BUTTON_8
+enum class GamepadButtons {
+	A = GLFW_GAMEPAD_BUTTON_A, B = GLFW_GAMEPAD_BUTTON_B, X = GLFW_GAMEPAD_BUTTON_X, Y  = GLFW_GAMEPAD_BUTTON_X, Y = GLFW_GAMEPAD_BUTTON_Y, LeftBumper = GLFW_GAMEPAD_BUTTON_LEFT_BUMPER,
+	RightBumper = GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER, Back = GLFW_GAMEPAD_BUTTON_BACK, Start = GLFW_GAMEPAD_BUTTON_START, Guide = GLFW_GAMEPAD_BUTTON_GUIDE, 
+	LeftThumb = GLFW_GAMEPAD_BUTTON_LEFT_THUMB, RightThumb = GLFW_GAMEPAD_BUTTON_RIGHT_THUMB, DpadUp = GLFW_GAMEPAD_BUTTON_DPAD_UP, DpadRight = GLFW_GAMEPAD_BUTTON_DPAD_RIGHT,
+	DpadDown = GLFW_GAMEPAD_BUTTON_DPAD_DOWN, DpadLeft = GLFW_GAMEPAD_BUTTON_DPAD_LEFT
+};
+ 
+enum class GamepadAxes {
+	LeftX = GLFW_GAMEPAD_AXIS_LEFT_X, LeftY = GLFW_GAMEPAD_AXIS_LEFT_Y, RightX = GLFW_GAMEPAD_AXIS_RIGHT_X, RightY = GLFW_GAMEPAD_AXIS_RIGHT_Y,
+	LeftTrigger = GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, RightTrigger = GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER
 };
 
 struct KeyInfo
-{
+{	
 	bool pressed = false;
 	bool just = false;
 };
@@ -57,4 +66,13 @@ struct MouseInfo
 	double y = 0.0;
 	double scrollDeltaX = 0.0f;
 	double scrollDeltaY = 0.0f;
+};
+
+struct Gamepad
+{
+	int id;
+	GLFWgamepadstate state;
+
+	Gamepad() = default;
+	Gamepad(int id): id(id) {}
 };

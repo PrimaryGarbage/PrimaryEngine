@@ -2,6 +2,7 @@
 
 KeyInfo Input::keys[200]{};
 MouseInfo Input::mouse;
+std::vector<Gamepad> Input::gamepads;
 
 void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -11,7 +12,7 @@ void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 void Input::char_callback(GLFWwindow* window, unsigned int codepoint)
 {
-	
+
 }
 
 void Input::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
@@ -32,6 +33,27 @@ void Input::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	mouse.scrollDeltaY = yoffset;
 }
 
+void Input::joystick_callback(int jid, int event)
+{
+	if (event == GLFW_CONNECTED)
+    {
+		if(glfwJoystickIsGamepad(jid))
+		{
+			auto gamepad = std::find(gamepads.begin(), gamepads.end(), [jid](const Gamepad& gp) -> bool { return gp.id == jid; });
+			if(gamepad != gamepads.end()) return;		// gamepad is already registered
+			gamepads.push_back(Gamepad(jid));
+		}
+    }
+    else if (event == GLFW_DISCONNECTED)
+    {
+		if(glfwJoystickIsGamepad(jid))
+		{
+			auto gamepad = std::find_if(gamepads.begin(), gamepads.end(), [jid](const Gamepad& gp) -> bool { return gp.id == jid; });
+			if(gamepad == gamepads.end()) return;		// gamepad is already unregistered
+			gamepads.erase(gamepad);
+		}
+    }
+}
 
 void Input::init(GLFWwindow* window)
 {
