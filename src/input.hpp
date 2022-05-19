@@ -4,7 +4,7 @@
 class Input final
 {
 private:
-	static KeyInfo keys[200];
+	static PressInfo keys[200];
 	static MouseInfo mouse;
 	static std::vector<Gamepad> gamepads;
 
@@ -57,7 +57,7 @@ enum class GamepadAxis {
 	LeftTrigger = GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, RightTrigger = GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, axisCount = 6
 };
 
-struct KeyInfo
+struct PressInfo
 {	
 	bool pressed = false;
 	bool just = false;
@@ -67,7 +67,7 @@ struct MouseInfo
 {
 	static const int buttonCount = 10;
 
-	KeyInfo buttons[buttonCount]{};
+	PressInfo buttons[buttonCount]{};
 	double x = 0.0;
 	double y = 0.0;
 	double scrollDeltaX = 0.0f;
@@ -80,7 +80,7 @@ struct Gamepad
 	static const int axisCount = static_cast<int>(GamepadAxis::axisCount);
 
 	int id;
-	KeyInfo buttons[buttonCount];
+	PressInfo buttons[buttonCount];
 	float axes[axisCount];
 
 	Gamepad() = default;

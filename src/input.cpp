@@ -1,6 +1,7 @@
 #include "input.hpp"
+#include <algorithm>
 
-KeyInfo Input::keys[200]{};
+PressInfo Input::keys[200]{};
 MouseInfo Input::mouse;
 std::vector<Gamepad> Input::gamepads;
 
