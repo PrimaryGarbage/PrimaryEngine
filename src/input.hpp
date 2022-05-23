@@ -1,5 +1,6 @@
 #include "GLFW/glfw3.h"
 #include <vector>
+#include <variant>
 
 class Input final
 {
@@ -17,12 +18,19 @@ private:
 public:
 	static void init(GLFWwindow* window);
 	static void update();
-	static bool keyPressed(Key key);
-	static bool keyJustPressed(Key key);
-	static bool keyJustReleased(Key key);
-	static bool gamepadButtonPressed(int gamepadId, GamepadButton button);
-	static bool gamepadButtonJustPressed(int gamepadId, GamepadButton button);
-	static bool gamepadButtonJustReleased(int gamepadId, GamepadButton button);
+	
+	static bool pressed(Key key);
+	static bool pressed(MouseButton button);
+	static bool pressed(int gamepadId, GamepadButton button);
+
+	static bool justPressed(Key key);
+	static bool justPressed(MouseButton button);
+	static bool justPressed(int gamepadId, GamepadButton button);
+
+	static bool justReleased(Key key);
+	static bool justReleased(MouseButton button);
+	static bool justReleased(int gamepadId, GamepadButton button);
+
 	static float gamepadAxis(int gamepadId, GamepadAxis axis);
 };
 
@@ -45,6 +53,11 @@ enum class Key {
 	insert = GLFW_KEY_INSERT, printScreen = GLFW_KEY_PRINT_SCREEN, end = GLFW_KEY_END, del = GLFW_KEY_DELETE
 };
 
+enum class MouseButton {
+	left = GLFW_MOUSE_BUTTON_LEFT, right = GLFW_MOUSE_BUTTON_RIGHT, middle = GLFW_MOUSE_BUTTON_MIDDLE, _1 = GLFW_MOUSE_BUTTON_1, _2 = GLFW_MOUSE_BUTTON_2,
+	_3 = GLFW_MOUSE_BUTTON_3, _4 = GLFW_MOUSE_BUTTON_4, _5 = GLFW_MOUSE_BUTTON_5, _6 = GLFW_MOUSE_BUTTON_6, _7 = GLFW_MOUSE_BUTTON_7, _8 = GLFW_MOUSE_BUTTON_8
+};
+
 enum class GamepadButton {
 	a = GLFW_GAMEPAD_BUTTON_A, b = GLFW_GAMEPAD_BUTTON_B, x = GLFW_GAMEPAD_BUTTON_X, y = GLFW_GAMEPAD_BUTTON_Y, leftBumper = GLFW_GAMEPAD_BUTTON_LEFT_BUMPER,
 	rightBumper = GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER, back = GLFW_GAMEPAD_BUTTON_BACK, start = GLFW_GAMEPAD_BUTTON_START, guide = GLFW_GAMEPAD_BUTTON_GUIDE, 
@@ -65,7 +78,7 @@ struct PressInfo
 
 struct MouseInfo
 {
-	static const int buttonCount = 10;
+	static const int buttonCount = 11;
 
 	PressInfo buttons[buttonCount]{};
 	double x = 0.0;

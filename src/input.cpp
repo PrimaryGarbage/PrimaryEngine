@@ -84,32 +84,47 @@ void Input::update()
 	}
 }
 
-bool Input::keyPressed(Key key)
+bool Input::pressed(Key key)
 {
 	return keys[static_cast<int>(key)].pressed;
 }
 
-bool Input::keyJustPressed(Key key)
+bool Input::pressed(MouseButton button)
 {
-	return keys[static_cast<int>(key)].pressed && keys[static_cast<int>(key)].just;
+	return mouse.buttons[static_cast<int>(button)].pressed;
 }
 
-bool Input::keyJustReleased(Key key)
-{
-	return !keys[static_cast<int>(key)].pressed && keys[static_cast<int>(key)].just;
-}
-
-bool Input::gamepadButtonPressed(int gamepadId, GamepadButton button)
+bool Input::pressed(int gamepadId, GamepadButton button)
 {
 	return gamepads[gamepadId].buttons[static_cast<int>(button)].pressed;
 }
 
-bool Input::gamepadButtonJustPressed(int gamepadId, GamepadButton button)
+bool Input::justPressed(Key key)
+{
+	return keys[static_cast<int>(key)].pressed && keys[static_cast<int>(key)].just;
+}
+
+bool Input::justPressed(MouseButton button)
+{
+	return mouse.buttons[static_cast<int>(button)].pressed && mouse.buttons[static_cast<int>(button)].just;
+}
+
+bool Input::justPressed(int gamepadId, GamepadButton button)
 {
 	return gamepads[gamepadId].buttons[static_cast<int>(button)].pressed && gamepads[gamepadId].buttons[static_cast<int>(button)].just;
 }
 
-bool Input::gamepadButtonJustReleased(int gamepadId, GamepadButton button)
+bool Input::justReleased(Key key)
+{
+	return !keys[static_cast<int>(key)].pressed && keys[static_cast<int>(key)].just;
+}
+
+bool Input::justReleased(MouseButton button)
+{
+	return !mouse.buttons[static_cast<int>(button)].pressed && mouse.buttons[static_cast<int>(button)].just;
+}
+
+bool Input::justReleased(int gamepadId, GamepadButton button)
 {
 	return !gamepads[gamepadId].buttons[static_cast<int>(button)].pressed && gamepads[gamepadId].buttons[static_cast<int>(button)].just;
 }
