@@ -13,6 +13,7 @@ set(PKG_CONFIG_REPRESENTATIVE_TARGET libglew_static)	# glew stuff
 set(PRIMARY_SRC
 	main.cpp
 	primary_app.cpp primary_app.hpp
+	prim_exception.hpp
 	input.cpp input.hpp
 	)
 
