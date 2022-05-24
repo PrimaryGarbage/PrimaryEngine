@@ -1,6 +1,14 @@
+#ifndef __INPUT_H__
+#define __INPUT_H__
+
 #include "GLFW/glfw3.h"
+#include "prim_exception.hpp"
 #include <vector>
 #include <variant>
+#include <string>
+
+using ActionCause = std::variant<Key, MouseButton, GamepadButton>;
+using AxisCause = std::variant<GamepadAxis, Key, MouseButton, GamepadButton>;
 
 class Input final
 {
@@ -8,6 +16,8 @@ private:
 	static PressInfo keys[200];
 	static MouseInfo mouse;
 	static std::vector<Gamepad> gamepads;
+	static std::vector<Action> actions;
+	static std::vector<Axis> axes;
 
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods); 
 	static void char_callback(GLFWwindow* window, unsigned int codepoint);
@@ -15,23 +25,31 @@ private:
 	static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	static void joystick_callback(int jid, int event);
+	static void createDefaultActionsAndAxes();
 public:
 	static void init(GLFWwindow* window);
 	static void update();
 	
-	static bool pressed(Key key);
-	static bool pressed(MouseButton button);
-	static bool pressed(int gamepadId, GamepadButton button);
+	static bool isPressed(Key key);
+	static bool isPressed(MouseButton button);
+	static bool isPressed(int gamepadId, GamepadButton button);
+	static bool isPressed(std::string actionName);
+	static bool isJustPressed(Key key);
+	static bool isJustPressed(MouseButton button);
+	static bool isJustPressed(int gamepadId, GamepadButton button);
+	static bool isJustPressed(std::string actionName);
+	static bool isJustReleased(Key key);
+	static bool isJustReleased(MouseButton button);
+	static bool isJustReleased(int gamepadId, GamepadButton button);
+	static bool isJustReleased(std::string actionName);
 
-	static bool justPressed(Key key);
-	static bool justPressed(MouseButton button);
-	static bool justPressed(int gamepadId, GamepadButton button);
+	static float getGamepadAxis(int gamepadId, GamepadAxis axis);
+	static float getAxis(std::string axisName);
 
-	static bool justReleased(Key key);
-	static bool justReleased(MouseButton button);
-	static bool justReleased(int gamepadId, GamepadButton button);
-
-	static float gamepadAxis(int gamepadId, GamepadAxis axis);
+	static void addAction(std::string name, std::initializer_list<ActionCause> actionCauses);
+	static void addAxis(std::string name, std::initializer_list<AxisCause> axisCauses);
+	static void removeAction(std::string name);
+	static void removeAxis(std::string name);
 };
 
 enum class Key { 
@@ -99,3 +117,16 @@ struct Gamepad
 	Gamepad() = default;
 	Gamepad(int id): id(id) {}
 };
+
+struct Action
+{
+	const char* name;
+	std::vector<ActionCause> associatedButtons;
+};
+
+struct Axis
+{
+	const char* name;
+	std::vector<AxisCause> associatedAxes;
+};
+#endif // __INPUT_H__

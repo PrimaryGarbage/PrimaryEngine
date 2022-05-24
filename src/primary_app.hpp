@@ -1,3 +1,6 @@
+#ifndef __PRIMARY_APP_HPP__
+#define __PRIMARY_APP_HPP__
+
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
@@ -20,3 +23,5 @@ private:
 	void mainLoop();
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 };
+
+#endif // __PRIMARY_APP_HPP__

@@ -4,6 +4,8 @@
 PressInfo Input::keys[200]{};
 MouseInfo Input::mouse;
 std::vector<Gamepad> Input::gamepads;
+std::vector<Action> Input::actions;
+std::vector<Axis> Input::axes;
 
 void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -13,7 +15,7 @@ void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 void Input::char_callback(GLFWwindow* window, unsigned int codepoint)
 {
-
+	// TO IMPLEMENT!
 }
 
 void Input::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
@@ -56,6 +58,11 @@ void Input::joystick_callback(int jid, int event)
     }
 }
 
+void Input::createDefaultActionsAndAxes()
+{
+	// TO IMPLEMENT!
+}
+
 void Input::init(GLFWwindow* window)
 {
 	glfwSetKeyCallback(window, key_callback);
@@ -63,6 +70,8 @@ void Input::init(GLFWwindow* window)
 	glfwSetCursorPosCallback(window, cursor_position_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwSetScrollCallback(window, scroll_callback);
+
+	createDefaultActionsAndAxes();
 }
 
 // should be called from mainLoop
@@ -84,52 +93,99 @@ void Input::update()
 	}
 }
 
-bool Input::pressed(Key key)
+bool Input::isPressed(Key key)
 {
 	return keys[static_cast<int>(key)].pressed;
 }
 
-bool Input::pressed(MouseButton button)
+bool Input::isPressed(MouseButton button)
 {
 	return mouse.buttons[static_cast<int>(button)].pressed;
 }
 
-bool Input::pressed(int gamepadId, GamepadButton button)
+bool Input::isPressed(int gamepadId, GamepadButton button)
 {
 	return gamepads[gamepadId].buttons[static_cast<int>(button)].pressed;
 }
 
-bool Input::justPressed(Key key)
+bool Input::isPressed(std::string actionName)
+{
+	auto action = std::find_if(actions.begin(), actions.end(), [&actionName](const Action& a) { return actionName == a.name; });
+	if(action == actions.end()) throw PRIM_EXCEPTION("Input action wasn't found! Action name: " + actionName);
+	bool result = false;
+	static auto pressedVisitor = [](const auto& actionCause) -> bool { isPressed(actionCause); };
+	for(const ActionCause& a : action->associatedButtons)
+	{
+		result = result || std::visit(pressedVisitor, a);
+	}
+}
+
+bool Input::isJustPressed(Key key)
 {
 	return keys[static_cast<int>(key)].pressed && keys[static_cast<int>(key)].just;
 }
 
-bool Input::justPressed(MouseButton button)
+bool Input::isJustPressed(MouseButton button)
 {
 	return mouse.buttons[static_cast<int>(button)].pressed && mouse.buttons[static_cast<int>(button)].just;
 }
 
-bool Input::justPressed(int gamepadId, GamepadButton button)
+bool Input::isJustPressed(int gamepadId, GamepadButton button)
 {
 	return gamepads[gamepadId].buttons[static_cast<int>(button)].pressed && gamepads[gamepadId].buttons[static_cast<int>(button)].just;
 }
 
-bool Input::justReleased(Key key)
+bool Input::isJustPressed(std::string actionName)
+{
+	// TO IMPLEMENT!
+}
+
+bool Input::isJustReleased(Key key)
 {
 	return !keys[static_cast<int>(key)].pressed && keys[static_cast<int>(key)].just;
 }
 
-bool Input::justReleased(MouseButton button)
+bool Input::isJustReleased(MouseButton button)
 {
 	return !mouse.buttons[static_cast<int>(button)].pressed && mouse.buttons[static_cast<int>(button)].just;
 }
 
-bool Input::justReleased(int gamepadId, GamepadButton button)
+bool Input::isJustReleased(int gamepadId, GamepadButton button)
 {
 	return !gamepads[gamepadId].buttons[static_cast<int>(button)].pressed && gamepads[gamepadId].buttons[static_cast<int>(button)].just;
 }
 
-float Input::gamepadAxis(int gamepadId, GamepadAxis axis)
+bool Input::isJustReleased(std::string actionName)
+{
+	// TO IMPLEMENT!
+}
+
+float Input::getGamepadAxis(int gamepadId, GamepadAxis axis)
 {
 	return gamepads[gamepadId].axes[static_cast<int>(axis)];
+}
+
+float Input::getAxis(std::string axisName)
+{
+	// TO IMPLEMENT!
+}
+
+void Input::addAction(std::string name, std::initializer_list<ActionCause> actionCauses)
+{
+	// TO IMPLEMENT!
+}
+
+void Input::addAxis(std::string name, std::initializer_list<AxisCause> axisCauses)
+{
+	// TO IMPLEMENT!
+}
+
+void Input::removeAction(std::string name)
+{
+	// TO IMPLEMENT!
+}
+
+void Input::removeAxis(std::string name)
+{
+	// TO IMPLEMENT!
 }
