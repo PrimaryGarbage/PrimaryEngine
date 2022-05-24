@@ -1,6 +1,7 @@
 #include "primary_app.hpp"
 #include "input.hpp"
 #include <stdexcept>
+#include <iostream>
 
 PrimaryApp::PrimaryApp()
 {
@@ -50,6 +51,7 @@ void PrimaryApp::mainLoop()
 		glGenVertexArrays(1, &VertexArrayID);
 		glBindVertexArray(VertexArrayID);
 
+		std::cout << Input::getAxis("Vertical") << std::endl;
 
 		glfwSwapBuffers(window);
 		Input::update();

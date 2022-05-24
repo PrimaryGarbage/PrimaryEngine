@@ -116,7 +116,9 @@ void Input::joystick_callback(int jid, int event)
 
 void Input::createDefaultActionsAndAxes()
 {
-	// TO IMPLEMENT!
+	addAction("Jump", { Key::space, GamepadButton::a });
+	addAxis("Horizontal", { GamepadAxis::LeftX, std::pair(Key::a, Key::d), std::pair(Key::left, Key::rigth) });
+	addAxis("Vertical", { std::pair(Key::up, Key::down) });
 }
 
 void Input::init(GLFWwindow* window)
@@ -246,6 +248,7 @@ bool Input::isJustReleased(const std::string actionName)
 
 float Input::getAxis(const GamepadAxis axis, const int gamepadId)
 {
+	if(gamepads.size() == 0) return 0.0f;
 	if(gamepadId > gamepads.size() - 1) throw PRIM_EXCEPTION("Inexistent gamepadId! GamepadId = " + gamepadId);
 	return gamepads[gamepadId].axes[static_cast<int>(axis)];
 }
@@ -270,7 +273,7 @@ float Input::getAxis(const std::string axisName)
 	auto axis = std::find_if(axes.begin(), axes.end(), [&axisName](const Axis& a) { return axisName == a.name; });
 	if(axis == axes.end()) throw PRIM_EXCEPTION("Input axis wasn't found! Axis name: " + axisName);
 	float result = 0.0f;
-	static auto axisVisitor = [](const auto& axisCause) -> bool { return getAxis(axisCause); };
+	static auto axisVisitor = [](const auto& axisCause) -> float { return getAxis(axisCause); };
 	for(const AxisCause& a : axis->associatedAxes)
 	{
 		result += std::visit(axisVisitor, a);

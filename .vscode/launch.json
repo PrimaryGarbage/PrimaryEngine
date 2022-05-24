@@ -8,7 +8,7 @@
 			"name": "(gdb) Launch",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/../out/bin/Primary-d",
+			"program": "${workspaceFolder}/../out/bin/PrimaryEngine-d",
 			"args": [],
 			"stopAtEntry": false,
 			"cwd": "${fileDirname}",

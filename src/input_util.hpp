@@ -75,13 +75,13 @@ using AxisCause = std::variant<GamepadAxis, std::pair<Key, Key>, std::pair<Mouse
 
 struct Action
 {
-	const char* name;
+	std::string name;
 	std::vector<ActionCause> associatedButtons;
 };
 
 struct Axis
 {
-	const char* name;
+	std::string name;
 	std::vector<AxisCause> associatedAxes;
 };
 
