@@ -51,8 +51,6 @@ void PrimaryApp::mainLoop()
 		glGenVertexArrays(1, &VertexArrayID);
 		glBindVertexArray(VertexArrayID);
 
-		std::cout << Input::getAxis("Vertical") << std::endl;
-
 		glfwSwapBuffers(window);
 		Input::update();
 		glfwPollEvents();

@@ -1,8 +1,9 @@
 #include "input.hpp"
 #include <algorithm>
 #include <string>
+#include <iostream>
 
-PressInfo Input::keys[200]{};
+PressInfo Input::keys[350]{};
 MouseInfo Input::mouse;
 std::vector<Gamepad> Input::gamepads;
 std::vector<Action> Input::actions;
@@ -11,8 +12,9 @@ std::string Input::charInput;
 
 void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	keys[key].just = action != keys[key].pressed;
-	keys[key].pressed = action == GLFW_PRESS;
+	bool act = static_cast<bool>(action);
+	keys[key].just = act != keys[key].pressed;
+	keys[key].pressed = act;
 }
 
 void Input::insertCodepointIntoString(unsigned int codepoint, std::string& str)
@@ -116,9 +118,10 @@ void Input::joystick_callback(int jid, int event)
 
 void Input::createDefaultActionsAndAxes()
 {
+	addAction("Interact", { Key::f, GamepadButton::x });
 	addAction("Jump", { Key::space, GamepadButton::a });
 	addAxis("Horizontal", { GamepadAxis::LeftX, std::pair(Key::a, Key::d), std::pair(Key::left, Key::rigth) });
-	addAxis("Vertical", { std::pair(Key::up, Key::down) });
+	addAxis("Vertical", { GamepadAxis::LeftY, std::pair(Key::w, Key::s), std::pair(Key::up, Key::down) });
 }
 
 void Input::init(GLFWwindow* window)
@@ -128,6 +131,8 @@ void Input::init(GLFWwindow* window)
 	glfwSetCursorPosCallback(window, cursor_position_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwSetScrollCallback(window, scroll_callback);
+
+	
 
 	createDefaultActionsAndAxes();
 }
@@ -150,6 +155,13 @@ void Input::update()
 		}
 	}
 
+	//std::cout << std::to_string(keys[32].just) << std::endl;
+
+	for(int i = 0; i < keysCount; ++i)
+	{
+		keys[i].just = false;
+	}
+
 	charInput.clear();
 }
 
@@ -165,8 +177,9 @@ bool Input::isPressed(const MouseButton button)
 
 bool Input::isPressed(const GamepadButton button, const int gamepadId)
 {
-	if(gamepads.size() < gamepadId + 1) throw PRIM_EXCEPTION("Requested gamepad doesn't exist! GamepadID = " + gamepadId);
-	return gamepads[gamepadId].buttons[static_cast<int>(button)].pressed;
+	auto gamepad = std::find_if(gamepads.begin(), gamepads.end(), [gamepadId](const Gamepad& g) { return g.id == gamepadId; });
+	if(gamepad == gamepads.end()) return false;
+	return gamepad->buttons[static_cast<int>(button)].pressed;
 }
 
 bool Input::isPressed(const std::string actionName)
@@ -196,8 +209,9 @@ bool Input::isJustPressed(const MouseButton button)
 
 bool Input::isJustPressed(const GamepadButton button, const int gamepadId)
 {
-	if(gamepads.size() < gamepadId + 1) throw PRIM_EXCEPTION("Requested gamepad doesn't exist! GamepadID = " + gamepadId);
-	return gamepads[gamepadId].buttons[static_cast<int>(button)].pressed && gamepads[gamepadId].buttons[static_cast<int>(button)].just;
+	auto gamepad = std::find_if(gamepads.begin(), gamepads.end(), [gamepadId](const Gamepad& g) { return g.id == gamepadId; });
+	if(gamepad == gamepads.end()) return false;
+	return gamepad->buttons[static_cast<int>(button)].pressed && gamepad->buttons[static_cast<int>(button)].just;
 }
 
 bool Input::isJustPressed(const std::string actionName)
@@ -227,8 +241,9 @@ bool Input::isJustReleased(const MouseButton button)
 
 bool Input::isJustReleased(const GamepadButton button, const int gamepadId)
 {
-	if(gamepads.size() < gamepadId + 1) throw PRIM_EXCEPTION("Requested gamepad doesn't exist! GamepadID = " + gamepadId);
-	return !gamepads[gamepadId].buttons[static_cast<int>(button)].pressed && gamepads[gamepadId].buttons[static_cast<int>(button)].just;
+	auto gamepad = std::find_if(gamepads.begin(), gamepads.end(), [gamepadId](const Gamepad& g) { return g.id == gamepadId; });
+	if(gamepad == gamepads.end()) return false;
+	return !gamepad->buttons[static_cast<int>(button)].pressed && gamepad->buttons[static_cast<int>(button)].just;
 }
 
 bool Input::isJustReleased(const std::string actionName)
@@ -248,9 +263,9 @@ bool Input::isJustReleased(const std::string actionName)
 
 float Input::getAxis(const GamepadAxis axis, const int gamepadId)
 {
-	if(gamepads.size() == 0) return 0.0f;
-	if(gamepadId > gamepads.size() - 1) throw PRIM_EXCEPTION("Inexistent gamepadId! GamepadId = " + gamepadId);
-	return gamepads[gamepadId].axes[static_cast<int>(axis)];
+	auto gamepad = std::find_if(gamepads.begin(), gamepads.end(), [gamepadId](const Gamepad& g) { return g.id == gamepadId; });
+	if(gamepad == gamepads.end()) return 0.0f;
+	return gamepad->axes[static_cast<int>(axis)];
 }
 
 float Input::getAxis(const std::pair<Key, Key> keys)

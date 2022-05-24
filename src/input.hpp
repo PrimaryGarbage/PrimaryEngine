@@ -9,7 +9,8 @@
 class Input final
 {
 private:
-	static PressInfo keys[200];
+	static const int keysCount = 350;
+	static PressInfo keys[keysCount];
 	static MouseInfo mouse;
 	static std::vector<Gamepad> gamepads;
 	static std::vector<Action> actions;
