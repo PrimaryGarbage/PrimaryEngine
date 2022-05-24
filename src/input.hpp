@@ -51,6 +51,8 @@ public:
 	static void addAxis(const std::string name, std::initializer_list<AxisCause> axisCauses);
 	static void removeAction(const std::string name);
 	static void removeAxis(const std::string name);
+
+	static std::string getChars();
 };
 
 #endif // __INPUT_HPP__

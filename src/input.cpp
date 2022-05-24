@@ -335,3 +335,8 @@ void Input::removeAxis(const std::string name)
 		// throw PRIM_EXCEPTION("Axis with name '" + name + "' wasn't found!");
 	} 
 }
+
+std::string Input::getChars()
+{
+	return charInput;
+}
