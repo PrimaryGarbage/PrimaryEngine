@@ -39,6 +39,6 @@ if(WIN32)
 	target_link_libraries(${PROJECT_NAME} PRIVATE opengl32)
 elseif(UNIX)
 	target_link_libraries(${PROJECT_NAME} PRIVATE GL)
-endif
+endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw libglew_static)

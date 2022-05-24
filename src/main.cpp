@@ -1,4 +1,5 @@
 #include "primary_app.hpp"
+#include "prim_exception.hpp"
 #include <stdexcept>
 #include <iostream>
 
@@ -10,10 +11,19 @@ int main()
 		app.run();
 		return 0;
 	}
+	catch(const prim::Exception& e)
+	{
+		std::cerr << e.what() << '\n';
+		return 1;
+	}
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
 		return 1;
+	}
+	catch(...)
+	{
+		std::cerr << "Unknown exception was caught!" << '\n';
 	}
 	
 }
