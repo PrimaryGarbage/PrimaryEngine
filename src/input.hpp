@@ -14,6 +14,7 @@ private:
 	static std::vector<Gamepad> gamepads;
 	static std::vector<Action> actions;
 	static std::vector<Axis> axes;
+	static std::string charInput;	// utf8 text
 
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods); 
 	static void char_callback(GLFWwindow* window, unsigned int codepoint);
@@ -22,6 +23,7 @@ private:
 	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	static void joystick_callback(int jid, int event);
 	static void createDefaultActionsAndAxes();
+	static void insertCodepointIntoString(unsigned int codepoint, std::string& str);
 public:
 	static void init(GLFWwindow* window);
 	static void update();

@@ -1,11 +1,13 @@
 #include "input.hpp"
 #include <algorithm>
+#include <string>
 
 PressInfo Input::keys[200]{};
 MouseInfo Input::mouse;
 std::vector<Gamepad> Input::gamepads;
 std::vector<Action> Input::actions;
 std::vector<Axis> Input::axes;
+std::string Input::charInput;
 
 void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -13,9 +15,63 @@ void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	keys[key].pressed = action == GLFW_PRESS;
 }
 
+void Input::insertCodepointIntoString(unsigned int codepoint, std::string& str)
+{
+	if(codepoint < 128)
+	{
+		// 1 byte char
+		str.push_back(static_cast<char>(codepoint));
+	}
+	else if(codepoint < 2048)
+	{
+		// 2 byte char
+		char ch = 0;
+		uint8_t ch1 = static_cast<uint8_t>(codepoint) | 0b10000000;
+		ch1 &= ~(1u << 6);
+		uint8_t ch2 = static_cast<uint8_t>(codepoint >> 6) | 0b11000000;
+		ch2 &= ~(1u << 5);
+
+		str.push_back(ch2);
+		str.push_back(ch1);
+	}
+	else if(codepoint < 65536)
+	{
+		// 3 byte char
+		char ch = 0;
+		uint8_t ch1 = static_cast<uint8_t>(codepoint) | 0b10000000;
+		ch1 &= ~(1u << 6);
+		uint8_t ch2 = static_cast<uint8_t>(codepoint >> 6) | 0b10000000;
+		ch2 &= ~(1u << 6);
+		uint8_t ch3 = static_cast<uint8_t>(codepoint >> 12) | 0b11100000;
+		ch3 &= ~(1u << 4);
+
+		str.push_back(ch3);
+		str.push_back(ch2);
+		str.push_back(ch1);
+	}
+	else
+	{
+		// 4 byte char
+		char ch = 0;
+		uint8_t ch1 = static_cast<uint8_t>(codepoint) | 0b10000000;
+		ch1 &= ~(1u << 6);
+		uint8_t ch2 = static_cast<uint8_t>(codepoint >> 6) | 0b10000000;
+		ch2 &= ~(1u << 6);
+		uint8_t ch3 = static_cast<uint8_t>(codepoint >> 12) | 0b10000000;
+		ch3 &= ~(1u << 6);
+		uint8_t ch4 = static_cast<uint8_t>(codepoint >> 18) | 0b11110000;
+		ch4 &= ~(1u << 3);
+
+		str.push_back(ch4);
+		str.push_back(ch3);
+		str.push_back(ch2);
+		str.push_back(ch1);
+	}
+}
+
 void Input::char_callback(GLFWwindow* window, unsigned int codepoint)
 {
-	// TO IMPLEMENT!
+	insertCodepointIntoString(codepoint, charInput);
 }
 
 void Input::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
@@ -91,6 +147,8 @@ void Input::update()
 			gamepad.axes[i] = state.axes[i];
 		}
 	}
+
+	charInput.clear();
 }
 
 bool Input::isPressed(const Key key)
