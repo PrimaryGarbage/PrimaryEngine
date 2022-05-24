@@ -52,6 +52,7 @@ void PrimaryApp::mainLoop()
 
 
 		glfwSwapBuffers(window);
+		Input::update();
 		glfwPollEvents();
 	}
 }
