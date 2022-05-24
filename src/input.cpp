@@ -42,7 +42,7 @@ void Input::joystick_callback(int jid, int event)
     {
 		if(glfwJoystickIsGamepad(jid))
 		{
-			auto gamepad = std::find(gamepads.begin(), gamepads.end(), [jid](const Gamepad& gp) -> bool { return gp.id == jid; });
+			auto gamepad = std::find_if(gamepads.begin(), gamepads.end(), [jid](const Gamepad& gp) -> bool { return gp.id == jid; });
 			if(gamepad != gamepads.end()) return;		// gamepad is already registered
 			gamepads.push_back(Gamepad(jid));
 		}
@@ -93,99 +93,187 @@ void Input::update()
 	}
 }
 
-bool Input::isPressed(Key key)
+bool Input::isPressed(const Key key)
 {
 	return keys[static_cast<int>(key)].pressed;
 }
 
-bool Input::isPressed(MouseButton button)
+bool Input::isPressed(const MouseButton button)
 {
 	return mouse.buttons[static_cast<int>(button)].pressed;
 }
 
-bool Input::isPressed(int gamepadId, GamepadButton button)
+bool Input::isPressed(const GamepadButton button, const int gamepadId)
 {
+	if(gamepads.size() < gamepadId + 1) throw PRIM_EXCEPTION("Requested gamepad doesn't exist! GamepadID = " + gamepadId);
 	return gamepads[gamepadId].buttons[static_cast<int>(button)].pressed;
 }
 
-bool Input::isPressed(std::string actionName)
+bool Input::isPressed(const std::string actionName)
 {
 	auto action = std::find_if(actions.begin(), actions.end(), [&actionName](const Action& a) { return actionName == a.name; });
 	if(action == actions.end()) throw PRIM_EXCEPTION("Input action wasn't found! Action name: " + actionName);
 	bool result = false;
-	static auto pressedVisitor = [](const auto& actionCause) -> bool { isPressed(actionCause); };
+	static auto pressedVisitor = [](const auto& actionCause) -> bool { return isPressed(actionCause); };
 	for(const ActionCause& a : action->associatedButtons)
 	{
 		result = result || std::visit(pressedVisitor, a);
+		if(result) break;
 	}
+
+	return result;
 }
 
-bool Input::isJustPressed(Key key)
+bool Input::isJustPressed(const Key key)
 {
 	return keys[static_cast<int>(key)].pressed && keys[static_cast<int>(key)].just;
 }
 
-bool Input::isJustPressed(MouseButton button)
+bool Input::isJustPressed(const MouseButton button)
 {
 	return mouse.buttons[static_cast<int>(button)].pressed && mouse.buttons[static_cast<int>(button)].just;
 }
 
-bool Input::isJustPressed(int gamepadId, GamepadButton button)
+bool Input::isJustPressed(const GamepadButton button, const int gamepadId)
 {
+	if(gamepads.size() < gamepadId + 1) throw PRIM_EXCEPTION("Requested gamepad doesn't exist! GamepadID = " + gamepadId);
 	return gamepads[gamepadId].buttons[static_cast<int>(button)].pressed && gamepads[gamepadId].buttons[static_cast<int>(button)].just;
 }
 
-bool Input::isJustPressed(std::string actionName)
+bool Input::isJustPressed(const std::string actionName)
 {
-	// TO IMPLEMENT!
+	auto action = std::find_if(actions.begin(), actions.end(), [&actionName](const Action& a) { return actionName == a.name; });
+	if(action == actions.end()) throw PRIM_EXCEPTION("Input action wasn't found! Action name: " + actionName);
+	bool result = false;
+	static auto pressedVisitor = [](const auto& actionCause) -> bool { return isJustPressed(actionCause); };
+	for(const ActionCause& a : action->associatedButtons)
+	{
+		result = result || std::visit(pressedVisitor, a);
+		if(result) break;
+	}
+
+	return result;
 }
 
-bool Input::isJustReleased(Key key)
+bool Input::isJustReleased(const Key key)
 {
 	return !keys[static_cast<int>(key)].pressed && keys[static_cast<int>(key)].just;
 }
 
-bool Input::isJustReleased(MouseButton button)
+bool Input::isJustReleased(const MouseButton button)
 {
 	return !mouse.buttons[static_cast<int>(button)].pressed && mouse.buttons[static_cast<int>(button)].just;
 }
 
-bool Input::isJustReleased(int gamepadId, GamepadButton button)
+bool Input::isJustReleased(const GamepadButton button, const int gamepadId)
 {
+	if(gamepads.size() < gamepadId + 1) throw PRIM_EXCEPTION("Requested gamepad doesn't exist! GamepadID = " + gamepadId);
 	return !gamepads[gamepadId].buttons[static_cast<int>(button)].pressed && gamepads[gamepadId].buttons[static_cast<int>(button)].just;
 }
 
-bool Input::isJustReleased(std::string actionName)
+bool Input::isJustReleased(const std::string actionName)
 {
-	// TO IMPLEMENT!
+	auto action = std::find_if(actions.begin(), actions.end(), [&actionName](const Action& a) { return actionName == a.name; });
+	if(action == actions.end()) throw PRIM_EXCEPTION("Input action wasn't found! Action name: " + actionName);
+	bool result = false;
+	static auto pressedVisitor = [](const auto& actionCause) -> bool { return isJustReleased(actionCause); };
+	for(const ActionCause& a : action->associatedButtons)
+	{
+		result = result || std::visit(pressedVisitor, a);
+		if(result) break;
+	}
+
+	return result;
 }
 
-float Input::getGamepadAxis(int gamepadId, GamepadAxis axis)
+float Input::getAxis(const GamepadAxis axis, const int gamepadId)
 {
+	if(gamepadId > gamepads.size() - 1) throw PRIM_EXCEPTION("Inexistent gamepadId! GamepadId = " + gamepadId);
 	return gamepads[gamepadId].axes[static_cast<int>(axis)];
 }
 
-float Input::getAxis(std::string axisName)
+float Input::getAxis(const std::pair<Key, Key> keys)
 {
-	// TO IMPLEMENT!
+	return static_cast<float>(isPressed(keys.first)) - static_cast<float>(isPressed(keys.second));
 }
 
-void Input::addAction(std::string name, std::initializer_list<ActionCause> actionCauses)
+float Input::getAxis(const std::pair<MouseButton, MouseButton> buttons)
 {
-	// TO IMPLEMENT!
+	return static_cast<float>(isPressed(buttons.first)) - static_cast<float>(isPressed(buttons.second));
 }
 
-void Input::addAxis(std::string name, std::initializer_list<AxisCause> axisCauses)
+float Input::getAxis(const std::pair<GamepadButton, GamepadButton> buttons)
 {
-	// TO IMPLEMENT!
+	return static_cast<float>(isPressed(buttons.first)) - static_cast<float>(isPressed(buttons.second));
 }
 
-void Input::removeAction(std::string name)
+float Input::getAxis(const std::string axisName)
 {
-	// TO IMPLEMENT!
+	auto axis = std::find_if(axes.begin(), axes.end(), [&axisName](const Axis& a) { return axisName == a.name; });
+	if(axis == axes.end()) throw PRIM_EXCEPTION("Input axis wasn't found! Axis name: " + axisName);
+	float result = 0.0f;
+	static auto axisVisitor = [](const auto& axisCause) -> bool { return getAxis(axisCause); };
+	for(const AxisCause& a : axis->associatedAxes)
+	{
+		result += std::visit(axisVisitor, a);
+		if(result) break;
+	}
+
+	return result;
 }
 
-void Input::removeAxis(std::string name)
+void Input::addAction(const std::string name, std::initializer_list<ActionCause> actionCauses)
 {
-	// TO IMPLEMENT!
+	auto actionSearch = std::find_if(actions.begin(), actions.end(), [&name](const Action& a) { return a.name == name; });
+	if(actionSearch != actions.end())
+	{
+		// throw PRIM_EXCEPTION("Action with name '" + name + "' aleady exists!");
+		actionSearch->associatedButtons.clear();
+		actionSearch->associatedButtons.insert(actionSearch->associatedButtons.begin(), actionCauses);
+	}
+	else
+	{
+		actions.push_back({ name.c_str(), actionCauses });
+	} 
+}
+
+void Input::addAxis(const std::string name, std::initializer_list<AxisCause> axisCauses)
+{
+	auto axisSearch = std::find_if(axes.begin(), axes.end(), [&name](const Axis& a) { return a.name == name; });
+	if(axisSearch != axes.end())
+	{
+		// throw PRIM_EXCEPTION("Axis with name '" + name + "' aleady exists!");
+		axisSearch->associatedAxes.clear();
+		axisSearch->associatedAxes.insert(axisSearch->associatedAxes.begin(), axisCauses);
+	}
+	else
+	{
+		axes.push_back({ name.c_str(), axisCauses });
+	} 
+}
+
+void Input::removeAction(const std::string name)
+{
+	auto actionSearch = std::find_if(actions.begin(), actions.end(), [&name](const Action& a) { return a.name == name; });
+	if(actionSearch != actions.end())
+	{
+		actions.erase(actionSearch);
+	}
+	else
+	{
+		// throw PRIM_EXCEPTION("Action with name '" + name + "' wasn't found!");
+	} 
+}
+
+void Input::removeAxis(const std::string name)
+{
+	auto axisSearch = std::find_if(axes.begin(), axes.end(), [&name](const Axis& a) { return a.name == name; });
+	if(axisSearch != axes.end())
+	{
+		axes.erase(axisSearch);
+	}
+	else
+	{
+		// throw PRIM_EXCEPTION("Axis with name '" + name + "' wasn't found!");
+	} 
 }
