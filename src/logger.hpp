@@ -14,10 +14,13 @@ private:
     static std::string buffer;
 
     static void writeFile();
+
 public:
     static void init(std::filesystem::path appPath);
-    static void log(std::string msg);
+    static void log(std::string msg, bool printAlso = false);
     static void terminate();
+	static void print(std::string msg);
+	static void printLine(std::string msg);
 };
 
 #endif // __LOGGER_HPP__

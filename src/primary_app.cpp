@@ -36,7 +36,7 @@ void PrimaryApp::init()
 	Logger::init(appPath);
 	glfwSetErrorCallback(error_callback);
 
-	Logger::log("GLFW and GLEW initialized successfully");
+	Logger::log("GLFW and GLEW initialized successfully", true);
 }
 
 void PrimaryApp::run()
