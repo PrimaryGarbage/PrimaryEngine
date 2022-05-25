@@ -12,6 +12,8 @@ PrimaryApp::PrimaryApp(const char* appPath) : appPath(appPath)
 PrimaryApp::~PrimaryApp()
 {
 	glfwTerminate();
+	Logger::log("GLFW successfully terminated");
+	Logger::terminate();
 }
 
 void PrimaryApp::init()
@@ -36,13 +38,12 @@ void PrimaryApp::init()
 	Logger::init(appPath);
 	glfwSetErrorCallback(error_callback);
 
-	Logger::log("GLFW and GLEW initialized successfully");
+	Logger::log("GLFW and GLEW initialized successfully", true);
 }
 
 void PrimaryApp::run()
 {
 	mainLoop();
-	Logger::terminate();
 }
 
 void PrimaryApp::mainLoop()

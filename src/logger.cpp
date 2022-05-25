@@ -1,6 +1,8 @@
 #include "logger.hpp"
-#include <fstream>
 #include "prim_exception.hpp"
+#include <fstream>
+#include <iostream>
+
 
 namespace fs = std::filesystem;
 
@@ -28,13 +30,25 @@ void Logger::init(std::filesystem::path appPath)
     logfilePath = logDirPath / logfileName;
 }
 
-void Logger::log(std::string msg)
+void Logger::log(std::string msg, bool printAlso)
 {
     buffer.append(msg);
     buffer.push_back('\n');
+	if(printAlso) printLine(msg);
 }
 
 void Logger::terminate()
 {
     writeFile();
+}
+
+void Logger::print(std::string msg)
+{
+	std::cout << msg;
+	std::cout.flush();
+}
+
+void Logger::printLine(std::string msg)
+{
+	std::cout << msg << std::endl;
 }
