@@ -1,5 +1,6 @@
 #include "primary_app.hpp"
 #include <stdexcept>
+#include "logger.hpp"
 
 PrimaryApp::PrimaryApp()
 {
@@ -29,6 +30,8 @@ void PrimaryApp::init()
 	glViewport(0, 0, windowWidth, windowHeight);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	if(glewInit() != GLEW_OK) { throw std::runtime_error("Failed to initialize glew!"); }
+
+	Logger::init();
 }
 
 void PrimaryApp::run()

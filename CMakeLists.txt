@@ -14,6 +14,7 @@ set(PRIMARY_SRC
 	main.cpp
 	primary_app.cpp primary_app.hpp
 	prim_exception.hpp
+	logger.hpp logger.cpp
 	)
 
 list(TRANSFORM PRIMARY_SRC PREPEND "src/")
