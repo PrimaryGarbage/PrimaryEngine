@@ -15,7 +15,7 @@ private:
 
     static void writeFile();
 public:
-    static void init();
+    static void init(std::filesystem::path appPath);
     static void log(std::string msg);
     static void terminate();
 };

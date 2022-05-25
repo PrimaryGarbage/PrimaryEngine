@@ -33,16 +33,16 @@ void PrimaryApp::init()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	if(glewInit() != GLEW_OK) { throw std::runtime_error("Failed to initialize glew!"); }
 
-<<<<<<< HEAD
-	Logger::init();
-=======
+	Logger::init(appPath);
 	glfwSetErrorCallback(error_callback);
->>>>>>> develop
+
+	Logger::log("GLFW and GLEW initialized successfully");
 }
 
 void PrimaryApp::run()
 {
 	mainLoop();
+	Logger::terminate();
 }
 
 void PrimaryApp::mainLoop()
