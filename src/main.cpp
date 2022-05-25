@@ -8,6 +8,7 @@ int main()
 	try
 	{
 		PrimaryApp app;
+		app.init();
 		app.run();
 		return 0;
 	}
@@ -24,6 +25,7 @@ int main()
 	catch(...)
 	{
 		std::cerr << "Unknown exception was caught!" << '\n';
+		return 1;
 	}
 	
 }

@@ -3,6 +3,16 @@
 
 PrimaryApp::PrimaryApp()
 {
+	
+}
+
+PrimaryApp::~PrimaryApp()
+{
+	glfwTerminate();
+}
+
+void PrimaryApp::init()
+{
 	if(!glfwInit()) { throw std::runtime_error("Failed to initialize glfw!"); }
 
 	glfwWindowHint(GLFW_SAMPLES, 4);
@@ -11,25 +21,14 @@ PrimaryApp::PrimaryApp()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, nullptr, nullptr);
-	if(window == nullptr) { glfwTerminate(); throw std::runtime_error("Failed to create glfw window!"); }
+	window = glfwCreateWindow(windowWidth, windowHeight, windowName, nullptr, nullptr);
+	if(window == nullptr) { throw std::runtime_error("Failed to create glfw window!"); }
 
 	glfwMakeContextCurrent(window);
 	glewExperimental = true;
-	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+	glViewport(0, 0, windowWidth, windowHeight);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	if(glewInit() != GLEW_OK)
-	{
-		glfwTerminate();
-		throw std::runtime_error("Failed to initialize glew!");
-	}
-
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-}
-
-PrimaryApp::~PrimaryApp()
-{
-	glfwTerminate();
+	if(glewInit() != GLEW_OK) { throw std::runtime_error("Failed to initialize glew!"); }
 }
 
 void PrimaryApp::run()

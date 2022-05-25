@@ -10,12 +10,13 @@ public:
 
 	GLFWwindow* window = nullptr;
 
+	void init();
 	void run();
 
 private:
-	const uint32_t WINDOW_WIDTH = 800;
-	const uint32_t WINDOW_HEIGHT = 800;
-	const char* WINDOW_NAME = "PrimaryEngine";
+	const uint32_t windowWidth = 800;
+	const uint32_t windowHeight = 800;
+	const char* windowName = "PrimaryEngine";
 
 	void mainLoop();
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
