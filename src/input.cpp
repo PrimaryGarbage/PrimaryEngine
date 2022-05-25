@@ -1,4 +1,5 @@
 #include "input.hpp"
+#include "logger.hpp"
 #include <algorithm>
 #include <string>
 #include <iostream>
@@ -80,6 +81,7 @@ void Input::registerAllGamepads()
 			if(glfwJoystickIsGamepad(i))
 			{
 				gamepads.push_back(Gamepad(i));
+				Logger::log("Gamepad registered. id: [" + std::to_string(i) + "]; name: [" + gamepads.back().name + "]", true);
 			}
 		}
 	}
@@ -117,16 +119,15 @@ void Input::joystick_callback(int jid, int event)
 			auto gamepad = std::find_if(gamepads.begin(), gamepads.end(), [jid](const Gamepad& gp) -> bool { return gp.id == jid; });
 			if(gamepad != gamepads.end()) return;		// gamepad is already registered
 			gamepads.push_back(Gamepad(jid));
+			Logger::log("Gamepad registered. id: [" + std::to_string(jid) + "]; name: [" + gamepads.back().name + "]", true);
 		}
     }
     else if (event == GLFW_DISCONNECTED)
     {
-		if(glfwJoystickIsGamepad(jid))
-		{
-			auto gamepad = std::find_if(gamepads.begin(), gamepads.end(), [jid](const Gamepad& gp) -> bool { return gp.id == jid; });
-			if(gamepad == gamepads.end()) return;		// gamepad is already unregistered
-			gamepads.erase(gamepad);
-		}
+		auto gamepad = std::find_if(gamepads.begin(), gamepads.end(), [jid](const Gamepad& gp) -> bool { return gp.id == jid; });
+		if(gamepad == gamepads.end()) return;		// gamepad is already unregistered
+		gamepads.erase(gamepad);
+		Logger::log("Gamepad unregistered. id: [" + std::to_string(jid) + "]; name: [" + gamepads.back().name + "]", true);
     }
 }
 
@@ -141,11 +142,17 @@ void Input::createDefaultActionsAndAxes()
 void Input::init(GLFWwindow* window)
 {
 	glfwSetKeyCallback(window, key_callback);
+	Logger::log("glfw key callback set");
 	glfwSetCharCallback(window, char_callback);
+	Logger::log("glfw char callback set");
 	glfwSetCursorPosCallback(window, cursor_position_callback);
+	Logger::log("glfw cursor pos callback set");
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
+	Logger::log("glfw mouse button callback set");
 	glfwSetScrollCallback(window, scroll_callback);
+	Logger::log("glfw scroll callback set");
 	glfwSetJoystickCallback(joystick_callback);
+	Logger::log("glfw joystick callback set");
 
 	registerAllGamepads();
 

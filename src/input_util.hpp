@@ -63,12 +63,12 @@ struct Gamepad
 	static const int axisCount = static_cast<int>(GamepadAxis::axisCount);
 
 	int id;
+	std::string name;
 	PressInfo buttons[buttonCount];
 	float axes[axisCount];
 
-	Gamepad() = default;
-	Gamepad(int id): id(id) {}
-};
+	Gamepad(int id): id(id), name(glfwGetGamepadName(id)) {}
+}; 
 
 using ActionCause = std::variant<Key, MouseButton, GamepadButton>;
 using AxisCause = std::variant<GamepadAxis, std::pair<Key, Key>, std::pair<MouseButton, MouseButton>, std::pair<GamepadButton, GamepadButton>>;
