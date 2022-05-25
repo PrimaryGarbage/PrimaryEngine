@@ -1,8 +1,10 @@
 #include "primary_app.hpp"
 #include <stdexcept>
+#include <iostream>
 #include "logger.hpp"
 
-PrimaryApp::PrimaryApp()
+
+PrimaryApp::PrimaryApp(const char* appPath) : appPath(appPath)
 {
 	
 }
@@ -31,7 +33,11 @@ void PrimaryApp::init()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	if(glewInit() != GLEW_OK) { throw std::runtime_error("Failed to initialize glew!"); }
 
+<<<<<<< HEAD
 	Logger::init();
+=======
+	glfwSetErrorCallback(error_callback);
+>>>>>>> develop
 }
 
 void PrimaryApp::run()
@@ -59,4 +65,10 @@ void PrimaryApp::mainLoop()
 void PrimaryApp::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
+}
+
+void PrimaryApp::error_callback(int error, const char* description)
+{
+	std::cerr << "GLFW error: " << error << std::endl;
+	std::cerr << description;
 }
