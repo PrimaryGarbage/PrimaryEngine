@@ -1,5 +1,6 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
+#include <filesystem>
 
 class PrimaryApp
 {
@@ -13,11 +14,12 @@ private:
 	static void error_callback(int error, const char* description);
 
 public:
-	explicit PrimaryApp();
+	explicit PrimaryApp(const char* appPath);
 	PrimaryApp(const PrimaryApp& other) = delete;
 	~PrimaryApp();
 
 	GLFWwindow* window = nullptr;
+	const std::filesystem::path appPath;
 
 	void init();
 	void run();

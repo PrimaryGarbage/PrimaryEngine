@@ -6,7 +6,14 @@
 	],
 	"settings": {
 		"files.associations": {
-			"iostream": "cpp"
+			"iostream": "cpp",
+			"charconv": "cpp",
+			"ios": "cpp",
+			"istream": "cpp",
+			"ostream": "cpp",
+			"xstring": "cpp",
+			"xutility": "cpp",
+			"stdexcept": "cpp"
 		}
 	}
 }

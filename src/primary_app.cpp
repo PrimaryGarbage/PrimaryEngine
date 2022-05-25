@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include <iostream>
 
-PrimaryApp::PrimaryApp()
+PrimaryApp::PrimaryApp(const char* appPath) : appPath(appPath)
 {
 	
 }

@@ -3,11 +3,11 @@
 #include <stdexcept>
 #include <iostream>
 
-int main() 
+int main(int argc, char* argv[]) 
 {
 	try
 	{
-		PrimaryApp app;
+		PrimaryApp app(argv[0]);
 		app.init();
 		app.run();
 		return 0;
