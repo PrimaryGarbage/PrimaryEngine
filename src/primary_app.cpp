@@ -2,8 +2,22 @@
 #include "input.hpp"
 #include <stdexcept>
 #include <iostream>
+#include "logger.hpp"
 
-PrimaryApp::PrimaryApp()
+
+PrimaryApp::PrimaryApp(const char* appPath) : appPath(appPath)
+{
+	
+}
+
+PrimaryApp::~PrimaryApp()
+{
+	glfwTerminate();
+	Logger::log("GLFW successfully terminated");
+	Logger::terminate();
+}
+
+void PrimaryApp::init()
 {
 	if(!glfwInit()) { throw std::runtime_error("Failed to initialize glfw!"); }
 
@@ -13,26 +27,21 @@ PrimaryApp::PrimaryApp()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, nullptr, nullptr);
-	if(window == nullptr) { glfwTerminate(); throw std::runtime_error("Failed to create glfw window!"); }
+	window = glfwCreateWindow(windowWidth, windowHeight, windowName, nullptr, nullptr);
+	if(window == nullptr) { throw std::runtime_error("Failed to create glfw window!"); }
 
 	glfwMakeContextCurrent(window);
 	glewExperimental = true;
-	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+	glViewport(0, 0, windowWidth, windowHeight);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	if(glewInit() != GLEW_OK)
-	{
-		glfwTerminate();
-		throw std::runtime_error("Failed to initialize glew!");
-	}
+	if(glewInit() != GLEW_OK) { throw std::runtime_error("Failed to initialize glew!"); }
 
-	//glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+	Logger::init(appPath);
 	Input::init(window);
-}
 
-PrimaryApp::~PrimaryApp()
-{
-	glfwTerminate();
+	glfwSetErrorCallback(error_callback);
+
+	Logger::log("GLFW and GLEW initialized successfully", true);
 }
 
 void PrimaryApp::run()
@@ -62,4 +71,10 @@ void PrimaryApp::mainLoop()
 void PrimaryApp::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
+}
+
+void PrimaryApp::error_callback(int error, const char* description)
+{
+	std::cerr << "GLFW error: " << error << std::endl;
+	std::cerr << description;
 }

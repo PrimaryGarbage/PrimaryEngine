@@ -16,6 +16,7 @@ set(PRIMARY_SRC
 	prim_exception.hpp
 	input.cpp input.hpp
 	input_util.hpp
+	logger.hpp logger.cpp
 	)
 
 list(TRANSFORM PRIMARY_SRC PREPEND "src/")
