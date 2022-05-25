@@ -25,6 +25,7 @@ private:
 	static void joystick_callback(int jid, int event);
 	static void createDefaultActionsAndAxes();
 	static void insertCodepointIntoString(unsigned int codepoint, std::string& str);
+	static void registerAllGamepads();
 public:
 	static void init(GLFWwindow* window);
 	static void update();

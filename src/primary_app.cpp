@@ -51,6 +51,8 @@ void PrimaryApp::mainLoop()
 		glGenVertexArrays(1, &VertexArrayID);
 		glBindVertexArray(VertexArrayID);
 
+
+
 		glfwSwapBuffers(window);
 		Input::update();
 		glfwPollEvents();

@@ -71,6 +71,20 @@ void Input::insertCodepointIntoString(unsigned int codepoint, std::string& str)
 	}
 }
 
+void Input::registerAllGamepads()
+{
+	for(int i = 0; i < 10; ++i)
+	{
+		if(glfwJoystickPresent(i))
+		{
+			if(glfwJoystickIsGamepad(i))
+			{
+				gamepads.push_back(Gamepad(i));
+			}
+		}
+	}
+}
+
 void Input::char_callback(GLFWwindow* window, unsigned int codepoint)
 {
 	insertCodepointIntoString(codepoint, charInput);
@@ -131,8 +145,9 @@ void Input::init(GLFWwindow* window)
 	glfwSetCursorPosCallback(window, cursor_position_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwSetScrollCallback(window, scroll_callback);
+	glfwSetJoystickCallback(joystick_callback);
 
-	
+	registerAllGamepads();
 
 	createDefaultActionsAndAxes();
 }
@@ -292,8 +307,9 @@ float Input::getAxis(const std::string axisName)
 	for(const AxisCause& a : axis->associatedAxes)
 	{
 		result += std::visit(axisVisitor, a);
-		if(result) break;
 	}
+
+	result = std::clamp(result, -1.0f, 1.0f);
 
 	return result;
 }
