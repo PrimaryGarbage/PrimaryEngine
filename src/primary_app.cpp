@@ -39,6 +39,8 @@ void PrimaryApp::init()
 	glfwSetErrorCallback(error_callback);
 
 	Logger::log("GLFW and GLEW initialized successfully", true);
+	Logger::log("OpenGL version: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))), true);
+	Logger::log("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
 }
 
 void PrimaryApp::run()
