@@ -45,6 +45,17 @@ void PrimaryApp::init()
 
 void PrimaryApp::run()
 {
+	float positions[6] = {
+		-0.5f, 0.5f,
+		0.0f, 0.5f,
+		0.5f, -0.5f
+	};
+
+	unsigned int bufferId;
+	glGenBuffers(1, &bufferId);	// generate buffer
+	glBindBuffer(GL_ARRAY_BUFFER, bufferId);	// bind buffer
+	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);	// write data into buffer
+
 	mainLoop();
 }
 
@@ -54,10 +65,11 @@ void PrimaryApp::mainLoop()
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		// create VAO and set it as the current one
-		GLuint VertexArrayID;
-		glGenVertexArrays(1, &VertexArrayID);
-		glBindVertexArray(VertexArrayID);
+		///// Draw /////
+
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		
+		////////////////
 
 
 		glfwSwapBuffers(window);
