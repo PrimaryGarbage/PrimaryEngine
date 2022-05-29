@@ -72,6 +72,6 @@ void PrimaryApp::framebuffer_size_callback(GLFWwindow* window, int width, int he
 
 void PrimaryApp::error_callback(int error, const char* description)
 {
-	std::cerr << "GLFW error: " << error << std::endl;
-	std::cerr << description;
+	Logger::log("GLFW error: " + std::to_string(error), true);
+	Logger::log(description, true);
 }
