@@ -14,7 +14,9 @@ configure() {
 
 build() {
 	echo -e "Building..."
-	cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE || { configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE; } || echo -e "${RED}Building failure${NOCOLOR}"
+	{ cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE && cp ./res $CMAKE_BUILD_DIR/bin/res -r; } \
+	|| { configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE && cp ./res $CMAKE_BUILD_DIR/bin/res -r; } \
+	|| { echo -e "${RED}Building failure${NOCOLOR}"; }
 }
 
 run() {
