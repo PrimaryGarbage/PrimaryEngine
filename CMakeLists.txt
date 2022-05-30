@@ -15,6 +15,9 @@ set(PRIMARY_SRC
 	primary_app.cpp primary_app.hpp
 	prim_exception.hpp
 	logger.hpp logger.cpp
+	renderer.hpp renderer.cpp
+	vertex_buffer.hpp vertex_buffer.cpp
+	index_buffer.hpp index_buffer.cpp
 	)
 
 list(TRANSFORM PRIMARY_SRC PREPEND "src/")
