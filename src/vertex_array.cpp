@@ -1,15 +1,24 @@
 #include "vertex_array.hpp"
 #include "renderer.hpp"
 
+namespace prim
+{
+
 VertexArray::VertexArray()
 {
-	GL_CALL(glGenVertexArrays(1, &id)); 
-	glBindVertexArray(id);
+	GL_CALL(glGenVertexArrays(1, &gl_id)); 
+	glBindVertexArray(gl_id);
+}
+
+VertexArray::VertexArray(VertexArray&& other)
+{
+	gl_id = other.gl_id;
+	other.gl_id = 0;
 }
 
 VertexArray::~VertexArray()
 {
-	GL_CALL(glDeleteVertexArrays(1, &id));
+	GL_CALL(glDeleteVertexArrays(1, &gl_id));
 }
 
 void VertexArray::addBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
@@ -29,10 +38,14 @@ void VertexArray::addBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
 
 void VertexArray::bind() const
 {
-	GL_CALL(glBindVertexArray(id));
+	GL_CALL(glBindVertexArray(gl_id));
 }
 
 void VertexArray::unbind() const
 {
 	GL_CALL(glBindVertexArray(0));
 }
+
+}
+
+

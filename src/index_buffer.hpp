@@ -1,19 +1,27 @@
 #ifndef __INDEX_BUFFER_HPP__
 #define __INDEX_BUFFER_HPP__
 
+namespace prim
+{
+
 class IndexBuffer
 {
 private:
-	unsigned int id;
+	unsigned int gl_id;
 	unsigned int count;
 public:
 	IndexBuffer(const unsigned int* data, unsigned int count);
+	IndexBuffer(IndexBuffer&& other);
 	~IndexBuffer();
 
-	void Bind() const;
-	void Unbind() const;
+	void bind() const;
+	void unbind() const;
 
 	inline unsigned int getCount() const { return count; }
 };
+
+}
+
+
 
 #endif // __INDEX_BUFFER_HPP__

@@ -1,6 +1,10 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include <filesystem>
+#include "renderer.hpp"
+
+namespace prim
+{
 
 class PrimaryApp
 {
@@ -8,6 +12,7 @@ private:
 	const uint32_t windowWidth = 800;
 	const uint32_t windowHeight = 800;
 	const char* windowName = "PrimaryEngine";
+	Renderer renderer;
 
 	void mainLoop();
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -24,3 +29,6 @@ public:
 	void init();
 	void run();
 };
+
+}
+

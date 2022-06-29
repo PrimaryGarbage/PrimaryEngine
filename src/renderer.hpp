@@ -3,8 +3,12 @@
 
 #include <cassert>
 #include "GL/glew.h"
-#include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
+#include "vertex_array.hpp"
+#include "shader.hpp"
+
+namespace prim
+{
 
 #define GL_CALL(glFunction) glClearError(); \
 	glFunction; \
@@ -12,6 +16,17 @@
 
 void glClearError();
 bool glLogCall(const char* function, const char* file, int line);
+
+class Renderer
+{
+private:
+
+public:
+	void draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
+	void clear();
+};
+
+}
 
 
 #endif // __RENDERER_HPP__

@@ -2,7 +2,11 @@
 #define __VERTEX_BUFFER_LAYOUT_HPP__
 
 #include <vector>
+#include <cassert>
 #include "GL/glew.h"
+
+namespace prim
+{
 
 struct VertexBufferElement
 {
@@ -31,35 +35,39 @@ public:
 	VertexBufferLayout() : stride(0) {}
 
 	template<class T>
-	void push(int count)
+	void push(unsigned int count)
 	{
-		static_assert(false);
-	}
-
-	template<>
-	void push<float>(unsigned int count)
-	{
-		elements.push_back({ GL_FLOAT, count, GL_FALSE });
-		stride += VertexBufferElement::getSizeOfType(GL_FLOAT) * count;
-	}
-
-	template<>
-	void push<unsigned int>(unsigned int count)
-	{
-		elements.push_back({ GL_UNSIGNED_INT, count, GL_FALSE });
-		stride += VertexBufferElement::getSizeOfType(GL_UNSIGNED_INT) * count;
-	}
-
-	template<>
-	void push<unsigned char>(unsigned int count)
-	{
-		elements.push_back({ GL_UNSIGNED_BYTE, count, GL_TRUE });
-		stride += sizeof(GLubyte) * count;
-		stride += VertexBufferElement::getSizeOfType(GL_UNSIGNED_BYTE) * count;
+		assert(false);
 	}
 
 	inline const std::vector<VertexBufferElement>& getElements() const { return elements; }
 	inline unsigned int getStride() const { return stride; }
 };
+
+template<>
+inline void VertexBufferLayout::push<float>(unsigned int count)
+{
+	elements.push_back({ GL_FLOAT, count, GL_FALSE });
+	stride += VertexBufferElement::getSizeOfType(GL_FLOAT) * count;
+}
+
+template<>
+inline void VertexBufferLayout::push<unsigned int>(unsigned int count)
+{
+	elements.push_back({ GL_UNSIGNED_INT, count, GL_FALSE });
+	stride += VertexBufferElement::getSizeOfType(GL_UNSIGNED_INT) * count;
+}
+
+template<>
+inline void VertexBufferLayout::push<unsigned char>(unsigned int count)
+{
+	elements.push_back({ GL_UNSIGNED_BYTE, count, GL_TRUE });
+	stride += sizeof(GLubyte) * count;
+	stride += VertexBufferElement::getSizeOfType(GL_UNSIGNED_BYTE) * count;
+}
+
+}
+
+
 
 #endif // __VERTEX_BUFFER_LAYOUT_HPP__

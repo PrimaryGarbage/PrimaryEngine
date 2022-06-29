@@ -2,6 +2,21 @@
 	"files.associations": {
 		"iostream": "cpp",
 		"chrono": "cpp",
-		"algorithm": "cpp"
+		"algorithm": "cpp",
+		"locale": "cpp",
+		"thread": "cpp",
+		"xlocale": "cpp",
+		"xlocmes": "cpp",
+		"xlocmon": "cpp",
+		"xlocnum": "cpp",
+		"xloctime": "cpp",
+		"iosfwd": "cpp",
+		"iterator": "cpp",
+		"xtree": "cpp",
+		"xutility": "cpp",
+		"format": "cpp",
+		"list": "cpp",
+		"vector": "cpp",
+		"xstring": "cpp"
 	}
 }
