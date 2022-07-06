@@ -4,7 +4,7 @@
 #include <cassert>
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
-#include "model.hpp"
+#include "mesh.hpp"
 
 namespace prim
 {
@@ -24,7 +24,8 @@ private:
 	const char* defaultName = "Prim Engine";
 
 	GLFWwindow* window = nullptr;
-	std::vector<Model*> modelDrawList;
+	std::vector<Mesh*> drawList;
+	int currentShaderId = 0;
 
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	static void error_callback(int error, const char* description);
@@ -35,13 +36,13 @@ public:
 
 	void init(unsigned int windowWidth, unsigned int windowHeight, const char* windowName);
 	void drawLists() const;
-	void drawModel(const Model& model);
-	void addModel(Model* model);
+	void drawMesh(const Mesh& mesh);
+	void addMesh(Mesh* mesh);
 	void clear();
 	bool windowShouldClose();
 	void swapBuffers();
 	void pollEvents();
-	const std::vector<Model*>&  getModelDrawList() const;
+	const std::vector<Mesh*>&  getDrawList() const;
 };
 
 }

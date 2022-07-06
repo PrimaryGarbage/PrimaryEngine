@@ -6,7 +6,8 @@ namespace prim
 
 	void glClearError()
 	{
-		while (glGetError() != GL_NO_ERROR);
+		while (glGetError() != GL_NO_ERROR)
+			;
 	}
 
 	bool glLogCall(const char* function, const char* file, int line)
@@ -27,7 +28,10 @@ namespace prim
 
 	void Renderer::init(unsigned int windowWidth, unsigned int windowHeight, const char* windowName)
 	{
-		if (!glfwInit()) { throw std::runtime_error("Failed to initialize glfw!"); }
+		if (!glfwInit())
+		{
+			throw std::runtime_error("Failed to initialize glfw!");
+		}
 
 		glfwWindowHint(GLFW_SAMPLES, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -36,13 +40,19 @@ namespace prim
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		window = glfwCreateWindow(windowWidth, windowHeight, windowName, nullptr, nullptr);
-		if (window == nullptr) { throw std::runtime_error("Failed to create glfw window!"); }
+		if (window == nullptr)
+		{
+			throw std::runtime_error("Failed to create glfw window!");
+		}
 
 		glfwMakeContextCurrent(window);
 		glewExperimental = true;
 		glViewport(0, 0, windowWidth, windowHeight);
 		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-		if (glewInit() != GLEW_OK) { throw std::runtime_error("Failed to initialize glew!"); }
+		if (glewInit() != GLEW_OK)
+		{
+			throw std::runtime_error("Failed to initialize glew!");
+		}
 
 		glfwSetErrorCallback(error_callback);
 
@@ -56,39 +66,38 @@ namespace prim
 		Logger::log("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
 	}
 
-
 	void Renderer::drawLists() const
 	{
-		for (Model* model : modelDrawList)
+		for (const Mesh* mesh : drawList)
 		{
-			for (const Mesh& mesh : model->meshes)
+			mesh->va.bind();
+			for (const MeshComposition& composition : mesh->compositions)
 			{
-				mesh.va.bind();
-				for (const MeshComposition& composition : mesh.compositions)
+				composition.ib.bind();
+				composition.texture.bind();
+				if (composition.shader.getId() != currentShaderId)
 				{
-					composition.bind();
-					GL_CALL(glDrawElements(GL_TRIANGLES, composition.getCount(), GL_UNSIGNED_INT, nullptr));
+					composition.shader.bind();
 				}
-			}
-		}
-	}
 
-	void Renderer::drawModel(const Model& model)
-	{
-		for (const Mesh& mesh : model.meshes)
-		{
-			mesh.va.bind();
-			for (const MeshComposition& composition : mesh.compositions)
-			{
-				composition.bind();
 				GL_CALL(glDrawElements(GL_TRIANGLES, composition.getCount(), GL_UNSIGNED_INT, nullptr));
 			}
 		}
 	}
 
-	void Renderer::addModel(Model* model)
+	void Renderer::drawMesh(const Mesh& mesh)
 	{
-		modelDrawList.push_back(model);
+		mesh.va.bind();
+		for (const MeshComposition& composition : mesh.compositions)
+		{
+			composition.bind();
+			GL_CALL(glDrawElements(GL_TRIANGLES, composition.getCount(), GL_UNSIGNED_INT, nullptr));
+		}
+	}
+
+	void Renderer::addMesh(Mesh* mesh)
+	{
+		drawList.push_back(mesh);
 	}
 
 	void Renderer::clear()
@@ -96,38 +105,37 @@ namespace prim
 		GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
 	}
 
-	
-void Renderer::framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}
+	void Renderer::framebuffer_size_callback(GLFWwindow* window, int width, int height)
+	{
+		glViewport(0, 0, width, height);
+	}
 
-void Renderer::error_callback(int error, const char* description)
-{
-	Logger::log("GLFW error: " + std::to_string(error), true);
-	Logger::log(description);
-	// std::cerr << "GLFW error: " << error << std::endl;
-	// std::cerr << description;
-}
+	void Renderer::error_callback(int error, const char* description)
+	{
+		Logger::log("GLFW error: " + std::to_string(error), true);
+		Logger::log(description);
+		// std::cerr << "GLFW error: " << error << std::endl;
+		// std::cerr << description;
+	}
 
-bool Renderer::windowShouldClose()
-{
-	return glfwWindowShouldClose(window);
-}
+	bool Renderer::windowShouldClose()
+	{
+		return glfwWindowShouldClose(window);
+	}
 
-void Renderer::swapBuffers()
-{
-	glfwSwapBuffers(window);
-}
+	void Renderer::swapBuffers()
+	{
+		glfwSwapBuffers(window);
+	}
 
-void Renderer::pollEvents()
-{
-	glfwPollEvents();
-}
+	void Renderer::pollEvents()
+	{
+		glfwPollEvents();
+	}
 
-const std::vector<Model*>& Renderer::getModelDrawList()	const
-{
-	return modelDrawList;
-}
+	const std::vector<Mesh*>& Renderer::getDrawList() const
+	{
+		return drawList;
+	}
 
 }

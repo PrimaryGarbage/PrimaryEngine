@@ -36,6 +36,7 @@ namespace prim
         void setUniform1i(const std::string name, int value) const;
         ShaderProgramSource parseShader(std::string filePath);
         unsigned int createShaderProgram(const std::string vertexShader, const std::string fragmentShader);
+        inline unsigned int getId() const { return gl_id; }
     };
 
 }

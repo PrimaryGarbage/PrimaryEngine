@@ -25,7 +25,6 @@ set(PRIMARY_SRC
 	texture.hpp texture.cpp
 	mesh.hpp mesh.cpp
 	mesh_composition.hpp
-	model.hpp
 	timer.hpp
 	)
 

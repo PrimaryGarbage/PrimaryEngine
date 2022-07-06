@@ -25,16 +25,15 @@ void PrimaryApp::init()
 	renderer.init(windowWidth, windowHeight, windowName);
 }
 
-
 void PrimaryApp::run()
 {
 	//// TEMP ////
 
 	float positions[] = {
-		-0.5f, -0.5f, 0.0f, 0.0f,
-		0.5f, -0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, 1.0f, 1.0f,
-		-0.5f, 0.5f, 0.0f, 1.0f,
+		100.0f, 100.0f, 0.0f, 0.0f,
+		200.0f, 100.0f, 1.0f, 0.0f,
+		200.0f, 200.0f, 1.0f, 1.0f,
+		100.0f, 200.0f, 0.0f, 1.0f,
 	};
 
 	unsigned int indices[] = {
@@ -48,12 +47,17 @@ void PrimaryApp::run()
 
 	VertexBuffer vb(positions, 16 * sizeof(float), layout);
 
-	glm::mat4 proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+	glm::mat4 proj = glm::ortho(0.0f, static_cast<float>(windowWidth), 0.0f, static_cast<float>(windowHeight), -1.0f, 1.0f);
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
+	glm::mat4 model(1.0f);
+
+	glm::mat4 mvp = proj * view * model;
+
 
 	Shader shader("res/shaders/default.shader");
 	shader.bind();
 	shader.setUniform4f("u_color", 0.8f, 0.6f, 0.4f, 1.0f);
-	shader.setUniformMat4f("u_mvp", proj);
+	shader.setUniformMat4f("u_mvp", mvp);
 
 	Texture texture("res/textures/TestTexture.png");
 	texture.bind();
@@ -66,10 +70,7 @@ void PrimaryApp::run()
 	MeshComposition meshComposition(std::move(ib), std::move(shader), std::move(texture));
 	mesh.addComposition(std::move(meshComposition));
 
-	Model model;
-	model.meshes.push_back(std::move(mesh));
-
-	renderer.addModel(&model);
+	renderer.addMesh(&mesh);
 
 	//////////////////
 
@@ -85,11 +86,9 @@ void PrimaryApp::mainLoop()
 		deltaTime = timer.peekSinceLastPeek() * 0.001f;
 		timeSinceStart = timer.peek() * 0.001f;
 
-		const auto& models = renderer.getModelDrawList();
-		for(const Model* model : models)
-			for(const Mesh& mesh : model->meshes)
-				for(const MeshComposition& composition : mesh.compositions)
-					composition.shader.setUniform1f("u_time", timeSinceStart);
+		for(const Mesh* mesh : renderer.getDrawList())
+			for(const MeshComposition& composition : mesh->compositions)
+				composition.shader.setUniform1f("u_time", timeSinceStart);
 
 
 		renderer.clear();
