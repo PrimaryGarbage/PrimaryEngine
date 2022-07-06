@@ -42,7 +42,7 @@ set(CMAKE_LINK_SEARCH_START_STATIC ON)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
 
-target_include_directories(${PROJECT_NAME} PRIVATE external/glfw/include external/glew/include)
+target_include_directories(${PROJECT_NAME} PRIVATE external/glfw/include external/glew/include external/glm)
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/external/glfw/src ${CMAKE_BINARY_DIR}/external/glew/lib)
 
