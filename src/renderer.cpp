@@ -19,9 +19,44 @@ namespace prim
 		return true;
 	}
 
+	Renderer::~Renderer()
+	{
+		glfwTerminate();
+		Logger::log("GLFW successfully terminated", true);
+	}
+
+	void Renderer::init(unsigned int windowWidth, unsigned int windowHeight, const char* windowName)
+	{
+		if (!glfwInit()) { throw std::runtime_error("Failed to initialize glfw!"); }
+
+		glfwWindowHint(GLFW_SAMPLES, 4);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+		window = glfwCreateWindow(windowWidth, windowHeight, windowName, nullptr, nullptr);
+		if (window == nullptr) { throw std::runtime_error("Failed to create glfw window!"); }
+
+		glfwMakeContextCurrent(window);
+		glewExperimental = true;
+		glViewport(0, 0, windowWidth, windowHeight);
+		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+		if (glewInit() != GLEW_OK) { throw std::runtime_error("Failed to initialize glew!"); }
+
+		glfwSetErrorCallback(error_callback);
+
+		glfwSwapInterval(1);
+
+		Logger::log("GLFW and GLEW initialized successfully", true);
+		Logger::log("OpenGL version: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))), true);
+		Logger::log("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
+	}
+
+
 	void Renderer::drawLists() const
 	{
-		for(Model* model : modelDrawList)
+		for (Model* model : modelDrawList)
 		{
 			for (const Mesh& mesh : model->meshes)
 			{
@@ -57,5 +92,34 @@ namespace prim
 	{
 		GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
 	}
+
+	
+void Renderer::framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+}
+
+void Renderer::error_callback(int error, const char* description)
+{
+	Logger::log("GLFW error: " + std::to_string(error), true);
+	Logger::log(description);
+	// std::cerr << "GLFW error: " << error << std::endl;
+	// std::cerr << description;
+}
+
+bool Renderer::windowShouldClose()
+{
+	return glfwWindowShouldClose(window);
+}
+
+void Renderer::swapBuffers()
+{
+	glfwSwapBuffers(window);
+}
+
+void Renderer::pollEvents()
+{
+	glfwPollEvents();
+}
 
 }
