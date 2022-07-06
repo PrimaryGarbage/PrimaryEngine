@@ -57,10 +57,10 @@ void PrimaryApp::run()
 	//// TEMP ////
 
 	float positions[] = {
-		-0.5f, -0.5f,
-		0.5f, -0.5f,
-		0.5f, 0.5f,
-		-0.5f, 0.5f
+		-0.5f, -0.5f, 0.0f, 0.0f,
+		0.5f, -0.5f, 1.0f, 0.0f,
+		0.5f, 0.5f, 1.0f, 1.0f,
+		-0.5f, 0.5f, 0.0f, 1.0f,
 	};
 
 	unsigned int indices[] = {
@@ -70,8 +70,9 @@ void PrimaryApp::run()
 
 	VertexBufferLayout layout;
 	layout.push<float>(2);
+	layout.push<float>(2);
 
-	VertexBuffer vb(positions, 8 * sizeof(float), layout);
+	VertexBuffer vb(positions, 16 * sizeof(float), layout);
 
 	Shader shader("res/shaders/default.shader");
 	shader.bind();
