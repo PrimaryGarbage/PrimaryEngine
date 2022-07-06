@@ -12,15 +12,29 @@ IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count) : count(c
 	GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW));
 }
 
-IndexBuffer::IndexBuffer(IndexBuffer&& other)
+IndexBuffer::IndexBuffer(IndexBuffer&& other) :
+	gl_id(other.gl_id), count(other.count)
 {
-	gl_id = other.gl_id;
 	other.gl_id = 0;
+	other.count = 0;
+}
+
+IndexBuffer& IndexBuffer::operator=(IndexBuffer&& other)
+{
+	this->~IndexBuffer();
+
+	gl_id = other.gl_id;
+	count = other.count;
+
+	other.gl_id = 0;
+	other.count = 0;
+	return *this;
 }
 
 IndexBuffer::~IndexBuffer()
 {
-	GL_CALL(glDeleteBuffers(1, &gl_id));
+	if(gl_id > 0)
+		GL_CALL(glDeleteBuffers(1, &gl_id));
 }
 
 void IndexBuffer::bind() const

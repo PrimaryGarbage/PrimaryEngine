@@ -11,12 +11,13 @@ class Texture
 private:
     unsigned int gl_id;
     std::string filePath;
-    unsigned char* localBuffer;
     int width;
     int height;
     int bitsPerPixel;
 public:
     Texture(const std::string path);
+    Texture(Texture&& other);
+    Texture& operator=(Texture&& other);
     ~Texture();
 
     void bind(unsigned int slot = 0) const;

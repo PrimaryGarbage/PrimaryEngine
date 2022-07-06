@@ -22,16 +22,28 @@ namespace prim
     }
     
     Shader::Shader(Shader&& other)
+        : filePath(other.filePath), gl_id(other.gl_id)
     {
-        filePath = other.filePath;
         other.filePath = "";
-        gl_id = other.gl_id;
         other.gl_id = 0;
+    }
+    
+    Shader& Shader::operator=(Shader&& other)
+    {
+       this->~Shader();
+
+       filePath = other.filePath;
+       gl_id = other.gl_id;
+
+       other.filePath = "";
+       other.gl_id = 0; 
+       return *this;
     }
 
     Shader::~Shader()
     {
-        GL_CALL(glDeleteProgram(gl_id));
+        if(gl_id > 0)
+            GL_CALL(glDeleteProgram(gl_id));
     }
 
     void Shader::bind() const

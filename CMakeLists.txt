@@ -18,10 +18,14 @@ set(PRIMARY_SRC
 	renderer.hpp renderer.cpp
 	vertex_buffer.hpp vertex_buffer.cpp
 	index_buffer.hpp index_buffer.cpp
-	vertex_buffer_layout.hpp
+	vertex_buffer_layout.hpp vertex_buffer_layout.cpp
 	vertex_array.hpp vertex_array.cpp
 	shader.hpp shader.cpp
 	stb_image.h stb_image.cpp
+	texture.hpp texture.cpp
+	mesh.hpp mesh.cpp
+	mesh_composition.hpp
+	model.hpp
 	)
 
 list(TRANSFORM PRIMARY_SRC PREPEND "src/")

@@ -12,6 +12,7 @@ private:
 public:
 	IndexBuffer(const unsigned int* data, unsigned int count);
 	IndexBuffer(IndexBuffer&& other);
+	IndexBuffer& operator=(IndexBuffer&& other);
 	~IndexBuffer();
 
 	void bind() const;

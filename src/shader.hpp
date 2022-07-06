@@ -22,6 +22,7 @@ namespace prim
         Shader(const std::string &filePath);
         Shader(const Shader& other) = delete;
         Shader(Shader&& other);
+        Shader& operator=(Shader&& other);
         ~Shader();
 
         void bind() const;

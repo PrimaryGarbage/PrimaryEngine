@@ -1,9 +1,9 @@
 #include "primary_app.hpp"
 #include "logger.hpp"
 #include "prim_exception.hpp"
-#include "texture.hpp"
 #include <stdexcept>
 #include <cassert>
+#include <filesystem>
 
 namespace prim
 {
@@ -16,7 +16,7 @@ PrimaryApp::PrimaryApp(const char* appPath) : appPath(appPath)
 PrimaryApp::~PrimaryApp()
 {
 	glfwTerminate();
-	Logger::log("GLFW successfully terminated");
+	Logger::log("GLFW successfully terminated", true);
 	Logger::terminate();
 }
 
@@ -68,12 +68,10 @@ void PrimaryApp::run()
 		0, 2, 3
 	};
 
-	VertexArray va;
-	VertexBuffer vb(positions, 8 * sizeof(float));
 	VertexBufferLayout layout;
 	layout.push<float>(2);
-	va.addBuffer(vb, layout);
-	IndexBuffer ib(indices, 6);
+
+	VertexBuffer vb(positions, 8 * sizeof(float), layout);
 
 	Shader shader("res/shaders/default.shader");
 	shader.bind();
@@ -81,7 +79,19 @@ void PrimaryApp::run()
 
 	Texture texture("res/textures/TestTexture.png");
 	texture.bind();
+
 	shader.setUniform1i("u_texture", 0);
+
+	IndexBuffer ib(indices, 6);
+
+	Mesh mesh(std::move(vb));
+	MeshComposition meshComposition(std::move(ib), std::move(shader), std::move(texture));
+	mesh.addComposition(std::move(meshComposition));
+
+	Model model;
+	model.meshes.push_back(std::move(mesh));
+
+	renderer.addModel(&model);
 
 	//////////////////
 
@@ -90,11 +100,16 @@ void PrimaryApp::run()
 
 void PrimaryApp::mainLoop()
 {
+	
 	while(!glfwWindowShouldClose(window))
 	{
 		renderer.clear();
+
 		///// Draw /////
 
+		renderer.drawLists();
+
+		//renderer.drawModel(*renderer.model);
 		
 		////////////////
 

@@ -1,27 +1,19 @@
 #ifndef __MODEL_HPP__
 #define __MODEL_HPP__
 
-#include <vector>
-#include "vertex_buffer.hpp"
-#include "index_buffer.hpp"
-#include "vertex_array.hpp"
-#include "shader.hpp"
+#include "mesh.hpp"
 
 namespace prim
 {
+    class Model
+    {
+    public:
+        std::vector<Mesh> meshes;
 
-class Model
-{
-private:
-    VertexBuffer vb;
-    VertexArray va;
-    std::vector<IndexBuffer> ibs;
-    Shader shader;
-
-public:
-    void 
-}
-
+        Model() = default;
+        Model(Model&& other) : meshes(std::move(other.meshes)) {}
+        Model& operator=(Model&& other) { meshes = std::move(other.meshes); return *this; }
+    };
 }
 
 #endif // __MODEL_HPP__

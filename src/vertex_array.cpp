@@ -16,29 +16,33 @@ VertexArray::VertexArray(VertexArray&& other)
 	other.gl_id = 0;
 }
 
-VertexArray::~VertexArray()
+VertexArray& VertexArray::operator=(VertexArray&& other)
 {
-	GL_CALL(glDeleteVertexArrays(1, &gl_id));
+	this->~VertexArray();
+
+	gl_id = other.gl_id;
+	other.gl_id = 0;
+
+	return *this;
 }
 
-void VertexArray::addBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
+VertexArray::~VertexArray()
+{
+	if(gl_id > 0)
+		GL_CALL(glDeleteVertexArrays(1, &gl_id));
+}
+
+void VertexArray::addBuffer(const VertexBuffer& vb)
 {
 	bind();
 	vb.bind();
-	const std::vector<VertexBufferElement> elements = layout.getElements();
-	unsigned int offset = 0;
-	for(int i = 0; i < elements.size(); ++i)
-	{
-		const VertexBufferElement& element = elements[i];
-		GL_CALL(glEnableVertexAttribArray(i));
-		GL_CALL(glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.getStride(), (const void*)offset));
-		offset += element.count * VertexBufferElement::getSizeOfType(element.type);
-	}
+	vb.getLayout().bind();
 }
 
 void VertexArray::bind() const
 {
-	GL_CALL(glBindVertexArray(gl_id));
+	if(gl_id > 0)
+		GL_CALL(glBindVertexArray(gl_id));
 }
 
 void VertexArray::unbind() const

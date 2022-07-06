@@ -3,9 +3,7 @@
 
 #include <cassert>
 #include "GL/glew.h"
-#include "index_buffer.hpp"
-#include "vertex_array.hpp"
-#include "shader.hpp"
+#include "model.hpp"
 
 namespace prim
 {
@@ -20,9 +18,12 @@ bool glLogCall(const char* function, const char* file, int line);
 class Renderer
 {
 private:
+	std::vector<Model*> modelDrawList;
 
 public:
-	void draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
+	void drawLists() const;
+	void drawModel(const Model& model);
+	void addModel(Model* model);
 	void clear();
 };
 

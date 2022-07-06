@@ -2,8 +2,8 @@
 #define __MESH_HPP__
 
 #include "vertex_buffer.hpp"
-#include "index_buffer.hpp"
 #include "vertex_array.hpp"
+#include "mesh_composition.hpp"
 #include <vector>
 
 namespace prim
@@ -11,12 +11,15 @@ namespace prim
 
 class Mesh
 {
-private:
-    VertexBuffer vb;
-    std::vector<IndexBuffer> ibs;
-    VertexArray va;
 public:
-    Mesh(VertexArray&& vb, std::vector<IndexBuffer> ibs, VertexArray&& va)
+    VertexBuffer vb;
+    VertexArray va;
+    std::vector<MeshComposition> compositions;
+
+    Mesh(VertexBuffer&& vb);
+    Mesh(Mesh&& other);
+    Mesh& operator=(Mesh&& other);
+    void addComposition(MeshComposition&& composition);
 };
 
 }

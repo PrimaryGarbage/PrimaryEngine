@@ -14,9 +14,10 @@ private:
 public:
 	VertexArray();
 	VertexArray(VertexArray&& other);
+	VertexArray& operator=(VertexArray&& other);
 	~VertexArray();
 
-	void addBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
+	void addBuffer(const VertexBuffer& vb);
 
 	void bind() const;
 	void unbind() const;
