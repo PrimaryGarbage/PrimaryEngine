@@ -26,6 +26,7 @@ set(PRIMARY_SRC
 	mesh.hpp mesh.cpp
 	mesh_composition.hpp
 	model.hpp
+	timer.hpp
 	)
 
 list(TRANSFORM PRIMARY_SRC PREPEND "src/")

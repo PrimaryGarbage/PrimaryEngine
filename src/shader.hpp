@@ -3,6 +3,9 @@
 
 #include <string>
 #include <unordered_map>
+#include "glm.hpp"
+
+
 
 namespace prim
 {
@@ -13,9 +16,9 @@ namespace prim
     private:
         unsigned int gl_id;
         std::string filePath;
-        std::unordered_map<std::string, int> uniformLocationCache;
+        mutable std::unordered_map<std::string, int> uniformLocationCache;
 
-        int getUniformLocation(const std::string name);
+        int getUniformLocation(const std::string name) const;
         unsigned int compileShader(unsigned int type, const std::string source);
 
     public:
@@ -27,9 +30,10 @@ namespace prim
 
         void bind() const;
         void unbind() const;
-        void setUniform4f(const std::string name, float v0, float v1, float v2, float v3);
-        void setUniform1f(const std::string name, float value);
-        void setUniform1i(const std::string name, int value);
+        void setUniformMat4f(const std::string name, const glm::mat4 matrix) const;
+        void setUniform4f(const std::string name, float v0, float v1, float v2, float v3) const;
+        void setUniform1f(const std::string name, float value) const;
+        void setUniform1i(const std::string name, int value) const;
         ShaderProgramSource parseShader(std::string filePath);
         unsigned int createShaderProgram(const std::string vertexShader, const std::string fragmentShader);
     };

@@ -125,4 +125,9 @@ void Renderer::pollEvents()
 	glfwPollEvents();
 }
 
+const std::vector<Model*>& Renderer::getModelDrawList()	const
+{
+	return modelDrawList;
+}
+
 }

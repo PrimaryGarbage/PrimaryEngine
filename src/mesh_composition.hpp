@@ -10,11 +10,11 @@ namespace prim
 
     class MeshComposition
     {
-    private:
+    public:
         IndexBuffer ib;
         Shader shader;
         Texture texture;
-    public:
+
         MeshComposition(IndexBuffer&& ib, Shader&& shader, Texture&& texture)
             : ib(std::move(ib)), shader(std::move(shader)), texture(std::move(texture)) {}
         MeshComposition(MeshComposition&& other)
@@ -27,7 +27,7 @@ namespace prim
             texture = std::move(other.texture);
             return *this;
         }
-        
+
         inline void bind() const { ib.bind(); shader.bind(); texture.bind(); }
         inline void unbind() const { ib.unbind(); shader.unbind(); texture.unbind(); }
         inline unsigned int getCount() const { return ib.getCount(); }

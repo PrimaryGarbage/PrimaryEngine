@@ -56,7 +56,7 @@ namespace prim
         GL_CALL(glUseProgram(0));
     }
 
-    int Shader::getUniformLocation(const std::string name)
+    int Shader::getUniformLocation(const std::string name) const
     {
         if(uniformLocationCache.find(name) != uniformLocationCache.end())
             return uniformLocationCache[name];
@@ -67,18 +67,23 @@ namespace prim
         uniformLocationCache[name] = location;
         return location;
     }
+    
+    void Shader::setUniformMat4f(const std::string name, const glm::mat4 matrix) const
+    {
+        GL_CALL(glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
+    }
 
-    void Shader::setUniform4f(const std::string name, float v0, float v1, float v2, float v3)
+    void Shader::setUniform4f(const std::string name, float v0, float v1, float v2, float v3) const
     {
         GL_CALL(glUniform4f(getUniformLocation(name), v0, v1, v2, v3));
     }
     
-    void Shader::setUniform1f(const std::string name, float value)
+    void Shader::setUniform1f(const std::string name, float value) const
     {
         GL_CALL(glUniform1f(getUniformLocation(name), value));
     }
     
-    void Shader::setUniform1i(const std::string name, int value)
+    void Shader::setUniform1i(const std::string name, int value) const
     {
         GL_CALL(glUniform1i(getUniformLocation(name), value));
     }

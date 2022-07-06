@@ -4,11 +4,13 @@
 #include <stdexcept>
 #include <cassert>
 #include <filesystem>
+#include "glm.hpp"
+#include "gtc/matrix_transform.hpp"
 
 namespace prim
 {
 
-PrimaryApp::PrimaryApp(const char* appPath) : appPath(appPath)
+PrimaryApp::PrimaryApp(const char* appPath) : appPath(appPath), deltaTime(0.0f), timeSinceStart(0.0f)
 {
 }
 
@@ -46,9 +48,12 @@ void PrimaryApp::run()
 
 	VertexBuffer vb(positions, 16 * sizeof(float), layout);
 
+	glm::mat4 proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+
 	Shader shader("res/shaders/default.shader");
 	shader.bind();
 	shader.setUniform4f("u_color", 0.8f, 0.6f, 0.4f, 1.0f);
+	shader.setUniformMat4f("u_mvp", proj);
 
 	Texture texture("res/textures/TestTexture.png");
 	texture.bind();
@@ -68,6 +73,8 @@ void PrimaryApp::run()
 
 	//////////////////
 
+	timer.start();
+
 	mainLoop();
 }
 
@@ -75,6 +82,16 @@ void PrimaryApp::mainLoop()
 {
 	while(!renderer.windowShouldClose())
 	{
+		deltaTime = timer.peekSinceLastPeek() * 0.001f;
+		timeSinceStart = timer.peek() * 0.001f;
+
+		const auto& models = renderer.getModelDrawList();
+		for(const Model* model : models)
+			for(const Mesh& mesh : model->meshes)
+				for(const MeshComposition& composition : mesh.compositions)
+					composition.shader.setUniform1f("u_time", timeSinceStart);
+
+
 		renderer.clear();
 
 		///// Draw /////

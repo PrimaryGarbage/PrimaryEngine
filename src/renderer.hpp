@@ -41,6 +41,7 @@ public:
 	bool windowShouldClose();
 	void swapBuffers();
 	void pollEvents();
+	const std::vector<Model*>&  getModelDrawList() const;
 };
 
 }
