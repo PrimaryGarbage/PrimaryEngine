@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 {
 	try
 	{
-		PrimaryApp app(argv[0]);
+		prim::PrimaryApp app(argv[0]);
 		app.init();
 		app.run();
 		return 0;

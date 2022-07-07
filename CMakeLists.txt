@@ -15,6 +15,17 @@ set(PRIMARY_SRC
 	primary_app.cpp primary_app.hpp
 	prim_exception.hpp
 	logger.hpp logger.cpp
+	renderer.hpp renderer.cpp
+	vertex_buffer.hpp vertex_buffer.cpp
+	index_buffer.hpp index_buffer.cpp
+	vertex_buffer_layout.hpp vertex_buffer_layout.cpp
+	vertex_array.hpp vertex_array.cpp
+	shader.hpp shader.cpp
+	stb_image.h stb_image.cpp
+	texture.hpp texture.cpp
+	mesh.hpp mesh.cpp
+	mesh_composition.hpp
+	timer.hpp
 	)
 
 list(TRANSFORM PRIMARY_SRC PREPEND "src/")
@@ -31,7 +42,7 @@ set(CMAKE_LINK_SEARCH_START_STATIC ON)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
 
-target_include_directories(${PROJECT_NAME} PRIVATE external/glfw/inclue external/glew/include)
+target_include_directories(${PROJECT_NAME} PRIVATE external/glfw/include external/glew/include external/glm)
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/external/glfw/src ${CMAKE_BINARY_DIR}/external/glew/lib)
 
