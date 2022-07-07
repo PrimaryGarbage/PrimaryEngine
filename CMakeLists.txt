@@ -14,6 +14,8 @@ set(PRIMARY_SRC
 	main.cpp
 	primary_app.cpp primary_app.hpp
 	prim_exception.hpp
+	input.cpp input.hpp
+	input_util.hpp
 	logger.hpp logger.cpp
 	timer.hpp
 	)
