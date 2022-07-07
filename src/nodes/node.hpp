@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "node_base.hpp"
+#include "glm.hpp"
 
 namespace prim
 {
@@ -11,6 +12,7 @@ namespace prim
     class Node : public NodeBase
     {
     private:
+    protected:
         Node* parent = nullptr;
         std::vector<Node*> children;
 
@@ -22,10 +24,11 @@ namespace prim
 
         virtual void start();
         virtual void update(float deltaTime);
+        virtual void draw();
 
-        void addChild(Node* node);
-        void removeChild(Node* node);
-        const std::vector<Node*> getChildren() const;
+        virtual void addChild(Node* node);
+        virtual void removeChild(Node* node);
+        virtual const std::vector<Node*>& getChildren() const;
     };
 
 }

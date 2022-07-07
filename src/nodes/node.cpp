@@ -25,6 +25,11 @@ namespace prim
         for(Node* child : children) child->update(deltaTime);
     }
     
+    void Node::draw()
+    {
+        for(Node* child: children) child->draw();
+    }
+    
     void Node::addChild(Node* node)
     {
         if(node->parent) throw PRIM_EXCEPTION("Can't add node '" + node->name + "' to children. Remove this node from it's parent first.");
@@ -38,6 +43,11 @@ namespace prim
         if(foundChild == children.end()) throw PRIM_EXCEPTION("Couldn't find node '" + node->name + "' among the children.");
         (*foundChild)->parent = nullptr;
         children.erase(foundChild);
+    }
+
+    const std::vector<Node*>& Node::getChildren() const
+    {
+        return children;
     }
 
 }
