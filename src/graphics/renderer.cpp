@@ -66,7 +66,7 @@ namespace prim
 		Logger::log("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
 	}
 
-	void Renderer::drawLists() const
+	void Renderer::drawLists()
 	{
 		for (const Mesh* mesh : drawList)
 		{
@@ -78,6 +78,7 @@ namespace prim
 				if (composition.shader.getId() != currentShaderId)
 				{
 					composition.shader.bind();
+					currentShaderId = composition.shader.getId();
 				}
 
 				GL_CALL(glDrawElements(GL_TRIANGLES, composition.getCount(), GL_UNSIGNED_INT, nullptr));
@@ -85,12 +86,22 @@ namespace prim
 		}
 	}
 
-	void Renderer::drawMesh(const Mesh& mesh)
+	void Renderer::drawMesh(const Mesh& mesh) const
 	{
 		mesh.va.bind();
+		const glm::mat4 mvp = projectMat * viewMat * modelMat;
 		for (const MeshComposition& composition : mesh.compositions)
 		{
-			composition.bind();
+			composition.ib.bind();
+			composition.texture.bind();
+			if (composition.shader.getId() != currentShaderId)
+			{
+				composition.shader.bind();
+				currentShaderId = composition.shader.getId();
+			}
+
+			composition.shader.setUniformMat4f("u_mvp", mvp);
+
 			GL_CALL(glDrawElements(GL_TRIANGLES, composition.getCount(), GL_UNSIGNED_INT, nullptr));
 		}
 	}

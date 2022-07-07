@@ -15,10 +15,15 @@ namespace prim
         Shader shader;
         Texture texture;
 
+        MeshComposition(IndexBuffer&& ib, Shader&& shader)
+            : ib(std::move(ib)), shader(std::move(shader)), texture() {}
+
         MeshComposition(IndexBuffer&& ib, Shader&& shader, Texture&& texture)
             : ib(std::move(ib)), shader(std::move(shader)), texture(std::move(texture)) {}
+
         MeshComposition(MeshComposition&& other)
             : ib(std::move(other.ib)), shader(std::move(other.shader)), texture(std::move(other.texture)) {}
+
         MeshComposition& operator=(MeshComposition&& other)
         {
             this->~MeshComposition();

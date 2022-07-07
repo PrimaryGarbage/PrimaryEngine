@@ -1,6 +1,7 @@
 #include "node.hpp"
 #include "prim_exception.hpp"
 #include <algorithm>
+#include "renderer.hpp"
 
 namespace prim
 {
@@ -25,9 +26,9 @@ namespace prim
         for(Node* child : children) child->update(deltaTime);
     }
     
-    void Node::draw()
+    void Node::draw(Renderer& renderer)
     {
-        for(Node* child: children) child->draw();
+        for(Node* child: children) child->draw(renderer);
     }
     
     void Node::addChild(Node* node)

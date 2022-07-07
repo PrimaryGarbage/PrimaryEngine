@@ -25,7 +25,10 @@ private:
 
 	GLFWwindow* window = nullptr;
 	std::vector<Mesh*> drawList;
-	int currentShaderId = 0;
+	mutable unsigned int currentShaderId = 0;
+	glm::mat4 projectMat;
+	glm::mat4 viewMat;
+	glm::mat4 modelMat;
 
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	static void error_callback(int error, const char* description);
@@ -35,14 +38,18 @@ public:
 	~Renderer();
 
 	void init(unsigned int windowWidth, unsigned int windowHeight, const char* windowName);
-	void drawLists() const;
-	void drawMesh(const Mesh& mesh);
+	void drawLists();
+	void drawMesh(const Mesh& mesh) const;
 	void addMesh(Mesh* mesh);
 	void clear();
 	bool windowShouldClose();
 	void swapBuffers();
 	void pollEvents();
 	const std::vector<Mesh*>&  getDrawList() const;
+	inline GLFWwindow* getWindow() const { return window; }
+	inline void setProjectMat(glm::mat4 proj) { projectMat = proj; }
+	inline void setViewMat(glm::mat4 view) { viewMat = view; }
+	inline void setModelMat(glm::mat4 model) { modelMat = model; }
 };
 
 }

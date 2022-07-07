@@ -1,4 +1,5 @@
 #include "node2d.hpp"
+#include "renderer.hpp"
 
 namespace prim
 {
@@ -12,14 +13,17 @@ namespace prim
     
     void Node2D::start()
     {
+        Node::start();
     }
     
     void Node2D::update(float deltaTime)
     {
+        Node::update(deltaTime);
     }
     
-    void Node2D::draw()
+    void Node2D::draw(Renderer& renderer)
     {
+        Node::draw(renderer);
     }
 
     void Node2D::move(glm::vec2 v)
@@ -34,7 +38,7 @@ namespace prim
 
     void Node2D::scale(float s)
     {
-        transform.scale *= glm::vec4(s);
+        transform.scale *= glm::vec2(s);
     }
 
     void Node2D::scale(glm::vec2 s)

@@ -70,21 +70,25 @@ namespace prim
     
     void Shader::setUniformMat4f(const std::string name, const glm::mat4 matrix) const
     {
+        bind();
         GL_CALL(glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
     }
 
     void Shader::setUniform4f(const std::string name, float v0, float v1, float v2, float v3) const
     {
+        bind();
         GL_CALL(glUniform4f(getUniformLocation(name), v0, v1, v2, v3));
     }
     
     void Shader::setUniform1f(const std::string name, float value) const
     {
+        bind();
         GL_CALL(glUniform1f(getUniformLocation(name), value));
     }
     
     void Shader::setUniform1i(const std::string name, int value) const
     {
+        bind();
         GL_CALL(glUniform1i(getUniformLocation(name), value));
     }
 

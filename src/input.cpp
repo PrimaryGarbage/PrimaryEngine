@@ -135,7 +135,7 @@ void Input::createDefaultActionsAndAxes()
 {
 	addAction("Interact", { Key::f, GamepadButton::x });
 	addAction("Jump", { Key::space, GamepadButton::a });
-	addAxis("Horizontal", { GamepadAxis::LeftX, std::pair(Key::a, Key::d), std::pair(Key::left, Key::rigth) });
+	addAxis("Horizontal", { GamepadAxis::LeftX, std::pair(Key::d, Key::a), std::pair(Key::right, Key::left) });
 	addAxis("Vertical", { GamepadAxis::LeftY, std::pair(Key::w, Key::s), std::pair(Key::up, Key::down) });
 }
 

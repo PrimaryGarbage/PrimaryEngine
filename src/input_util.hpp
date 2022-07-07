@@ -16,7 +16,7 @@ enum class Key {
 	l = GLFW_KEY_L, semicolon = GLFW_KEY_SEMICOLON, apostophe = GLFW_KEY_APOSTROPHE, enter = GLFW_KEY_ENTER, leftShift = GLFW_KEY_LEFT_SHIFT, z = GLFW_KEY_Z, 
 	x = GLFW_KEY_X, c = GLFW_KEY_C, v = GLFW_KEY_V, b = GLFW_KEY_B, n = GLFW_KEY_N, m = GLFW_KEY_M, comma = GLFW_KEY_COMMA, period = GLFW_KEY_PERIOD, 
 	rightShift = GLFW_KEY_RIGHT_SHIFT, leftCtrl = GLFW_KEY_LEFT_CONTROL, leftAlt = GLFW_KEY_LEFT_ALT, space = GLFW_KEY_SPACE, rightAlt = GLFW_KEY_RIGHT_ALT,
-	rightCtrl = GLFW_KEY_RIGHT_CONTROL, left = GLFW_KEY_LEFT, rigth = GLFW_KEY_RIGHT, up = GLFW_KEY_UP, down = GLFW_KEY_DOWN, numlock = GLFW_KEY_NUM_LOCK,
+	rightCtrl = GLFW_KEY_RIGHT_CONTROL, left = GLFW_KEY_LEFT, right = GLFW_KEY_RIGHT, up = GLFW_KEY_UP, down = GLFW_KEY_DOWN, numlock = GLFW_KEY_NUM_LOCK,
 	numpad_1 = GLFW_KEY_KP_1, numpad_2 = GLFW_KEY_KP_2, numpad_3 = GLFW_KEY_KP_3, numpad_4 = GLFW_KEY_KP_4, numpad_5 = GLFW_KEY_KP_5, numpad_6 = GLFW_KEY_KP_6, 
 	numpad_7 = GLFW_KEY_KP_7, numpad_8 = GLFW_KEY_KP_8, numpad_9 = GLFW_KEY_KP_9, numpad_0 = GLFW_KEY_KP_0, numpadDivide = GLFW_KEY_KP_DIVIDE, 
 	numpadMultiply = GLFW_KEY_KP_MULTIPLY, numpadMinus = GLFW_KEY_KP_SUBTRACT, numpadPlus = GLFW_KEY_KP_ADD, numpadEnter = GLFW_KEY_KP_ENTER,

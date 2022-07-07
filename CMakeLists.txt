@@ -25,6 +25,7 @@ set(NODES_SRC
 	node_base.hpp node_base.cpp
 	node.hpp node.cpp
 	node2d.hpp node2d.cpp
+	sprite.hpp sprite.cpp
 )
 
 set(GRAPHICS_SRC
@@ -38,13 +39,14 @@ set(GRAPHICS_SRC
 	texture.hpp texture.cpp
 	mesh.hpp mesh.cpp
 	mesh_composition.hpp
+	primitives.hpp primitives.cpp
 )
 
 list(TRANSFORM NODES_SRC PREPEND "nodes/")
 list(TRANSFORM GRAPHICS_SRC PREPEND "graphics/")
 
-list(APPEND PRIMARY_SRC NODES_SRC)
-list(APPEND PRIMARY_SRC GRAPHICS_SRC)
+list(APPEND PRIMARY_SRC ${NODES_SRC})
+list(APPEND PRIMARY_SRC ${GRAPHICS_SRC})
 
 list(TRANSFORM PRIMARY_SRC PREPEND "src/")
 
@@ -60,7 +62,7 @@ set(CMAKE_LINK_SEARCH_START_STATIC ON)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
 
-target_include_directories(${PROJECT_NAME} PRIVATE external/glfw/include external/glew/include external/glm)
+target_include_directories(${PROJECT_NAME} PRIVATE external/glfw/include external/glew/include external/glm src/graphics src/nodes src)
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/external/glfw/src ${CMAKE_BINARY_DIR}/external/glew/lib)
 

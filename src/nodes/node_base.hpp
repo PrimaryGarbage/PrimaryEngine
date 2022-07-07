@@ -15,7 +15,7 @@ namespace prim
         const unsigned int id;
         
         static unsigned int getUniqueId();
-        static unsigned int freeUniqueId(unsigned int id);
+        void freeUniqueId(unsigned int id);
 
     public:
         NodeBase();

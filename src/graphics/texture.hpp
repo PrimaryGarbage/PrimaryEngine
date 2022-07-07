@@ -15,13 +15,16 @@ private:
     int height;
     int bitsPerPixel;
 public:
+    Texture() = default;
     Texture(const std::string path);
     Texture(Texture&& other);
     Texture& operator=(Texture&& other);
     ~Texture();
 
+    void load(std::string filePath);
     void bind(unsigned int slot = 0) const;
     void unbind() const;
+    void destroy();
 
     inline int getWidth() const { return width; }
     inline int getHeight() const { return height; }

@@ -8,6 +8,7 @@
 
 namespace prim
 {
+    class Renderer;
 
     class Node : public NodeBase
     {
@@ -24,7 +25,7 @@ namespace prim
 
         virtual void start();
         virtual void update(float deltaTime);
-        virtual void draw();
+        virtual void draw(Renderer& renderer);
 
         virtual void addChild(Node* node);
         virtual void removeChild(Node* node);
