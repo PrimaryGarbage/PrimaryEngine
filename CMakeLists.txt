@@ -15,6 +15,16 @@ set(PRIMARY_SRC
 	primary_app.cpp primary_app.hpp
 	prim_exception.hpp
 	logger.hpp logger.cpp
+	timer.hpp
+	)
+
+set(NODES_SRC
+	transform3d.hpp transform2d.hpp
+	node_base.hpp node_base.cpp
+	node.hpp node.cpp
+)
+
+set(GRAPHICS_SRC
 	renderer.hpp renderer.cpp
 	vertex_buffer.hpp vertex_buffer.cpp
 	index_buffer.hpp index_buffer.cpp
@@ -25,8 +35,13 @@ set(PRIMARY_SRC
 	texture.hpp texture.cpp
 	mesh.hpp mesh.cpp
 	mesh_composition.hpp
-	timer.hpp
-	)
+)
+
+list(TRANSFORM NODES_SRC PREPEND "nodes/")
+list(TRANSFORM GRAPHICS_SRC PREPEND "graphics/")
+
+list(APPEND PRIMARY_SRC NODES_SRC)
+list(APPEND PRIMARY_SRC GRAPHICS_SRC)
 
 list(TRANSFORM PRIMARY_SRC PREPEND "src/")
 
