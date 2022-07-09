@@ -126,8 +126,8 @@ void Input::joystick_callback(int jid, int event)
     {
 		auto gamepad = std::find_if(gamepads.begin(), gamepads.end(), [jid](const Gamepad& gp) -> bool { return gp.id == jid; });
 		if(gamepad == gamepads.end()) return;		// gamepad is already unregistered
-		gamepads.erase(gamepad);
 		Logger::log("Gamepad unregistered. id: [" + std::to_string(jid) + "]; name: [" + gamepads.back().name + "]", true);
+		gamepads.erase(gamepad);
     }
 }
 

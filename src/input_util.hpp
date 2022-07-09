@@ -65,7 +65,7 @@ struct Gamepad
 	int id;
 	std::string name;
 	PressInfo buttons[buttonCount];
-	float axes[axisCount];
+	float axes[axisCount] {};
 
 	Gamepad(int id): id(id), name(glfwGetGamepadName(id)) {}
 }; 

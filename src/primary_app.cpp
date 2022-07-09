@@ -60,6 +60,8 @@ void PrimaryApp::mainLoop()
 		deltaTime = timer.peekSinceLastPeek() * 0.001f;
 		timeSinceStart = timer.peek() * 0.001f;
 
+		Input::update();
+
 		for(const Mesh* mesh : renderer.getDrawList())
 			for(const MeshComposition& composition : mesh->compositions)
 				composition.shader.setUniform1f("u_time", timeSinceStart);
