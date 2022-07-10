@@ -287,7 +287,10 @@ float Input::getAxis(const GamepadAxis axis, const int gamepadId)
 {
 	auto gamepad = std::find_if(gamepads.begin(), gamepads.end(), [gamepadId](const Gamepad& g) { return g.id == gamepadId; });
 	if(gamepad == gamepads.end()) return 0.0f;
-	return gamepad->axes[static_cast<int>(axis)];
+	if(axis == GamepadAxis::LeftY || axis == GamepadAxis::RightY)
+		return - gamepad->axes[static_cast<int>(axis)];
+	else
+		return gamepad->axes[static_cast<int>(axis)];
 }
 
 float Input::getAxis(const std::pair<Key, Key> keys)
