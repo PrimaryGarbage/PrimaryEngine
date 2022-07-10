@@ -14,8 +14,7 @@ set(PRIMARY_SRC
 	main.cpp
 	primary_app.cpp primary_app.hpp
 	prim_exception.hpp
-	input.cpp input.hpp
-	input_util.hpp
+	input.cpp input.hpp input_utils.hpp
 	logger.hpp logger.cpp
 	timer.hpp
 	)
@@ -40,6 +39,7 @@ set(GRAPHICS_SRC
 	mesh.hpp mesh.cpp
 	mesh_composition.hpp
 	primitives.hpp primitives.cpp
+	image.hpp image.cpp image_utils.hpp
 )
 
 list(TRANSFORM NODES_SRC PREPEND "nodes/")

@@ -52,7 +52,7 @@ void PrimaryApp::mainLoop()
 	Sprite sprite1("testSprite", "res/textures/TestTexture.png");
 	Sprite sprite2("testSprite", "res/textures/TestTexture.png");
 	sprite1.addChild(&sprite2);
-	sprite2.move(glm::vec2(200.0f, 0.0f));
+	sprite2.move(glm::vec2(200.0f, 40.0f));
 	float speed = 10.0f;
 
 	while(!renderer.windowShouldClose())

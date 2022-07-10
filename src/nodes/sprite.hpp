@@ -7,6 +7,8 @@
 namespace prim
 {
 
+    enum class ImageType;
+
     class Sprite : public Node2D
     {
     private:

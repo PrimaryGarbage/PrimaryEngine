@@ -3,7 +3,7 @@
 
 #include "GLFW/glfw3.h"
 #include "prim_exception.hpp"
-#include "input_util.hpp"
+#include "input_utils.hpp"
 #include <vector>
 
 class Input final

@@ -13,17 +13,17 @@ namespace prim
     
     void Node2D::start()
     {
-        Node::start();
+        START_CHILDREN
     }
-    
+   
     void Node2D::update(float deltaTime)
     {
-        Node::update(deltaTime);
+        UPDATE_CHILDREN
     }
     
     void Node2D::draw(Renderer& renderer)
     {
-        Node::draw(renderer);
+        DRAW_CHILDREN
     }
 
     void Node2D::move(glm::vec2 v)

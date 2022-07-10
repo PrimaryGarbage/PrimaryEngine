@@ -2,6 +2,7 @@
 #include "primitives.hpp"
 #include "renderer.hpp"
 #include "gtc/matrix_transform.hpp"
+#include "image.hpp"
 
 namespace prim
 {
@@ -9,8 +10,9 @@ namespace prim
     {
     }
     
-    Sprite::Sprite(std::string name, std::string imagePath) : Node2D(name), planeMesh(Primitives::createSquareMesh(imagePath))
+    Sprite::Sprite(std::string name, std::string imagePath) : Node2D(name), planeMesh(Primitives::createSquareMesh())
     {
+        planeMesh.compositions[0].texture.load(imagePath);
     }
     
     Sprite::~Sprite()
@@ -19,17 +21,17 @@ namespace prim
     
     void Sprite::start()
     {
-        Node2D::start();
+        START_CHILDREN
     }
     
     void Sprite::update(float deltaTime)
     {
-        Node2D::update(deltaTime);
+        UPDATE_CHILDREN
     }
     
     void Sprite::draw(Renderer& renderer)
     {
-        Node2D::draw(renderer);
+        DRAW_CHILDREN
 
         glm::vec2 globalPos = getGlobalPosition();
         glm::vec2 globalScale = getGlobalScale();

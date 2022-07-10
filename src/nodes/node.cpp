@@ -18,17 +18,17 @@ namespace prim
 
     void Node::start()
     {
-        for(Node* child : children) child->start();
+        START_CHILDREN
     }
     
     void Node::update(float deltaTime)
     {
-        for(Node* child : children) child->update(deltaTime);
+        UPDATE_CHILDREN
     }
     
     void Node::draw(Renderer& renderer)
     {
-        for(Node* child: children) child->draw(renderer);
+        DRAW_CHILDREN
     }
     
     void Node::addChild(Node* node)
