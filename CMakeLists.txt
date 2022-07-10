@@ -17,6 +17,7 @@ set(PRIMARY_SRC
 	input.cpp input.hpp input_utils.hpp
 	logger.hpp logger.cpp
 	timer.hpp
+	utils.hpp
 	)
 
 set(NODES_SRC
@@ -25,6 +26,8 @@ set(NODES_SRC
 	node.hpp node.cpp
 	node2d.hpp node2d.cpp
 	sprite.hpp sprite.cpp
+	camera_base.hpp camera_base.cpp
+	camera2d.hpp camera2d.cpp
 )
 
 set(GRAPHICS_SRC

@@ -7,9 +7,8 @@
 #include <filesystem>
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
-#include "node2d.hpp"
-#include "primitives.hpp"
 #include "sprite.hpp"
+#include "camera2d.hpp"
 
 namespace prim
 {
@@ -35,10 +34,8 @@ void PrimaryApp::run()
 	//// TEMP ////
 
 	glm::mat4 proj = glm::ortho(0.0f, static_cast<float>(windowWidth), 0.0f, static_cast<float>(windowHeight), -1.0f, 1.0f);
-	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(100, 0, 0));
 
 	renderer.setProjectMat(std::move(proj));
-	renderer.setViewMat(std::move(view));
 
 	//////////////////
 
@@ -49,36 +46,46 @@ void PrimaryApp::run()
 
 void PrimaryApp::mainLoop()
 {
+	Camera2D camera("Player camera", &renderer);
+
 	Sprite sprite1("testSprite", "res/textures/TestTexture.png");
 	Sprite sprite2("testSprite", "res/textures/TestTexture.png");
 	sprite1.addChild(&sprite2);
+	sprite2.addChild(&camera);
 	sprite2.move(glm::vec2(200.0f, 40.0f));
 	float speed = 10.0f;
+
 
 	while(!renderer.windowShouldClose())
 	{
 		deltaTime = timer.peekSinceLastPeek() * 0.001f;
 		timeSinceStart = timer.peek() * 0.001f;
 
+		renderer.clear();
+
+		///// Update /////
+
 		Input::update();
+
+		sprite2.move(glm::vec2(Input::getAxis("Horizontal") * speed, Input::getAxis("Vertical") * speed));
+
+		if(Input::isPressed(Key::comma)) sprite2.scale(0.99f);
+		if(Input::isPressed(Key::period)) sprite2.scale(1.01f);
+
+		sprite2.rotate(0.01f);
+
+		/////////////////
 
 		for(const Mesh* mesh : renderer.getDrawList())
 			for(const MeshComposition& composition : mesh->compositions)
 				composition.shader.setUniform1f("u_time", timeSinceStart);
 
-
-		renderer.clear();
-
 		///// Draw /////
-
-		sprite1.move(glm::vec2(Input::getAxis("Horizontal") * speed, Input::getAxis("Vertical") * speed));
 
 		sprite1.draw(renderer);
 		sprite2.draw(renderer);
 
 		renderer.drawLists();
-
-		//renderer.drawModel(*renderer.model);
 		
 		////////////////
 

@@ -46,22 +46,22 @@ namespace prim
         transform.scale *= s;
     }
 
-    glm::vec2 Node2D::getPosition()
+    glm::vec2 Node2D::getPosition() const
     {
         return transform.position;
     }
 
-    float Node2D::getRotation()
+    float Node2D::getRotation() const
     {
         return transform.rotation;
     }
 
-    glm::vec2 Node2D::getScale()
+    glm::vec2 Node2D::getScale() const
     {
         return transform.scale;
     }
 
-    glm::vec2 Node2D::getGlobalPosition()
+    glm::vec2 Node2D::getGlobalPosition() const
     {
         if (!parent) return transform.position;
         Node2D* parent2d = dynamic_cast<Node2D*>(parent);
@@ -75,7 +75,7 @@ namespace prim
         }
     }
 
-    float Node2D::getGlobalRotation()
+    float Node2D::getGlobalRotation() const
     {
         if (!parent) return transform.rotation;
         Node2D* parent2d = dynamic_cast<Node2D*>(parent);
@@ -89,7 +89,7 @@ namespace prim
         }
     }
 
-    glm::vec2 Node2D::getGlobalScale()
+    glm::vec2 Node2D::getGlobalScale() const
     {
         if (!parent) return transform.scale;
         Node2D* parent2d = dynamic_cast<Node2D*>(parent);

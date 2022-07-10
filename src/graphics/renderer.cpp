@@ -45,6 +45,11 @@ namespace prim
 			throw std::runtime_error("Failed to create glfw window!");
 		}
 
+		this->windowWidth = windowWidth;
+		this->windowHeight = windowHeight;
+		
+		windowRendererMap[window] = this;
+
 		glfwMakeContextCurrent(window);
 		glewExperimental = true;
 		glViewport(0, 0, windowWidth, windowHeight);
@@ -68,6 +73,8 @@ namespace prim
 
 	void Renderer::drawLists()
 	{
+		updateMatrices();
+
 		for (const Mesh* mesh : drawList)
 		{
 			mesh->va.bind();
@@ -86,8 +93,21 @@ namespace prim
 		}
 	}
 
-	void Renderer::drawMesh(const Mesh& mesh) const
+	void Renderer::updateMatrices()
 	{
+		if(currentCamera && !matricesUpdated)
+		{
+			setViewMat(currentCamera->calculateViewMatrix());
+			setProjectMat(currentCamera->calculateProjectMatrix());
+		}
+
+		matricesUpdated = true;
+	}
+
+	void Renderer::drawMesh(const Mesh& mesh)
+	{
+		updateMatrices();
+
 		mesh.va.bind();
 		const glm::mat4 mvp = projectMat * viewMat * modelMat;
 		for (const MeshComposition& composition : mesh.compositions)
@@ -113,11 +133,15 @@ namespace prim
 
 	void Renderer::clear()
 	{
+		matricesUpdated = false;
 		GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
 	}
 
 	void Renderer::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	{
+		Renderer* renderer = windowRendererMap[window];
+		renderer->windowWidth = width;
+		renderer->windowHeight = height;
 		glViewport(0, 0, width, height);
 	}
 

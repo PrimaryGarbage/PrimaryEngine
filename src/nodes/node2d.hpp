@@ -25,13 +25,13 @@ namespace prim
         void scale(float s);
         void scale(glm::vec2 s);
 
-        glm::vec2 getPosition();
-        float getRotation();
-        glm::vec2 getScale();
+        glm::vec2 getPosition() const;
+        float getRotation() const;
+        glm::vec2 getScale() const;
 
-        glm::vec2 getGlobalPosition();
-        float getGlobalRotation();
-        glm::vec2 getGlobalScale();
+        glm::vec2 getGlobalPosition() const;
+        float getGlobalRotation() const;
+        glm::vec2 getGlobalScale() const;
 
         void setPosition(glm::vec2 v);
         void setRotation(float angle);

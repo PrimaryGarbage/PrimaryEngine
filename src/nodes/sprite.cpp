@@ -35,7 +35,8 @@ namespace prim
 
         glm::vec2 globalPos = getGlobalPosition();
         glm::vec2 globalScale = getGlobalScale();
-        glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(globalPos.x, globalPos.y, 0.0f));
+        glm::mat4 modelMat(1.0f);
+        modelMat = glm::translate(modelMat, glm::vec3(globalPos.x, globalPos.y, 0.0f));
         modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
         modelMat = glm::scale(modelMat, glm::vec3(globalScale.x, globalScale.y, 1.0f));
 
