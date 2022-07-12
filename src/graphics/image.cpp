@@ -23,9 +23,9 @@ namespace prim
     ImageType Image::parseType(std::string path)
     {
         const static std::unordered_map<std::string, int> extensionMap = {
-            { ".jpeg", 0 },
-            { ".jpg", 1 },
-            { ".png", 2 },
+            { ".jpeg", static_cast<int>(ImageType::jpeg) },
+            { ".jpg", static_cast<int>(ImageType::jpeg) },
+            { ".png", static_cast<int>(ImageType::png) },
         };
 
         assert(std::filesystem::exists(std::filesystem::path(path)));
@@ -33,10 +33,9 @@ namespace prim
         std::string extension = filePath.extension().string(); 
         switch(extensionMap.at(extension))
         {
-            case 0:
-            case 1:
+            case static_cast<int>(ImageType::jpeg):
                 return ImageType::jpeg;
-            case 2:
+            case static_cast<int>(ImageType::png):
                 return ImageType::png;
             default:
                 return ImageType::unknown;
@@ -101,7 +100,8 @@ namespace prim
         unload();
         assert(std::filesystem::exists(filePath));
         stbi_set_flip_vertically_on_load(1);
-        data = stbi_load(filePath.c_str(), &width, &height, &channelCount, getChannelCountOfType(parseType(filePath)));
+        type = parseType(filePath);
+        data = stbi_load(filePath.c_str(), &width, &height, &channelCount, getChannelCountOfType(type));
         size = width * height * channelCount; 
         if(!data) throw PRIM_EXCEPTION("Couldn't load image with path '" + filePath + "'. Probably a file extension problem.");
     }

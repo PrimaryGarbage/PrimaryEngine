@@ -17,7 +17,7 @@ private:
     int height;
     int channelCount;
 
-    void loadIntoGpu(unsigned char* data, int widht, int height);
+    void loadIntoGpu(unsigned char* data, int widht, int height, ImageType type);
 
 public:
     Texture() = default;

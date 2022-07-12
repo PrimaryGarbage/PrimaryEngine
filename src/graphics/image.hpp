@@ -16,6 +16,7 @@ namespace prim
         int height;
         int channelCount;
         unsigned int size;
+        ImageType type;
 
         static int getChannelCountOfType(ImageType type);
         static ImageType parseType(std::string path);
@@ -38,6 +39,7 @@ namespace prim
         inline int getChannelCount() const { return channelCount; }
         inline unsigned int getSize() const { return size; }
         inline std::string getFilePath() const { return filePath; }
+        inline ImageType getType() const { return type; }
     };
 
 }

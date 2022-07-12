@@ -5,7 +5,7 @@ namespace prim
 {
     Mesh Primitives::createCubeMesh(float size)
     {
-        float positions[] = {
+        const static float vertices[] = {
         0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
         size, 0.0f, 0.0f, 1.0f, 0.0f,
         size, size, 0.0f, 1.0f, 1.0f,
@@ -16,7 +16,7 @@ namespace prim
         0.0f, size, size, 0.0f, 1.0f
         };
 
-        unsigned int indices[] = {
+        const static unsigned int indices[] = {
             0, 1, 2,
             0, 2, 3,
             4, 0, 3,
@@ -35,7 +35,7 @@ namespace prim
         layout.push<float>(3);
         layout.push<float>(2);
 
-        VertexBuffer vb(positions, 40 * sizeof(float), layout);
+        VertexBuffer vb(vertices, 40 * sizeof(float), layout);
 
         Shader shader("res/shaders/default.shader");
         shader.bind();
@@ -51,16 +51,16 @@ namespace prim
         return mesh;
     }
 
-    Mesh Primitives::createSquareMesh(float size)
+    Mesh Primitives::createRectangleMesh(float width, float height)
     {
-        float positions[] = {
+        const static float vertices[] = {
         0.0f, 0.0f, 0.0f, 0.0f,
-        size, 0.0f, 1.0f, 0.0f,
-        size, size, 1.0f, 1.0f,
-        0.0f, size, 0.0f, 1.0f
+        width, 0.0f, 1.0f, 0.0f,
+        width, height, 1.0f, 1.0f,
+        0.0f, height, 0.0f, 1.0f
         };
 
-        unsigned int indices[] = {
+        const static unsigned int indices[] = {
             0, 1, 2,
             0, 2, 3
         };
@@ -69,7 +69,40 @@ namespace prim
         layout.push<float>(2);
         layout.push<float>(2);
 
-        VertexBuffer vb(positions, 16 * sizeof(float), layout);
+        VertexBuffer vb(vertices, 16 * sizeof(float), layout);
+
+        Shader shader("res/shaders/default.shader");
+
+        shader.setUniform1i("u_texture", 0);
+
+        IndexBuffer ib(indices, 6);
+
+        Mesh mesh(std::move(vb));
+        MeshComposition meshComposition(std::move(ib), std::move(shader));
+        mesh.addComposition(std::move(meshComposition));
+
+        return mesh;
+    }
+
+    Mesh Primitives::createSquareMesh(float size)
+    {
+        const static float vertices[] = {
+        0.0f, 0.0f, 0.0f, 0.0f,
+        size, 0.0f, 1.0f, 0.0f,
+        size, size, 1.0f, 1.0f,
+        0.0f, size, 0.0f, 1.0f
+        };
+
+        const static unsigned int indices[] = {
+            0, 1, 2,
+            0, 2, 3
+        };
+
+        VertexBufferLayout layout;
+        layout.push<float>(2);
+        layout.push<float>(2);
+
+        VertexBuffer vb(vertices, 16 * sizeof(float), layout);
 
         Shader shader("res/shaders/default.shader");
 

@@ -34,6 +34,27 @@ namespace prim
         virtual void addChild(Node* node);
         virtual void removeChild(Node* node);
         virtual const std::vector<Node*>& getChildren() const;
+
+        template<class T>
+        T* findChild(std::string name)
+        {
+            T* childT = nullptr;
+            for(Node* child : children)
+            {
+                childT = dynamic_cast<T*>(child);
+                if(childT)
+                {
+                    if(childT->name == name)
+                        return childT;
+                    else
+                        childT = nullptr;
+                }
+
+                return child->findChild<T>(std::move(name));
+            }
+
+            return childT;
+        }
     };
 
 }

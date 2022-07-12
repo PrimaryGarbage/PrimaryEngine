@@ -25,7 +25,7 @@ namespace prim
     {
         glm::mat4 viewMatrix(1.0f);
         viewMatrix = glm::rotate(viewMatrix, -getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
-        viewMatrix = glm::translate(viewMatrix,Utils::toVec3(-getGlobalPosition()));
+        viewMatrix = glm::translate(viewMatrix,Utils::toVec3(-getGlobalPosition() + getPivot()));
         return std::move(viewMatrix);
     }
 

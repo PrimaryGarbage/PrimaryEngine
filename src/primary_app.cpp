@@ -44,18 +44,40 @@ void PrimaryApp::run()
 	mainLoop();
 }
 
+void PrimaryApp::setCurrentScene(Node* scene)
+{
+	currentScene = scene;
+	currentScene->start();
+}
+
+Node* PrimaryApp::getCurrentScene() const
+{
+	return currentScene;
+}
+
 void PrimaryApp::mainLoop()
 {
+	Node scene("TestScene");
+
 	Camera2D camera("Player camera", &renderer);
 
 	Sprite sprite1("testSprite", "res/textures/TestTexture.png");
 	Sprite sprite2("testSprite", "res/textures/TestTexture.png");
-	//sprite1.addChild(&sprite2);
-	//sprite2.addChild(&camera);
+	Sprite background("background", "res/textures/florence.jpg");
+	background.setSize(windowWidth, windowHeight);
+	camera.move(glm::vec2(windowWidth, windowHeight) * 0.5f);
+	sprite1.setCenterPivot();
+	sprite1.move(glm::vec2(200.0f, 100.0f));
 	sprite2.setCenterPivot();
-	sprite2.move(glm::vec2(200.0f, 0.0f));
+	sprite2.move(glm::vec2(400.0f, 300.0f));
 	float speed = 10.0f;
 
+	scene.addChild(&background);
+	scene.addChild(&sprite1);
+	scene.addChild(&sprite2);
+	scene.addChild(&camera);
+
+	setCurrentScene(&scene);
 
 	while(!renderer.windowShouldClose())
 	{
@@ -68,31 +90,18 @@ void PrimaryApp::mainLoop()
 
 		Input::update();
 
-		sprite2.move(Input::getAxis("Vertical") * speed * sprite2.forward());
-		//sprite2.rotate(-Input::getAxis("Horizontal") * 0.01f);
+		if(currentScene)
+			currentScene->update(deltaTime);
 
+		sprite1.rotate(0.01f);
 
-		//camera.move(glm::vec2(Input::getAxis("Horizontal") * speed, Input::getAxis("Vertical") * speed));
-
-		if(Input::isPressed(Key::comma)) sprite2.scale(0.99f);
-		if(Input::isPressed(Key::period)) sprite2.scale(1.01f);
-		if(Input::isPressed(Key::e)) sprite2.rotate(0.01f);
-		if(Input::isPressed(Key::q)) sprite2.rotate(-0.01f);
-
-		sprite2.rotate(0.01f);
+		camera.move(glm::vec2(Input::getAxis("Horizontal"), Input::getAxis("Vertical")) * speed);
 
 		/////////////////
 
-		for(const Mesh* mesh : renderer.getDrawList())
-			for(const MeshComposition& composition : mesh->compositions)
-				composition.shader.setUniform1f("u_time", timeSinceStart);
-
 		///// Draw /////
 
-		sprite1.draw(renderer);
-		sprite2.draw(renderer);
-
-		renderer.drawLists();
+		currentScene->draw(renderer);
 		
 		////////////////
 

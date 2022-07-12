@@ -15,6 +15,7 @@ private:
 	float timeSinceStart;
 	Timer timer;
 	Renderer renderer;
+	Node* currentScene = nullptr;
 
 	void mainLoop();
 public:
@@ -26,6 +27,9 @@ public:
 
 	void init();
 	void run();
+
+	void setCurrentScene(Node* scene);
+	Node* getCurrentScene() const;
 };
 
 }

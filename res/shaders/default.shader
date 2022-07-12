@@ -30,6 +30,5 @@ uniform float u_time;
 void main()
 {
 	vec4 texColor = texture(u_texture, uv);
-	texColor.x = sin(u_time);
 	color = texColor;
 }
