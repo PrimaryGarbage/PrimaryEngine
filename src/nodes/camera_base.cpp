@@ -16,7 +16,7 @@ namespace prim
     void CameraBase::setAsCurrent()
     {
         CameraBase* currentCamera = renderer->getCurrentCamera();
-        if(currentCamera) renderer->getCurrentCamera()->current = false;
+        if(currentCamera) currentCamera->current = false;
         renderer->setCurrentCamera(this);
         current = true;
     }

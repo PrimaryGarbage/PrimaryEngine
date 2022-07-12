@@ -67,12 +67,18 @@ void PrimaryApp::mainLoop()
 
 		Input::update();
 
-		sprite2.move(glm::vec2(Input::getAxis("Horizontal") * speed, Input::getAxis("Vertical") * speed));
+		sprite2.move(Input::getAxis("Vertical") * speed * sprite2.left());
+		sprite2.rotate(-Input::getAxis("Horizontal") * 0.01f);
+
+
+		//sprite2.move(glm::vec2(Input::getAxis("Horizontal") * speed, Input::getAxis("Vertical") * speed));
 
 		if(Input::isPressed(Key::comma)) sprite2.scale(0.99f);
 		if(Input::isPressed(Key::period)) sprite2.scale(1.01f);
+		if(Input::isPressed(Key::e)) sprite2.rotate(0.01f);
+		if(Input::isPressed(Key::q)) sprite2.rotate(-0.01f);
 
-		sprite2.rotate(0.01f);
+		//sprite2.rotate(0.01f);
 
 		/////////////////
 

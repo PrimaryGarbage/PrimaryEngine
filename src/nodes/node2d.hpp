@@ -33,6 +33,11 @@ namespace prim
         float getGlobalRotation() const;
         glm::vec2 getGlobalScale() const;
 
+        glm::vec2 forward() const;
+        glm::vec2 backward() const;
+        glm::vec2 left() const;
+        glm::vec2 right() const;
+
         void setPosition(glm::vec2 v);
         void setRotation(float angle);
         void setScale(float s);
@@ -42,6 +47,7 @@ namespace prim
         void setGlobalRotation(float angle);
         void setGlobalScale(float s);
         void setGlobalScale(glm::vec2 s);
+
     };
 
 }

@@ -1,5 +1,6 @@
 #include "renderer.hpp"
 #include "logger.hpp"
+#include "gtc/matrix_transform.hpp"
 
 namespace prim
 {
@@ -95,10 +96,17 @@ namespace prim
 
 	void Renderer::updateMatrices()
 	{
-		if(currentCamera && !matricesUpdated)
+		if(matricesUpdated) return;
+		
+		if(currentCamera)
 		{
 			setViewMat(currentCamera->calculateViewMatrix());
 			setProjectMat(currentCamera->calculateProjectMatrix());
+		}
+		else
+		{
+			setViewMat(glm::mat4(1.0f));
+			setProjectMat(glm::ortho(0.0f, static_cast<float>(windowWidth), 0.0f, static_cast<float>(windowHeight)));
 		}
 
 		matricesUpdated = true;

@@ -62,7 +62,7 @@ public:
 	inline void setModelMat(glm::mat4 model) { modelMat = model; }
 	inline int getWindowWidth() const { return windowWidth; }
 	inline int getWindowHeight() const { return windowHeight; }
-	inline void setCurrentCamera(CameraBase* camera) { currentCamera = camera; }
+	inline void setCurrentCamera(CameraBase* camera){ currentCamera = camera; }
 	inline CameraBase* getCurrentCamera() const { return currentCamera; }
 };
 

@@ -1,5 +1,6 @@
 #include "node2d.hpp"
 #include "renderer.hpp"
+#include "gtx/rotate_vector.hpp"
 
 namespace prim
 {
@@ -101,6 +102,26 @@ namespace prim
         {
             return transform.scale;
         }
+    }
+    
+    glm::vec2 Node2D::forward() const
+    {
+        return glm::rotate(glm::vec2(0.0f, 1.0f), getGlobalRotation());
+    }
+    
+    glm::vec2 Node2D::backward() const
+    {
+        return -forward();
+    }
+    
+    glm::vec2 Node2D::left() const
+    {
+        return glm::rotate(glm::vec2(0.0f, 1.0f), getGlobalRotation() + glm::pi<float>() * 0.5f);
+    }
+    
+    glm::vec2 Node2D::right() const
+    {
+        return glm::rotate(glm::vec2(0.0f, 1.0f), getGlobalRotation() - glm::pi<float>() * 0.5f);
     }
 
     void Node2D::setPosition(glm::vec2 v)
