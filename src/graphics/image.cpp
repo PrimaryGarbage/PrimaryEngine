@@ -103,6 +103,7 @@ namespace prim
         type = parseType(filePath);
         data = stbi_load(filePath.c_str(), &width, &height, &channelCount, getChannelCountOfType(type));
         size = width * height * channelCount; 
+        this->filePath = filePath;
         if(!data) throw PRIM_EXCEPTION("Couldn't load image with path '" + filePath + "'. Probably a file extension problem.");
     }
     

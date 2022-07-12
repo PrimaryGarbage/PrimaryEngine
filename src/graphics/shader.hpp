@@ -21,6 +21,7 @@ namespace prim
         int getUniformLocation(const std::string name) const;
         unsigned int compileShader(unsigned int type, const std::string source);
 
+        void unload();
     public:
         Shader(const std::string &filePath);
         Shader(const Shader& other) = delete;

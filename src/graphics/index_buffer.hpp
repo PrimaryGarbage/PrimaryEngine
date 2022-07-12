@@ -9,6 +9,8 @@ class IndexBuffer
 private:
 	unsigned int gl_id;
 	unsigned int count;
+
+	void unload();
 public:
 	IndexBuffer(const unsigned int* data, unsigned int count);
 	IndexBuffer(IndexBuffer&& other);

@@ -15,35 +15,35 @@ namespace prim
         std::string fragmentSource;
     };
 
-    Shader::Shader(const std::string &filePath) : filePath(filePath), gl_id(0)
+    Shader::Shader(const std::string& filePath) : filePath(filePath), gl_id(0)
     {
         ShaderProgramSource source = parseShader(filePath);
         gl_id = createShaderProgram(source.vertexSource, source.fragmentSource);
     }
-    
+
     Shader::Shader(Shader&& other)
-        : filePath(other.filePath), gl_id(other.gl_id)
+        : filePath(other.filePath), gl_id(other.gl_id), uniformLocationCache(std::move(other.uniformLocationCache))
     {
         other.filePath = "";
         other.gl_id = 0;
     }
-    
+
     Shader& Shader::operator=(Shader&& other)
     {
-       this->~Shader();
+        unload();
 
-       filePath = other.filePath;
-       gl_id = other.gl_id;
+        filePath = other.filePath;
+        gl_id = other.gl_id;
+        uniformLocationCache = std::move(other.uniformLocationCache);
 
-       other.filePath = "";
-       other.gl_id = 0; 
-       return *this;
+        other.filePath = "";
+        other.gl_id = 0;
+        return *this;
     }
 
     Shader::~Shader()
     {
-        if(gl_id > 0)
-            GL_CALL(glDeleteProgram(gl_id));
+        unload();
     }
 
     void Shader::bind() const
@@ -58,16 +58,16 @@ namespace prim
 
     int Shader::getUniformLocation(const std::string name) const
     {
-        if(uniformLocationCache.find(name) != uniformLocationCache.end())
+        if (uniformLocationCache.find(name) != uniformLocationCache.end())
             return uniformLocationCache[name];
 
         GL_CALL(int location = glGetUniformLocation(gl_id, name.c_str()));
-        if(location == -1)
+        if (location == -1)
             Logger::log("Warning: uniform '" + name + "' doesn't exist!", true);
         uniformLocationCache[name] = location;
         return location;
     }
-    
+
     void Shader::setUniformMat4f(const std::string name, const glm::mat4 matrix) const
     {
         bind();
@@ -79,13 +79,13 @@ namespace prim
         bind();
         GL_CALL(glUniform4f(getUniformLocation(name), v0, v1, v2, v3));
     }
-    
+
     void Shader::setUniform1f(const std::string name, float value) const
     {
         bind();
         GL_CALL(glUniform1f(getUniformLocation(name), value));
     }
-    
+
     void Shader::setUniform1i(const std::string name, int value) const
     {
         bind();
@@ -138,13 +138,13 @@ namespace prim
             }
         }
 
-        return {ss[0].str(), ss[1].str()};
+        return { ss[0].str(), ss[1].str() };
     }
 
     unsigned int Shader::compileShader(unsigned int type, const std::string source)
     {
         unsigned int id = glCreateShader(type);
-        const char *src = source.c_str();
+        const char* src = source.c_str();
         glShaderSource(id, 1, &src, nullptr);
         glCompileShader(id);
 
@@ -154,7 +154,7 @@ namespace prim
         {
             int length;
             glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-            char *message = (char *)alloca(length * sizeof(char));
+            char* message = (char*)alloca(length * sizeof(char));
             glGetShaderInfoLog(id, length, &length, message);
             Logger::log("Failed to compile shader. Shader type: " + std::to_string(type), true);
             Logger::log(message, true);
@@ -163,5 +163,15 @@ namespace prim
         }
 
         return id;
+    }
+
+    void Shader::unload()
+    {
+        if (gl_id > 0)
+        {
+            unbind();
+            GL_CALL(glDeleteProgram(gl_id));
+            gl_id = 0;
+        }
     }
 }

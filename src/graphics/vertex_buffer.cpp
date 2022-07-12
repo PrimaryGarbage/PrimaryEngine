@@ -19,7 +19,7 @@ VertexBuffer::VertexBuffer(VertexBuffer&& other)
 
 VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other)
 {
-	this->~VertexBuffer();
+	unload();
 
 	gl_id = other.gl_id;
 	layout = other.layout;
@@ -30,8 +30,7 @@ VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other)
 
 VertexBuffer::~VertexBuffer()
 {
-	if(gl_id > 0)
-		GL_CALL(glDeleteBuffers(1, &gl_id));
+	unload();
 }
 
 void VertexBuffer::bind() const
@@ -43,6 +42,16 @@ void VertexBuffer::bind() const
 void VertexBuffer::unbind() const
 {
 	GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, 0));
+}
+
+void VertexBuffer::unload()
+{
+	if(gl_id > 0)
+	{
+		unbind();
+		GL_CALL(glDeleteBuffers(1, &gl_id));
+		gl_id = 0;
+	}
 }
 
 }

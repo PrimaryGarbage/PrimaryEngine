@@ -9,6 +9,7 @@
 #include "gtc/matrix_transform.hpp"
 #include "sprite.hpp"
 #include "camera2d.hpp"
+#include "primitives.hpp"
 
 namespace prim
 {
@@ -102,7 +103,7 @@ void PrimaryApp::mainLoop()
 		///// Draw /////
 
 		currentScene->draw(renderer);
-		
+
 		////////////////
 
 		renderer.swapBuffers();

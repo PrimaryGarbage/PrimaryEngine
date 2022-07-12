@@ -12,12 +12,14 @@ enum class ImageType;
 class Texture
 {
 private:
-    unsigned int gl_id;
+    unsigned int gl_id = 0u;
     int width;
     int height;
     int channelCount;
 
     void loadIntoGpu(unsigned char* data, int widht, int height, ImageType type);
+
+    void unload();
 
 public:
     Texture() = default;
@@ -31,7 +33,6 @@ public:
     void load(const Image& image);
     void bind(unsigned int slot = 0) const;
     void unbind() const;
-    void unload();
 
     inline int getWidth() const { return width; }
     inline int getHeight() const { return height; }

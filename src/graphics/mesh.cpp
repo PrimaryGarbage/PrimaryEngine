@@ -12,20 +12,24 @@ namespace prim
     Mesh::Mesh(Mesh&& other)
         : vb(std::move(other.vb)), va(std::move(other.va)),
         compositions(std::move(other.compositions)) 
-    {}
+    {
+        std::string lel;
+    }
     
     Mesh& Mesh::operator=(Mesh&& other)
     {
         vb = std::move(other.vb);
         va = std::move(other.va);
-        compositions = std::move(other.compositions);
+        compositions.clear();
+        for(MeshComposition& composition : other.compositions)
+            compositions.emplace_back(std::move(composition));
 
         return *this;
     }
     
     void Mesh::addComposition(MeshComposition&& composition)
     {
-        compositions.push_back(std::move(composition));
+        compositions.emplace_back(std::move(composition));
     }
 
 }

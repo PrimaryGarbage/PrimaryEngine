@@ -11,6 +11,8 @@ class VertexArray
 {
 private:
 	unsigned int gl_id;
+
+	void unload();
 public:
 	VertexArray();
 	VertexArray(VertexArray&& other);

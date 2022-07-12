@@ -26,7 +26,7 @@ namespace prim
 
         MeshComposition& operator=(MeshComposition&& other)
         {
-            this->~MeshComposition();
+            other.unbind();
             ib = std::move(other.ib);
             shader = std::move(other.shader);
             texture = std::move(other.texture);

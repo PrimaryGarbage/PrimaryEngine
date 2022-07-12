@@ -3,52 +3,61 @@
 
 namespace prim
 {
+	void VertexArray::unload()
+	{
+		if (gl_id > 0)
+		{
+			unbind();
+			GL_CALL(glDeleteVertexArrays(1, &gl_id));
+			gl_id = 0;
+		}
+	}
 
-VertexArray::VertexArray()
-{
-	GL_CALL(glGenVertexArrays(1, &gl_id)); 
-	glBindVertexArray(gl_id);
-}
 
-VertexArray::VertexArray(VertexArray&& other)
-{
-	gl_id = other.gl_id;
-	other.gl_id = 0;
-}
+	VertexArray::VertexArray()
+	{
+		GL_CALL(glGenVertexArrays(1, &gl_id));
+		glBindVertexArray(gl_id);
+	}
 
-VertexArray& VertexArray::operator=(VertexArray&& other)
-{
-	this->~VertexArray();
+	VertexArray::VertexArray(VertexArray&& other)
+	{
+		gl_id = other.gl_id;
+		other.gl_id = 0;
+	}
 
-	gl_id = other.gl_id;
-	other.gl_id = 0;
+	VertexArray& VertexArray::operator=(VertexArray&& other)
+	{
+		unload();
 
-	return *this;
-}
+		gl_id = other.gl_id;
+		other.gl_id = 0;
 
-VertexArray::~VertexArray()
-{
-	if(gl_id > 0)
-		GL_CALL(glDeleteVertexArrays(1, &gl_id));
-}
+		return *this;
+	}
 
-void VertexArray::addBuffer(const VertexBuffer& vb)
-{
-	bind();
-	vb.bind();
-	vb.getLayout().bind();
-}
+	VertexArray::~VertexArray()
+	{
+		unload();
+	}
 
-void VertexArray::bind() const
-{
-	if(gl_id > 0)
-		GL_CALL(glBindVertexArray(gl_id));
-}
+	void VertexArray::addBuffer(const VertexBuffer& vb)
+	{
+		bind();
+		vb.bind();
+		vb.getLayout().bind();
+	}
 
-void VertexArray::unbind() const
-{
-	GL_CALL(glBindVertexArray(0));
-}
+	void VertexArray::bind() const
+	{
+		if (gl_id > 0)
+			GL_CALL(glBindVertexArray(gl_id));
+	}
+
+	void VertexArray::unbind() const
+	{
+		GL_CALL(glBindVertexArray(0));
+	}
 
 }
 

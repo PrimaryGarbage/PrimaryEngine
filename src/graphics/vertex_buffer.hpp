@@ -11,6 +11,8 @@ class VertexBuffer
 private:
 	unsigned int gl_id;
 	VertexBufferLayout layout;
+
+	void unload();
 public:
 	VertexBuffer(const void* data, unsigned int size, VertexBufferLayout layout);
 	VertexBuffer(VertexBuffer&& other);
