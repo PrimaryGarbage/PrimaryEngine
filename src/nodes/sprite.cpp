@@ -38,7 +38,7 @@ namespace prim
         glm::mat4 modelMat(1.0f);
         modelMat = glm::translate(modelMat, Utils::toVec3(getGlobalPosition()));
         modelMat = glm::scale(modelMat, glm::vec3(globalScale.x, globalScale.y, 1.0f));
-        modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 0.0f));
+        modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
         modelMat = glm::translate(modelMat, -Utils::toVec3(getPivot()));
 
         renderer.setModelMat(std::move(modelMat));
