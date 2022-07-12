@@ -14,6 +14,7 @@ namespace prim
         : CameraBase(name, renderer), width(width), height(height), zNear(zNear), zFar(zFar)
     {
         setAsCurrent();
+        setPivot(glm::vec2(width, height) * 0.5f);
     }
     
     Camera2D::~Camera2D()

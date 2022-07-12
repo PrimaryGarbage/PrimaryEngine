@@ -12,6 +12,7 @@ namespace prim
     class Sprite : public Node2D
     {
     private:
+        const float defaultSize = 100.0f;
         Mesh planeMesh;
     public:
         Sprite(std::string name);
@@ -21,6 +22,8 @@ namespace prim
         virtual void start() override;
         virtual void update(float deltaTime) override;
         virtual void draw(Renderer& renderer) override;
+
+        void setCenterPivot();
     };
 
 }

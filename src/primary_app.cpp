@@ -50,9 +50,10 @@ void PrimaryApp::mainLoop()
 
 	Sprite sprite1("testSprite", "res/textures/TestTexture.png");
 	Sprite sprite2("testSprite", "res/textures/TestTexture.png");
-	sprite1.addChild(&sprite2);
-	sprite2.addChild(&camera);
-	sprite2.move(glm::vec2(200.0f, 40.0f));
+	//sprite1.addChild(&sprite2);
+	//sprite2.addChild(&camera);
+	sprite2.setCenterPivot();
+	sprite2.move(glm::vec2(200.0f, 0.0f));
 	float speed = 10.0f;
 
 
@@ -67,18 +68,18 @@ void PrimaryApp::mainLoop()
 
 		Input::update();
 
-		sprite2.move(Input::getAxis("Vertical") * speed * sprite2.left());
-		sprite2.rotate(-Input::getAxis("Horizontal") * 0.01f);
+		sprite2.move(Input::getAxis("Vertical") * speed * sprite2.forward());
+		//sprite2.rotate(-Input::getAxis("Horizontal") * 0.01f);
 
 
-		//sprite2.move(glm::vec2(Input::getAxis("Horizontal") * speed, Input::getAxis("Vertical") * speed));
+		//camera.move(glm::vec2(Input::getAxis("Horizontal") * speed, Input::getAxis("Vertical") * speed));
 
 		if(Input::isPressed(Key::comma)) sprite2.scale(0.99f);
 		if(Input::isPressed(Key::period)) sprite2.scale(1.01f);
 		if(Input::isPressed(Key::e)) sprite2.rotate(0.01f);
 		if(Input::isPressed(Key::q)) sprite2.rotate(-0.01f);
 
-		//sprite2.rotate(0.01f);
+		sprite2.rotate(0.01f);
 
 		/////////////////
 

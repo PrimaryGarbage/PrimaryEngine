@@ -61,10 +61,15 @@ namespace prim
     {
         return transform.scale;
     }
+    
+    glm::vec2 Node2D::getPivot() const
+    {
+        return transform.pivot;
+    }
 
     glm::vec2 Node2D::getGlobalPosition() const
     {
-        if (!parent) return transform.position;
+        if (!parent) return getPosition();
         Node2D* parent2d = dynamic_cast<Node2D*>(parent);
         if (parent2d)
         {
@@ -116,12 +121,12 @@ namespace prim
     
     glm::vec2 Node2D::left() const
     {
-        return glm::rotate(glm::vec2(0.0f, 1.0f), getGlobalRotation() + glm::pi<float>() * 0.5f);
+        return glm::rotate(glm::vec2(0.0f, 1.0f), getGlobalRotation() + glm::half_pi<float>());
     }
     
     glm::vec2 Node2D::right() const
     {
-        return glm::rotate(glm::vec2(0.0f, 1.0f), getGlobalRotation() - glm::pi<float>() * 0.5f);
+        return glm::rotate(glm::vec2(0.0f, 1.0f), getGlobalRotation() - glm::half_pi<float>());
     }
 
     void Node2D::setPosition(glm::vec2 v)
@@ -142,6 +147,11 @@ namespace prim
     void Node2D::setScale(glm::vec2 s)
     {
         transform.scale = s;
+    }
+    
+    void Node2D::setPivot(glm::vec2 pivot)
+    {
+        transform.pivot = pivot;
     }
 
     void Node2D::setGlobalPosition(glm::vec2 v)

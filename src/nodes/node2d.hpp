@@ -10,7 +10,7 @@ namespace prim
 
     class Node2D : public Node
     {
-    protected:
+    private:
         Transform2D transform;
     public:
         Node2D(std::string name);
@@ -28,6 +28,7 @@ namespace prim
         glm::vec2 getPosition() const;
         float getRotation() const;
         glm::vec2 getScale() const;
+        glm::vec2 getPivot() const;
 
         glm::vec2 getGlobalPosition() const;
         float getGlobalRotation() const;
@@ -42,6 +43,7 @@ namespace prim
         void setRotation(float angle);
         void setScale(float s);
         void setScale(glm::vec2 s);
+        void setPivot(glm::vec2 pivot);
 
         void setGlobalPosition(glm::vec2 v);
         void setGlobalRotation(float angle);
