@@ -24,8 +24,9 @@ namespace prim
     glm::mat4 Camera2D::calculateViewMatrix() const 
     {
         glm::mat4 viewMatrix(1.0f);
+        viewMatrix = glm::translate(viewMatrix, Utils::toVec3(getPivot()));
         viewMatrix = glm::rotate(viewMatrix, -getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
-        viewMatrix = glm::translate(viewMatrix,Utils::toVec3(-getGlobalPosition() + getPivot()));
+        viewMatrix = glm::translate(viewMatrix, Utils::toVec3(-getGlobalPosition()));
         return std::move(viewMatrix);
     }
 

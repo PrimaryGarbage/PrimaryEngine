@@ -66,11 +66,11 @@ void PrimaryApp::mainLoop()
 	Sprite sprite2("testSprite", "res/textures/TestTexture.png");
 	Sprite background("background", "res/textures/florence.jpg");
 	background.setSize(windowWidth, windowHeight);
-	camera.move(glm::vec2(windowWidth, windowHeight) * 0.5f);
+	background.setCenterPivot();
 	sprite1.setCenterPivot();
-	sprite1.move(glm::vec2(200.0f, 100.0f));
+	sprite1.move(glm::vec2(100.0f, 100.0f));
 	sprite2.setCenterPivot();
-	sprite2.move(glm::vec2(400.0f, 300.0f));
+	sprite2.move(glm::vec2(200.0f, 200.0f));
 	float speed = 10.0f;
 
 	scene.addChild(&background);
@@ -94,9 +94,12 @@ void PrimaryApp::mainLoop()
 		if(currentScene)
 			currentScene->update(deltaTime);
 
-		sprite1.rotate(0.01f);
+		sprite2.rotate(0.01f);
 
-		camera.move(glm::vec2(Input::getAxis("Horizontal"), Input::getAxis("Vertical")) * speed);
+		//camera.move(glm::vec2(Input::getAxis("Horizontal"), Input::getAxis("Vertical")) * speed);
+
+		sprite1.move(Input::getAxis("Vertical") * speed * sprite1.forward());
+		sprite1.rotate(-Input::getAxis("Horizontal") * 0.03); 
 
 		/////////////////
 

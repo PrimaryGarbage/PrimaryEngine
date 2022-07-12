@@ -73,7 +73,7 @@ namespace prim
         Node2D* parent2d = dynamic_cast<Node2D*>(parent);
         if (parent2d)
         {
-            return parent2d->getGlobalPosition() + transform.position;
+            return parent2d->getGlobalPosition() + glm::rotate(transform.position, parent2d->getGlobalRotation());
         }
         else
         {
