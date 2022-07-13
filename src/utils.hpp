@@ -12,6 +12,8 @@ namespace prim
     private:
         constexpr static inline float radiansInDegree = glm::pi<float>() / 180.0f;
         constexpr static inline float degreesInRadian = 180.0f * glm::one_over_pi<float>();
+        constexpr static inline float pi = glm::pi<float>();
+        constexpr static inline float twoPi = glm::two_pi<float>();
 
     public:
         static inline glm::vec3 toVec3(glm::vec2 vec)
@@ -19,28 +21,28 @@ namespace prim
             return glm::vec3(vec.x, vec.y, 0.0f);
         }
 
-        static inline float trimAngle(float angle)
+        static inline float normalizeAngle(float angle)
         {
-            if(std::abs(angle) < glm::two_pi<float>()) return angle;
+            if (angle > twoPi)
+                angle -= std::floor(angle / twoPi) * twoPi;
+            else if (angle < 0.0f)
+                angle += std::ceil(-angle / twoPi) * twoPi;
 
-            if (angle > 0)
-                return angle - std::floor(angle / glm::two_pi<float>()) * glm::two_pi<float>();
-            else
-                return angle - std::ceil(angle / glm::two_pi<float>()) * glm::two_pi<float>();
+            return angle;
         }
 
-        static inline float lerpAngle(float a, float b, float t)
+
+        static inline float lerpAngle(float a, float b, float t, bool normalizeAngles = false)
         {
-            float diff = std::abs(b - a);
-            Logger::printLine(std::to_string(diff));
-            if (diff > glm::pi<float>())
-               b += glm::two_pi<float>() * sign(b);
-            return a + (b - a) * t;
-            // const static glm::vec2 up(0.0f, 1.0f);
-            // glm::vec2 v1 = glm::rotate(up, a);
-            // glm::vec2 v2 = glm::rotate(up, b);
-            // glm::vec2 result = glm::mix(v1, v2, t);
-            // return glm::orientedAngle(result, up);
+            if (normalizeAngles)
+            {
+                a = normalizeAngle(a);
+                b = normalizeAngle(b);
+            }
+            float diff = b - a;
+            if (std::abs(diff) > pi)
+                diff = twoPi * sign(-diff) + diff;
+            return a + diff * t;
         }
 
         template <class T>
@@ -58,6 +60,13 @@ namespace prim
         {
             return degrees * radiansInDegree;
         }
+
+        template <class T>
+        static inline constexpr float clamp(T value, T min, T max)
+        {
+            return std::min(max, std::max(value, min));
+        }
+
     };
 
 }

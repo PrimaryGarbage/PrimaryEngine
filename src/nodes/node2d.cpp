@@ -44,7 +44,7 @@ namespace prim
     void Node2D::rotate(float angle)
     {
         transform.rotation += angle;
-        transform.rotation = Utils::trimAngle(transform.rotation);
+        transform.rotation = Utils::normalizeAngle(transform.rotation);
     }
 
     void Node2D::scale(float s)
@@ -63,10 +63,10 @@ namespace prim
         setGlobalRotation(-glm::orientedAngle(glm::normalize(v - getGlobalPosition()), up));
     }
 
-    void Node2D::lookAtSmooth(glm::vec2 v, float smoothness)
+    void Node2D::lookAtSmooth(glm::vec2 v, float stiffness)
     {
         const static glm::vec2 up(0.0f, 1.0f);
-        setGlobalRotation(Utils::lerpAngle(getGlobalRotation(),-glm::orientedAngle(glm::normalize(v - getGlobalPosition()), up), smoothness));
+        setGlobalRotation(Utils::lerpAngle(getGlobalRotation(),-glm::orientedAngle(glm::normalize(v - getGlobalPosition()), up), Utils::clamp(stiffness, 0.0f, 1.0f)));
     }
 
     glm::vec2 Node2D::getPosition() const
@@ -158,7 +158,7 @@ namespace prim
 
     void Node2D::setRotation(float angle)
     {
-        transform.rotation = Utils::trimAngle(angle);
+        transform.rotation = Utils::normalizeAngle(angle);
     }
 
     void Node2D::setScale(float s)
@@ -192,15 +192,15 @@ namespace prim
 
     void Node2D::setGlobalRotation(float angle)
     {
-        if (!parent) transform.rotation = Utils::trimAngle(angle);
+        if (!parent) transform.rotation = Utils::normalizeAngle(angle);
         Node2D* parent2d = dynamic_cast<Node2D*>(parent);
         if (parent2d)
         {
-            transform.rotation = Utils::trimAngle(angle - parent2d->getGlobalRotation());
+            transform.rotation = Utils::normalizeAngle(angle - parent2d->getGlobalRotation());
         }
         else
         {
-            transform.rotation = Utils::trimAngle(angle);
+            transform.rotation = Utils::normalizeAngle(angle);
         }
     }
 

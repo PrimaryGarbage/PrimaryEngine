@@ -65,7 +65,7 @@ void PrimaryApp::mainLoop()
 
 	ActorCamera2D camera("Player camera", &renderer, &sprite1);
 	camera.move(0.0f, -100.0f);
-	camera.smoothness = 0.1f;
+	camera.setStiffness(0.1f);
 
 	background.setSize(windowWidth, windowHeight);
 	background.setCenterPivot();
@@ -97,12 +97,14 @@ void PrimaryApp::mainLoop()
 			currentScene->update(deltaTime);
 
 		//sprite2.rotate(0.01f);
-		sprite2.lookAtSmooth(sprite1.getGlobalPosition(), 0.1f);
+		sprite2.lookAtSmooth(sprite1.getGlobalPosition(), 0.05f);
 
 		//camera.move(glm::vec2(Input::getAxis("Horizontal"), Input::getAxis("Vertical")) * speed);
 
 		sprite1.move(Input::getAxis("Vertical") * speed * sprite1.forward());
 		sprite1.rotate(-Input::getAxis("Horizontal") * 0.03); 
+		
+		Logger::printLine(std::to_string(sprite1.getGlobalRotation()));
 
 		/////////////////
 

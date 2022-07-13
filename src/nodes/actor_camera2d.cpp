@@ -34,11 +34,11 @@ namespace prim
         if(rotateWithTarget)
         {
             float targetAngle = target->getGlobalRotation();
-            position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + glm::rotate(initialOffset, targetAngle), smoothness);
-            setGlobalRotation(Utils::lerpAngle(getGlobalRotation(), targetAngle, smoothness));
+            position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + glm::rotate(initialOffset, targetAngle), stiffness);
+            setGlobalRotation(Utils::lerpAngle(getGlobalRotation(), targetAngle, stiffness));
         }
         else
-            position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + initialOffset, smoothness);
+            position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + initialOffset, stiffness);
 
         setGlobalPosition(position);
     }
@@ -51,5 +51,10 @@ namespace prim
     void ActorCamera2D::setTarget(Node2D* target)
     {
         
+    }
+    
+    void ActorCamera2D::setStiffness(float value)
+    {
+        stiffness = Utils::clamp(value, 0.0f, 1.0f);
     }
 }
