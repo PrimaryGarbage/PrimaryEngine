@@ -25,6 +25,8 @@ namespace prim
         void rotate(float angle);
         void scale(float s);
         void scale(glm::vec2 s);
+        void lookAt(glm::vec2 v);
+        void lookAtSmooth(glm::vec2 v, float smoothness);
 
         glm::vec2 getPosition() const;
         float getRotation() const;

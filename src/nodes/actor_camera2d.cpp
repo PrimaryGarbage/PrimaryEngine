@@ -20,11 +20,15 @@ namespace prim
     
     void ActorCamera2D::start()
     {
+        START_CHILDREN
+
         initialOffset = getGlobalPosition() - target->getGlobalPosition();
     }
     
     void ActorCamera2D::update(float deltaTime)
     {
+        UPDATE_CHILDREN
+
         glm::vec2 position;
 
         if(rotateWithTarget)
@@ -41,7 +45,7 @@ namespace prim
     
     void ActorCamera2D::draw(Renderer& renderer)
     {
-        
+        DRAW_CHILDREN   
     }
     
     void ActorCamera2D::setTarget(Node2D* target)

@@ -1,11 +1,12 @@
 #include "node2d.hpp"
 #include "renderer.hpp"
 #include "gtx/rotate_vector.hpp"
+#include "gtx/vector_angle.hpp"
 #include "utils.hpp"
+#include "logger.hpp"
 
 namespace prim
 {
-
 
     Node2D::Node2D(std::string name) : Node(name)
     {
@@ -54,6 +55,18 @@ namespace prim
     void Node2D::scale(glm::vec2 s)
     {
         transform.scale *= s;
+    }
+    
+    void Node2D::lookAt(glm::vec2 v)
+    {
+        const static glm::vec2 up(0.0f, 1.0f);
+        setGlobalRotation(-glm::orientedAngle(glm::normalize(v - getGlobalPosition()), up));
+    }
+
+    void Node2D::lookAtSmooth(glm::vec2 v, float smoothness)
+    {
+        const static glm::vec2 up(0.0f, 1.0f);
+        setGlobalRotation(Utils::lerpAngle(getGlobalRotation(),-glm::orientedAngle(glm::normalize(v - getGlobalPosition()), up), smoothness));
     }
 
     glm::vec2 Node2D::getPosition() const

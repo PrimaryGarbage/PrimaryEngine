@@ -2,6 +2,7 @@
 #define __UTILS_HPP__
 
 #include "glm.hpp"
+#include "logger.hpp"
 
 namespace prim
 {
@@ -30,9 +31,16 @@ namespace prim
 
         static inline float lerpAngle(float a, float b, float t)
         {
-            if (std::abs(b - a) > glm::pi<float>())
+            float diff = std::abs(b - a);
+            Logger::printLine(std::to_string(diff));
+            if (diff > glm::pi<float>())
                b += glm::two_pi<float>() * sign(b);
             return a + (b - a) * t;
+            // const static glm::vec2 up(0.0f, 1.0f);
+            // glm::vec2 v1 = glm::rotate(up, a);
+            // glm::vec2 v2 = glm::rotate(up, b);
+            // glm::vec2 result = glm::mix(v1, v2, t);
+            // return glm::orientedAngle(result, up);
         }
 
         template <class T>
