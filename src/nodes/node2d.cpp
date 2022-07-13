@@ -1,9 +1,12 @@
 #include "node2d.hpp"
 #include "renderer.hpp"
 #include "gtx/rotate_vector.hpp"
+#include "utils.hpp"
 
 namespace prim
 {
+
+
     Node2D::Node2D(std::string name) : Node(name)
     {
     }
@@ -11,17 +14,17 @@ namespace prim
     Node2D::~Node2D()
     {
     }
-    
+
     void Node2D::start()
     {
         START_CHILDREN
     }
-   
+
     void Node2D::update(float deltaTime)
     {
         UPDATE_CHILDREN
     }
-    
+
     void Node2D::draw(Renderer& renderer)
     {
         DRAW_CHILDREN
@@ -32,9 +35,15 @@ namespace prim
         transform.position += v;
     }
 
+    void Node2D::move(float x, float y)
+    {
+        transform.position += glm::vec2(x, y);
+    }
+
     void Node2D::rotate(float angle)
     {
         transform.rotation += angle;
+        transform.rotation = Utils::trimAngle(transform.rotation);
     }
 
     void Node2D::scale(float s)
@@ -61,7 +70,7 @@ namespace prim
     {
         return transform.scale;
     }
-    
+
     glm::vec2 Node2D::getPivot() const
     {
         return transform.pivot;
@@ -108,22 +117,22 @@ namespace prim
             return transform.scale;
         }
     }
-    
+
     glm::vec2 Node2D::forward() const
     {
         return glm::rotate(glm::vec2(0.0f, 1.0f), getGlobalRotation());
     }
-    
+
     glm::vec2 Node2D::backward() const
     {
         return -forward();
     }
-    
+
     glm::vec2 Node2D::left() const
     {
         return glm::rotate(glm::vec2(0.0f, 1.0f), getGlobalRotation() + glm::half_pi<float>());
     }
-    
+
     glm::vec2 Node2D::right() const
     {
         return glm::rotate(glm::vec2(0.0f, 1.0f), getGlobalRotation() - glm::half_pi<float>());
@@ -136,7 +145,7 @@ namespace prim
 
     void Node2D::setRotation(float angle)
     {
-        transform.rotation = angle;
+        transform.rotation = Utils::trimAngle(angle);
     }
 
     void Node2D::setScale(float s)
@@ -148,7 +157,7 @@ namespace prim
     {
         transform.scale = s;
     }
-    
+
     void Node2D::setPivot(glm::vec2 pivot)
     {
         transform.pivot = pivot;
@@ -170,15 +179,15 @@ namespace prim
 
     void Node2D::setGlobalRotation(float angle)
     {
-        if (!parent) transform.rotation = angle;
+        if (!parent) transform.rotation = Utils::trimAngle(angle);
         Node2D* parent2d = dynamic_cast<Node2D*>(parent);
         if (parent2d)
         {
-            transform.rotation = angle - parent2d->getGlobalRotation();
+            transform.rotation = Utils::trimAngle(angle - parent2d->getGlobalRotation());
         }
         else
         {
-            transform.rotation = angle;
+            transform.rotation = Utils::trimAngle(angle);
         }
     }
 
@@ -195,4 +204,5 @@ namespace prim
             transform.scale = s;
         }
     }
+
 }

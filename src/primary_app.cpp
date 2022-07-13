@@ -8,8 +8,7 @@
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
 #include "sprite.hpp"
-#include "camera2d.hpp"
-#include "primitives.hpp"
+#include "actor_camera2d.hpp"
 
 namespace prim
 {
@@ -60,18 +59,19 @@ void PrimaryApp::mainLoop()
 {
 	Node scene("TestScene");
 
-	Camera2D camera("Player camera", &renderer);
-
 	Sprite sprite1("testSprite", "res/textures/TestTexture.png");
 	Sprite sprite2("testSprite", "res/textures/TestTexture.png");
 	Sprite background("background", "res/textures/florence.jpg");
+
+	ActorCamera2D camera("Player camera", &renderer, &sprite1);
+	camera.move(0.0f, -100.0f);
+	camera.smoothness = 0.1f;
+
 	background.setSize(windowWidth, windowHeight);
 	background.setCenterPivot();
 	sprite1.setCenterPivot();
-	sprite1.move(glm::vec2(100.0f, 100.0f));
-	sprite1.setZIndex(0.1f);
 	sprite2.setCenterPivot();
-	sprite2.move(glm::vec2(200.0f, 200.0f));
+	sprite2.move(200.0f, 200.0f);
 	sprite2.setZIndex(1.0f);
 	float speed = 10.0f;
 
@@ -102,6 +102,8 @@ void PrimaryApp::mainLoop()
 
 		sprite1.move(Input::getAxis("Vertical") * speed * sprite1.forward());
 		sprite1.rotate(-Input::getAxis("Horizontal") * 0.03); 
+
+		Logger::printLine(std::to_string(camera.getRotation()));
 
 		/////////////////
 

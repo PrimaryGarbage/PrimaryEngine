@@ -21,6 +21,7 @@ namespace prim
         virtual void draw(Renderer& renderer) override;
 
         void move(glm::vec2 v);
+        void move(float x, float y);
         void rotate(float angle);
         void scale(float s);
         void scale(glm::vec2 s);

@@ -28,6 +28,7 @@ set(NODES_SRC
 	sprite.hpp sprite.cpp
 	camera_base.hpp camera_base.cpp
 	camera2d.hpp camera2d.cpp
+	actor_camera2d.hpp actor_camera2d.cpp
 )
 
 set(GRAPHICS_SRC
