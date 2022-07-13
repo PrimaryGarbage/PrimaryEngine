@@ -67,6 +67,9 @@ namespace prim
 		GL_CALL(glEnable(GL_BLEND));
 		GL_CALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
+		GL_CALL(glEnable(GL_DEPTH_TEST));
+		GL_CALL(glDepthFunc(GL_LEQUAL));
+
 		Logger::log("GLFW and GLEW initialized successfully", true);
 		Logger::log("OpenGL version: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))), true);
 		Logger::log("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
@@ -141,7 +144,7 @@ namespace prim
 
 	void Renderer::clear()
 	{
-		GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
+		GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 	}
 
 	void Renderer::framebuffer_size_callback(GLFWwindow* window, int width, int height)

@@ -34,9 +34,10 @@ namespace prim
     {
         DRAW_CHILDREN
 
+        glm::vec2 globalPosition = getGlobalPosition();
         glm::vec2 globalScale = getGlobalScale();
         glm::mat4 modelMat(1.0f);
-        modelMat = glm::translate(modelMat, Utils::toVec3(getGlobalPosition()));
+        modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x, globalPosition.y, zIndex));
         modelMat = glm::scale(modelMat, glm::vec3(globalScale.x, globalScale.y, 1.0f));
         modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
         modelMat = glm::translate(modelMat, -Utils::toVec3(getPivot() * getSize()));
@@ -78,4 +79,10 @@ namespace prim
         image.load(path);
         planeMesh.compositions[0].texture.load(image);
     }
+
+    void Sprite::setZIndex(float value)
+    {
+        zIndex = value;
+    }
+
 }

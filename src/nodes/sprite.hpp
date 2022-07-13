@@ -18,6 +18,7 @@ namespace prim
         Image image;
         float width;
         float height;
+        float zIndex = 0.0f;
     public:
         Sprite(std::string name);
         Sprite(std::string name, std::string imagePath);
@@ -33,9 +34,12 @@ namespace prim
         void setWidth(float width);
         void setHeight(float height);
         void setImage(std::string path);
+        void setZIndex(float value);
         inline float getWidth() const { return width; }
         inline float getHeight() const { return height; }
         inline glm::vec2 getSize() const { return glm::vec2(width, height); }
+        inline float getZIndex() const { return zIndex; }
+
     };
 
 }

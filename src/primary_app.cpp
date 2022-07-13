@@ -69,8 +69,10 @@ void PrimaryApp::mainLoop()
 	background.setCenterPivot();
 	sprite1.setCenterPivot();
 	sprite1.move(glm::vec2(100.0f, 100.0f));
+	sprite1.setZIndex(0.1f);
 	sprite2.setCenterPivot();
 	sprite2.move(glm::vec2(200.0f, 200.0f));
+	sprite2.setZIndex(1.0f);
 	float speed = 10.0f;
 
 	scene.addChild(&background);
