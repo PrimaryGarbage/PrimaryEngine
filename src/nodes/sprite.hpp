@@ -35,6 +35,7 @@ namespace prim
         void setImage(std::string path);
         inline float getWidth() const { return width; }
         inline float getHeight() const { return height; }
+        inline glm::vec2 getSize() const { return glm::vec2(width, height); }
     };
 
 }

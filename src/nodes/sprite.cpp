@@ -39,7 +39,7 @@ namespace prim
         modelMat = glm::translate(modelMat, Utils::toVec3(getGlobalPosition()));
         modelMat = glm::scale(modelMat, glm::vec3(globalScale.x, globalScale.y, 1.0f));
         modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
-        modelMat = glm::translate(modelMat, -Utils::toVec3(getPivot()));
+        modelMat = glm::translate(modelMat, -Utils::toVec3(getPivot() * getSize()));
 
         renderer.setModelMat(std::move(modelMat));
 
@@ -48,7 +48,7 @@ namespace prim
     
     void Sprite::setCenterPivot()
     {
-        setPivot(glm::vec2(width, height) * 0.5f);
+        setPivot(glm::vec2(0.5f, 0.5f));
     }
     
     void Sprite::setSize(float width, float height)

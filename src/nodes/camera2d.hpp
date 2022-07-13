@@ -8,14 +8,14 @@ namespace prim
 
     class Camera2D : public CameraBase 
     {
+    private:
+        glm::vec2 getWindowSize() const;
     public:
-        float width;
-        float height;
         float zNear;
         float zFar;
 
         Camera2D(std::string name, Renderer* renderer);
-        Camera2D(std::string name, Renderer* renderer, float width, float height, float zNear, float zFar);
+        Camera2D(std::string name, Renderer* renderer, float zNear, float zFar);
         virtual ~Camera2D();
 
         virtual glm::mat4 calculateViewMatrix() const override;

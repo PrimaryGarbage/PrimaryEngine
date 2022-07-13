@@ -35,13 +35,13 @@ private:
 	glm::mat4 projectMat;
 	glm::mat4 viewMat;
 	glm::mat4 modelMat;
-	bool matricesUpdated = false;
+	bool preparedForDrawing = false;
 	CameraBase* currentCamera = nullptr;
 
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	static void error_callback(int error, const char* description);
 
-	void updateMatrices();
+	void prepareForDrawing();
 
 public:
 	Renderer() = default;

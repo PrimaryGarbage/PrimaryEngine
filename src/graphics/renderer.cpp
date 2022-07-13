@@ -74,7 +74,7 @@ namespace prim
 
 	void Renderer::drawLists()
 	{
-		updateMatrices();
+		prepareForDrawing();
 
 		for (const Mesh* mesh : drawList)
 		{
@@ -94,27 +94,27 @@ namespace prim
 		}
 	}
 
-	void Renderer::updateMatrices()
+	void Renderer::prepareForDrawing()
 	{
-		if(matricesUpdated) return;
+		if(preparedForDrawing) return;
 		
 		if(currentCamera)
 		{
 			setViewMat(currentCamera->calculateViewMatrix());
 			setProjectMat(currentCamera->calculateProjectMatrix());
-		}
+		} 
 		else
 		{
 			setViewMat(glm::mat4(1.0f));
 			setProjectMat(glm::ortho(0.0f, static_cast<float>(windowWidth), 0.0f, static_cast<float>(windowHeight)));
 		}
 
-		matricesUpdated = true;
+		preparedForDrawing = true;
 	}
 
 	void Renderer::drawMesh(const Mesh& mesh)
 	{
-		updateMatrices();
+		prepareForDrawing();
 
 		mesh.va.bind();
 		const glm::mat4 mvp = projectMat * viewMat * modelMat;
@@ -141,7 +141,6 @@ namespace prim
 
 	void Renderer::clear()
 	{
-		matricesUpdated = false;
 		GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
 	}
 
@@ -169,6 +168,7 @@ namespace prim
 	void Renderer::swapBuffers()
 	{
 		glfwSwapBuffers(window);
+		preparedForDrawing = false;
 	}
 
 	void Renderer::pollEvents()
