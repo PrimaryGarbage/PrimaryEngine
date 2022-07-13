@@ -11,6 +11,7 @@ namespace prim
         Node2D* target;
         glm::vec2 initialOffset { 0.0f, 0.0f };
         float stiffness = 1.0f;
+        
     public:
         bool rotateWithTarget = true;
 

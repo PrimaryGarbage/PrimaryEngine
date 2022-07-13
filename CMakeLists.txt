@@ -18,6 +18,7 @@ set(PRIMARY_SRC
 	logger.hpp logger.cpp
 	timer.hpp
 	utils.hpp
+	globals.hpp
 	)
 
 set(NODES_SRC

@@ -1,9 +1,15 @@
+#ifndef __PRIMARY_APP_HPP__
+#define __PRIMARY_APP_HPP__
+
 #include <filesystem>
+#include <functional>
 #include "renderer.hpp"
 #include "timer.hpp"
 
 namespace prim
 {
+
+typedef std::function<void()> deferred_func_type;
 
 class PrimaryApp
 {
@@ -16,8 +22,10 @@ private:
 	Timer timer;
 	Renderer renderer;
 	Node* currentScene = nullptr;
+	std::vector<std::pair<deferred_func_type, short>> deferredFunctions;
 
 	void mainLoop();
+	void executeDeferredFunctions();
 public:
 	explicit PrimaryApp(const char* appPath);
 	PrimaryApp(const PrimaryApp& other) = delete;
@@ -30,7 +38,11 @@ public:
 
 	void setCurrentScene(Node* scene);
 	Node* getCurrentScene() const;
+
+	void deferFunctionExecution(deferred_func_type function, short order = 1);
 };
 
 }
 
+
+#endif // __PRIMARY_APP_HPP__

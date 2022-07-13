@@ -5,10 +5,11 @@
 #include <stdexcept>
 #include <cassert>
 #include <filesystem>
+#include <algorithm>
 #include "glm.hpp"
-#include "gtc/matrix_transform.hpp"
 #include "sprite.hpp"
 #include "actor_camera2d.hpp"
+#include "globals.hpp"
 
 namespace prim
 {
@@ -27,18 +28,12 @@ void PrimaryApp::init()
 	Logger::init(appPath);
 	renderer.init(windowWidth, windowHeight, windowName);
 	Input::init(renderer.getWindow());
+
+	Globals::app = this;
 }
 
 void PrimaryApp::run()
 {
-	//// TEMP ////
-
-	glm::mat4 proj = glm::ortho(0.0f, static_cast<float>(windowWidth), 0.0f, static_cast<float>(windowHeight), -1.0f, 1.0f);
-
-	renderer.setProjectMat(std::move(proj));
-
-	//////////////////
-
 	timer.start();
 
 	mainLoop();
@@ -55,19 +50,25 @@ Node* PrimaryApp::getCurrentScene() const
 	return currentScene;
 }
 
+void PrimaryApp::deferFunctionExecution(deferred_func_type function, short order)
+{
+	deferredFunctions.push_back(std::pair<deferred_func_type, short>(function, order));
+	std::sort(deferredFunctions.begin(), deferredFunctions.end(), [](const auto& pair1, const auto& pair2) { return pair1.second < pair2.second; });
+}
+
 void PrimaryApp::mainLoop()
 {
 	Node scene("TestScene");
 
 	Sprite sprite1("testSprite", "res/textures/TestTexture.png");
 	Sprite sprite2("testSprite", "res/textures/TestTexture.png");
-	Sprite background("background", "res/textures/florence.jpg");
+	Sprite background("background", "res/textures/abstract_stairs.png");
 
 	ActorCamera2D camera("Player camera", &renderer, &sprite1);
 	camera.move(0.0f, -100.0f);
-	camera.setStiffness(0.1f);
+	camera.setStiffness(0.01f);
 
-	background.setSize(windowWidth, windowHeight);
+	background.setSize(1920.0f, 1080.0f);
 	background.setCenterPivot();
 	sprite1.setCenterPivot();
 	sprite2.setCenterPivot();
@@ -90,22 +91,22 @@ void PrimaryApp::mainLoop()
 		renderer.clear();
 
 		///// Update /////
+		deferredFunctions.clear();
 
 		Input::update();
 
 		if(currentScene)
 			currentScene->update(deltaTime);
 
-		//sprite2.rotate(0.01f);
 		sprite2.lookAtSmooth(sprite1.getGlobalPosition(), 0.05f);
-
-		//camera.move(glm::vec2(Input::getAxis("Horizontal"), Input::getAxis("Vertical")) * speed);
 
 		sprite1.move(Input::getAxis("Vertical") * speed * sprite1.forward());
 		sprite1.rotate(-Input::getAxis("Horizontal") * 0.03); 
-		
-		Logger::printLine(std::to_string(sprite1.getGlobalRotation()));
 
+		if(Input::isPressed(Key::comma)) background.scale(0.99f);
+		if(Input::isPressed(Key::period)) background.scale(1.01f);
+		
+		executeDeferredFunctions();
 		/////////////////
 
 		///// Draw /////
@@ -117,6 +118,12 @@ void PrimaryApp::mainLoop()
 		renderer.swapBuffers();
 		renderer.pollEvents();
 	}
+}
+
+void PrimaryApp::executeDeferredFunctions()
+{
+	for(const auto& pair : deferredFunctions)
+		pair.first();
 }
 
 }
