@@ -13,6 +13,7 @@ namespace prim
     public:
         float zNear;
         float zFar;
+        float zoom = 1.0f;
 
         Camera2D(std::string name, Renderer* renderer);
         Camera2D(std::string name, Renderer* renderer, float zNear, float zFar);

@@ -101,8 +101,8 @@ void PrimaryApp::mainLoop()
 		sprite1.move(Input::getAxis("Vertical") * speed * sprite1.forward());
 		sprite1.rotate(-Input::getAxis("Horizontal") * 0.03); 
 
-		if(Input::isPressed(Key::comma)) background.scale(0.99f);
-		if(Input::isPressed(Key::period)) background.scale(1.01f);
+		if(Input::isPressed(Key::comma)) camera.zoom -= 0.01f;
+		if(Input::isPressed(Key::period)) camera.zoom += 0.01f;
 		
 		executeDeferredFunctions();
 		/////////////////

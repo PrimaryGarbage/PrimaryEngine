@@ -16,9 +16,9 @@ namespace prim
         constexpr static inline float twoPi = glm::two_pi<float>();
 
     public:
-        static inline glm::vec3 toVec3(glm::vec2 vec)
+        static inline glm::vec3 toVec3(glm::vec2 vec, float z = 0.0f)
         {
-            return glm::vec3(vec.x, vec.y, 0.0f);
+            return glm::vec3(vec.x, vec.y, z);
         }
 
         static inline float normalizeAngle(float angle)
