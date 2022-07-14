@@ -19,6 +19,7 @@ set(PRIMARY_SRC
 	timer.hpp
 	utils.hpp
 	globals.hpp
+	ui.hpp ui.cpp
 	)
 
 set(NODES_SRC
@@ -47,13 +48,25 @@ set(GRAPHICS_SRC
 	image.hpp image.cpp image_utils.hpp
 )
 
+set(IMGUI_SRC
+	imgui.h imgui.cpp imgui_demo.cpp
+	imgui_impl_glfw.h imgui_impl_glfw.cpp
+	imgui_impl_opengl3.h imgui_impl_opengl3.cpp imgui_impl_opengl3_loader.h
+	imconfig.h imgui_draw.cpp imgui_internal.h
+	imgui_tables.cpp imgui_widgets.cpp
+	imstb_rectpack.h imstb_textedit.h imstb_truetype.h
+)
+
 list(TRANSFORM NODES_SRC PREPEND "nodes/")
 list(TRANSFORM GRAPHICS_SRC PREPEND "graphics/")
+list(TRANSFORM IMGUI_SRC PREPEND "external/imgui/")
 
 list(APPEND PRIMARY_SRC ${NODES_SRC})
 list(APPEND PRIMARY_SRC ${GRAPHICS_SRC})
 
 list(TRANSFORM PRIMARY_SRC PREPEND "src/")
+
+list(APPEND PRIMARY_SRC ${IMGUI_SRC})
 
 add_executable(${PROJECT_NAME} ${PRIMARY_SRC})
 
@@ -67,7 +80,7 @@ set(CMAKE_LINK_SEARCH_START_STATIC ON)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
 
-target_include_directories(${PROJECT_NAME} PRIVATE external/glfw/include external/glew/include external/glm src/graphics src/nodes src)
+target_include_directories(${PROJECT_NAME} PRIVATE external/glfw/include external/glew/include external/glm src/graphics src/nodes src external/imgui)
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/external/glfw/src ${CMAKE_BINARY_DIR}/external/glew/lib)
 

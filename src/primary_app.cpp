@@ -10,6 +10,7 @@
 #include "sprite.hpp"
 #include "actor_camera2d.hpp"
 #include "globals.hpp"
+#include "ui.hpp"
 
 namespace prim
 {
@@ -28,6 +29,7 @@ void PrimaryApp::init()
 	Logger::init(appPath);
 	renderer.init(windowWidth, windowHeight, windowName);
 	Input::init(renderer.getWindow());
+	UI::init(renderer.getWindow());
 
 	Globals::app = this;
 }
@@ -110,6 +112,8 @@ void PrimaryApp::mainLoop()
 		///// Draw /////
 
 		currentScene->draw(renderer);
+
+		UI::draw();
 
 		////////////////
 
