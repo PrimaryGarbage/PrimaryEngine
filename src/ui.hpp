@@ -8,9 +8,10 @@ namespace prim
 
     class UI
     {
+        GLFWwindow* window;
     public:
-        static void init(GLFWwindow* window);
-        static void draw();
+        void init(GLFWwindow* window);
+        void draw();
     };
 }
 

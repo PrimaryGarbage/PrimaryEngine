@@ -29,7 +29,7 @@ void PrimaryApp::init()
 	Logger::init(appPath);
 	renderer.init(windowWidth, windowHeight, windowName);
 	Input::init(renderer.getWindow());
-	UI::init(renderer.getWindow());
+	mainUI.init(renderer.getWindow());
 
 	Globals::app = this;
 }
@@ -113,7 +113,7 @@ void PrimaryApp::mainLoop()
 
 		currentScene->draw(renderer);
 
-		UI::draw();
+		mainUI.draw();
 
 		////////////////
 

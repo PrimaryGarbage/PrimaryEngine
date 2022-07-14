@@ -5,6 +5,7 @@
 #include <functional>
 #include "renderer.hpp"
 #include "timer.hpp"
+#include "ui.hpp"
 
 namespace prim
 {
@@ -17,6 +18,7 @@ private:
 	const uint32_t windowWidth = 800;
 	const uint32_t windowHeight = 800;
 	const char* windowName = "PrimaryEngine";
+	UI mainUI;
 	float deltaTime;
 	float timeSinceStart;
 	Timer timer;
