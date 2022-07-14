@@ -67,7 +67,6 @@ void PrimaryApp::mainLoop()
 	ActorCamera2D camera("Player camera", &renderer, &sprite1);
 	camera.move(0.0f, -100.0f);
 	camera.setStiffness(0.01f);
-
 	background.setSize(1920.0f, 1080.0f);
 	background.setCenterPivot();
 	sprite1.setCenterPivot();

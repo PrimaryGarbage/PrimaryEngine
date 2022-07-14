@@ -13,11 +13,13 @@ namespace prim
     class Sprite : public Node2D
     {
     private:
-        const float defaultSize = 100.0f;
+        const static inline float defaultSize = 100.0f;
         Mesh planeMesh;
         Image image;
         float width;
         float height;
+        float relativeWidth;
+        float relativeHeight;
         float zIndex = 0.0f;
     public:
         Sprite(std::string name);
