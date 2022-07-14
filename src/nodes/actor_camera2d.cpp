@@ -54,7 +54,7 @@ namespace prim
 
     void ActorCamera2D::setTarget(Node2D* target)
     {
-
+        this->target = target;
     }
 
     void ActorCamera2D::setStiffness(float value)

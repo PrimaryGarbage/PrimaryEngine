@@ -53,7 +53,6 @@ Node* PrimaryApp::getCurrentScene() const
 void PrimaryApp::deferFunctionExecution(deferred_func_type function, short order)
 {
 	deferredFunctions.push_back(std::pair<deferred_func_type, short>(function, order));
-	std::sort(deferredFunctions.begin(), deferredFunctions.end(), [](const auto& pair1, const auto& pair2) { return pair1.second < pair2.second; });
 }
 
 void PrimaryApp::mainLoop()
@@ -121,8 +120,9 @@ void PrimaryApp::mainLoop()
 
 void PrimaryApp::executeDeferredFunctions()
 {
-	for(const auto& pair : deferredFunctions)
-		pair.first();
+	std::sort(deferredFunctions.begin(), deferredFunctions.end(), [](const auto& pair1, const auto& pair2) { return pair1.second < pair2.second; });
+	for(int i = 0; i < deferredFunctions.size(); ++i)
+		deferredFunctions[i].first();
 }
 
 }
