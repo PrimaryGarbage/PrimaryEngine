@@ -1,17 +1,55 @@
 #include "ui.hpp"
-#include "imgui.h"
+#include "renderer.hpp"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
 namespace prim
 {
-    void UI::init(GLFWwindow* window)
+    void UI::drawRightPanel()
     {
-        this->window = window;
+        const static ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove;
+        const ImVec2 panelPos(renderer->getWindowWidth(), 0.0f);
+        static ImVec2 panelSize(rightPanelWidth, renderer->getWindowHeight());
+        ImGui::SetNextWindowSize(panelSize);
+        ImGui::SetNextWindowPos(panelPos, 0, ImVec2(1.0f, 0.0f));
+
+        ImGui::Begin("RightPanel", nullptr, flags);
+        {
+            panelSize = ImVec2(ImGui::GetWindowSize().x, renderer->getWindowHeight());
+
+            for (const std::string& str : printLines)
+            {
+                ImGui::Text(str.c_str());
+            }
+
+            ImGui::Separator();
+
+            for (const auto& df : dragFloats)
+            {
+                ImGui::DragFloat(df.label, df.f, df.speed);
+            }
+
+        }
+        ImGui::End();
+    }
+
+
+    UI::~UI()
+    {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+    }
+
+    void UI::init(Renderer* renderer)
+    {
+        this->renderer = renderer;
         ImGui::CreateContext();
-        ImGui_ImplGlfw_InitForOpenGL(window, true);
+        ImGui_ImplGlfw_InitForOpenGL(renderer->getWindow(), true);
         ImGui_ImplOpenGL3_Init("#version 130");
-        ImGui::StyleColorsDark();       
+        ImGui::StyleColorsDark();
+        io = &ImGui::GetIO();
+        io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     }
 
     void UI::draw()
@@ -21,12 +59,26 @@ namespace prim
         ImGui::NewFrame();
 
         /// Drawing happends here ///
-        
-        ImGui::ShowDemoWindow();
+        drawRightPanel();
+
+        //ImGui::ShowDemoWindow();
 
         /////////////////////////////
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        printLines.clear();
+        dragFloats.clear();
+    }
+
+    void UI::print(std::string str)
+    {
+        printLines.push_back(std::move(str));
+    }
+
+    void UI::addDragFloat(const char* label, float* f, float speed)
+    {
+        dragFloats.push_back(DragFloat{ label, f, speed });
     }
 }

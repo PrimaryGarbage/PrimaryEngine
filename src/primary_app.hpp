@@ -18,11 +18,11 @@ private:
 	const uint32_t windowWidth = 800;
 	const uint32_t windowHeight = 800;
 	const char* windowName = "PrimaryEngine";
-	UI mainUI;
 	float deltaTime;
 	float timeSinceStart;
 	Timer timer;
 	Renderer renderer;
+	UI mainUI;
 	Node* currentScene = nullptr;
 	std::vector<std::pair<deferred_func_type, short>> deferredFunctions;
 

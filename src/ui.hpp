@@ -1,17 +1,41 @@
 #ifndef __UI_HPP__
 #define __UI_HPP__
 
-class GLFWwindow;
+#include "imgui.h"
+#include <vector>
+#include <string>
+
 
 namespace prim
 {
 
+    class Renderer;
+
+    struct DragFloat
+    {
+        const char* label;
+        float* f;
+        float speed;
+    };
+
     class UI
     {
-        GLFWwindow* window;
+        const float rightPanelWidth = 200.0f;
+
+        Renderer* renderer;
+        ImGuiIO* io;
+        std::vector<std::string> printLines;
+        std::vector<DragFloat> dragFloats;
+        
+        void drawRightPanel();
+
     public:
-        void init(GLFWwindow* window);
+        UI() = default;
+        ~UI();
+        void init(Renderer* renderer);
         void draw();
+        void print(std::string str);
+        void addDragFloat(const char* label, float* f, float speed = 0.1f);
     };
 }
 

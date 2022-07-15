@@ -29,7 +29,7 @@ void PrimaryApp::init()
 	Logger::init(appPath);
 	renderer.init(windowWidth, windowHeight, windowName);
 	Input::init(renderer.getWindow());
-	mainUI.init(renderer.getWindow());
+	mainUI.init(&renderer);
 
 	Globals::app = this;
 }
@@ -103,8 +103,12 @@ void PrimaryApp::mainLoop()
 		sprite1.move(Input::getAxis("Vertical") * speed * sprite1.forward());
 		sprite1.rotate(-Input::getAxis("Horizontal") * 0.03); 
 
+		mainUI.print(std::to_string(sprite1.getGlobalRotation()));
+
 		if(Input::isPressed(Key::comma)) camera.zoom -= 0.01f;
 		if(Input::isPressed(Key::period)) camera.zoom += 0.01f;
+
+		mainUI.addDragFloat("Zoom", &camera.zoom, 0.01f);
 		
 		executeDeferredFunctions();
 		/////////////////
