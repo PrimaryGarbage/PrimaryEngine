@@ -28,6 +28,7 @@ namespace prim
         std::vector<DragFloat> dragFloats;
         
         void drawRightPanel();
+        void drawLeftPanel();
 
     public:
         UI() = default;

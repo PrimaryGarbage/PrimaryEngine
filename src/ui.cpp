@@ -13,7 +13,7 @@ namespace prim
         ImGui::SetNextWindowSize(panelSize);
         ImGui::SetNextWindowPos(panelPos, 0, ImVec2(1.0f, 0.0f));
 
-        ImGui::Begin("RightPanel", nullptr, flags);
+        ImGui::Begin("Node Info", nullptr, flags);
         {
             panelSize = ImVec2(ImGui::GetWindowSize().x, renderer->getWindowHeight());
 
@@ -33,6 +33,20 @@ namespace prim
         ImGui::End();
     }
 
+    void UI::drawLeftPanel()
+    {
+        const static ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove;
+        static ImVec2 panelSize(rightPanelWidth, renderer->getWindowHeight());
+        ImGui::SetNextWindowSize(panelSize);
+        ImGui::SetNextWindowPos(ImVec2());
+
+        ImGui::Begin("Scene", nullptr, flags);
+        {
+            panelSize = ImVec2(ImGui::GetWindowSize().x, renderer->getWindowHeight());
+
+        }
+        ImGui::End();
+    }
 
     UI::~UI()
     {
@@ -60,6 +74,7 @@ namespace prim
 
         /// Drawing happends here ///
         drawRightPanel();
+        drawLeftPanel();
 
         //ImGui::ShowDemoWindow();
 
