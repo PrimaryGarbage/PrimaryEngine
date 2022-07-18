@@ -28,7 +28,7 @@ namespace prim
 
         throw PRIM_EXCEPTION("There are no more free node IDs");
     }
-
+    
     void NodeBase::freeUniqueId(unsigned int id)
     {
         idPool[id] = false;

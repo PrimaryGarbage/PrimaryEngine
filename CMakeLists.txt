@@ -20,6 +20,7 @@ set(PRIMARY_SRC
 	utils.hpp
 	globals.hpp
 	ui.hpp ui.cpp
+	scene_manager.hpp scene_manager.cpp
 	)
 
 set(NODES_SRC
@@ -31,6 +32,7 @@ set(NODES_SRC
 	camera_base.hpp camera_base.cpp
 	camera2d.hpp camera2d.cpp
 	actor_camera2d.hpp actor_camera2d.cpp
+	node_serializer.hpp node_utils.hpp
 )
 
 set(GRAPHICS_SRC

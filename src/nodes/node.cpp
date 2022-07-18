@@ -1,7 +1,9 @@
 #include "node.hpp"
 #include "prim_exception.hpp"
 #include <algorithm>
+#include <sstream>
 #include "renderer.hpp"
+#include "scene_manager.hpp"
 
 namespace prim
 {

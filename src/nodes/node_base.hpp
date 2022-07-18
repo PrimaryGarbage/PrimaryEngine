@@ -20,6 +20,8 @@ namespace prim
     public:
         NodeBase();
         virtual ~NodeBase();
+        
+        virtual inline const char* getTypeName() const = 0;
     };
 }
 
