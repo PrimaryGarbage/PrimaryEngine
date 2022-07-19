@@ -2,32 +2,37 @@
 #include "prim_exception.hpp"
 #include <fstream>
 #include <filesystem>
-
+#include "node.hpp"
 
 namespace prim
 {
-    std::string SceneManager::serialize(Node* node)
+    namespace fs = std::filesystem;
+   
+    SceneManager::SceneManager(const char* savePath) : savePath(savePath)
     {
-        
+        fs::path path(savePath);
+        if(!fs::exists(path))
+        {
+            fs::create_directories(path);
+        }
     }
 
-    namespace fs = std::filesystem;
 
-    void SceneManager::loadScene(const char* filePath, Node* parentNode)
+    void SceneManager::loadScene(std::string fileName, Node* parentNode)
     {
     }
     
-    void SceneManager::saveScene(Node* scene, const char* filePath, bool ovewrite)
+    void SceneManager::saveScene(Node* scene, std::string fileName, bool ovewrite)
     {
-        fs::path path(filePath);
-        if(fs::exists(path) && !ovewrite) throw PRIM_EXCEPTION("File with the path '" + std::string(filePath) + "' already exists.");
+        fs::path path(savePath + fileName + sceneFileExtension);
+        if(fs::exists(path) && !ovewrite) throw PRIM_EXCEPTION("File with the path '" + path.string() + "' already exists.");
 
         std::ofstream stream(path.string(), std::ios::out | std::ios::trunc);
         if(!stream.good()) throw PRIM_EXCEPTION("Unable to open file stream.");
 
-        
+        stream << scene->serialize();
 
-        /// seialize scene and write it to the file //
+        stream.close();
     }
 
 }

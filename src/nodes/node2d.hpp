@@ -53,6 +53,7 @@ namespace prim
         void setGlobalScale(float s);
         void setGlobalScale(glm::vec2 s);
 
+        virtual std::string serialize() const override;
     };
 
 }

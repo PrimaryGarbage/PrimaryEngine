@@ -6,6 +6,7 @@
 #include "renderer.hpp"
 #include "timer.hpp"
 #include "ui.hpp"
+#include "scene_manager.hpp"
 
 namespace prim
 {
@@ -24,6 +25,7 @@ private:
 	Renderer renderer;
 	UI mainUI;
 	Node* currentScene = nullptr;
+	SceneManager sceneManager;
 	std::vector<std::pair<deferred_func_type, short>> deferredFunctions;
 
 	void mainLoop();

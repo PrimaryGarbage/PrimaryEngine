@@ -32,7 +32,7 @@ set(NODES_SRC
 	camera_base.hpp camera_base.cpp
 	camera2d.hpp camera2d.cpp
 	actor_camera2d.hpp actor_camera2d.cpp
-	node_serializer.hpp node_utils.hpp
+	node_utils.hpp
 )
 
 set(GRAPHICS_SRC

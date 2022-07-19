@@ -10,12 +10,11 @@
 #include "sprite.hpp"
 #include "actor_camera2d.hpp"
 #include "globals.hpp"
-#include "ui.hpp"
 
 namespace prim
 {
 
-PrimaryApp::PrimaryApp(const char* appPath) : appPath(appPath), deltaTime(0.0f), timeSinceStart(0.0f)
+PrimaryApp::PrimaryApp(const char* appPath) : appPath(appPath), deltaTime(0.0f), timeSinceStart(0.0f), sceneManager("./res/scenes/")
 {
 }
 
@@ -82,6 +81,8 @@ void PrimaryApp::mainLoop()
 	scene.addChild(&camera);
 
 	setCurrentScene(&scene);
+
+	sceneManager.saveScene(&scene, "testSceneSprite1", true);
 
 	while(!renderer.windowShouldClose())
 	{

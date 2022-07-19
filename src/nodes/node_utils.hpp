@@ -7,6 +7,7 @@
 #include "sprite.hpp"
 #include "camera2d.hpp"
 #include "actor_camera2d.hpp"
+#include <sstream>
 
 namespace prim
 {
@@ -31,24 +32,58 @@ namespace prim
         { getNodeTypeName<ActorCamera2D>(), 4 }
     };
 
+    struct NodeFields
+    {
+        inline static const char* header = "Node";
+        inline static const char* type = "type";
+        inline static const char* name = "name";
+        inline static const char* children = "children";
+        inline static const char* position = "position";
+        inline static const char* rotation = "rotation";
+        inline static const char* scale = "scale";
+        inline static const char* pivot = "pivot";
+        inline static const char* width = "width";
+        inline static const char* height = "height";
+        inline static const char* zIndex = "zIndex";
+        inline static const char* imagePath = "imagePath";
+        inline static const char* zNear = "zNear";
+        inline static const char* zFar = "zFar";
+        inline static const char* zoom = "zoom";
+        inline static const char* target = "target";
+        inline static const char* initialOffset = "initialOffset";
+        inline static const char* stiffness = "stiffness";
+        inline static const char* rotateWithTarget = "rotateWithTarget";
+    };
+
     template<class... Args>
     Node* createNode(const char* type, const char* name, Args&&... args)
     {
-        switch (nodeTypeMap[type])
+        switch (nodeTypeMap.at(type))
         {
-            case 0:
-                return new Node(name);
-            case 1:
-                return new Node2D(name);
-            case 2: 
-                return new Sprite(name, std::forward<Args>(args)...);
-            case 3:
-                return new Camera2D(name, std::forward<Args>(args)...);
-            case 4:
-                return new ActorCamera2D(name, std::forward<Args>(args)...);
-            default:
-                return nullptr;
+        case 0:
+            return new Node(name);
+        case 1:
+            return new Node2D(name);
+        case 2:
+            return new Sprite(name, std::forward<Args>(args)...);
+        case 3:
+            return new Camera2D(name, std::forward<Args>(args)...);
+        case 4:
+            return new ActorCamera2D(name, std::forward<Args>(args)...);
+        default:
+            return nullptr;
         }
+    }
+
+    inline std::string createKeyValuePair(std::string key, std::string value)
+    {
+        static const char keyValueSeparator = '=';
+        return std::string(std::move(key) + keyValueSeparator + std::move(value));
+    }
+
+    inline std::string serializeVec2(const glm::vec2& vec)
+    {
+        return std::to_string(vec.x) + ',' + std::to_string(vec.y);
     }
 }
 

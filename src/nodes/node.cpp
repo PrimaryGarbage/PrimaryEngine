@@ -1,9 +1,8 @@
 #include "node.hpp"
 #include "prim_exception.hpp"
 #include <algorithm>
-#include <sstream>
 #include "renderer.hpp"
-#include "scene_manager.hpp"
+#include "node_utils.hpp"
 
 namespace prim
 {
@@ -51,6 +50,20 @@ namespace prim
     const std::vector<Node*>& Node::getChildren() const
     {
         return children;
+    }
+
+    std::string Node::serialize() const
+    {
+        std::stringstream ss;
+        ss << NodeFields::header << std::endl;
+        ss << createKeyValuePair(NodeFields::type, getNodeTypeName<Node>()) << std::endl;
+        ss << createKeyValuePair(NodeFields::name, name) << std::endl;
+        ss << NodeFields::children << std::endl;
+        ss << "{\n";
+        for (Node* child : children)
+            ss << child->serialize() << std::endl;
+        ss << "}\n";
+        return ss.str();
     }
 
 }

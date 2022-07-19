@@ -41,7 +41,9 @@ namespace prim
         inline float getHeight() const { return height; }
         inline glm::vec2 getSize() const { return glm::vec2(width, height); }
         inline float getZIndex() const { return zIndex; }
+        inline const Image* getImage() const { return &image; }
 
+        virtual std::string serialize() const override;
     };
 
 }

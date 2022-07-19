@@ -4,6 +4,7 @@
 #include "gtx/vector_angle.hpp"
 #include "utils.hpp"
 #include "logger.hpp"
+#include "node_utils.hpp"
 
 namespace prim
 {
@@ -56,7 +57,7 @@ namespace prim
     {
         transform.scale *= s;
     }
-    
+
     void Node2D::lookAt(glm::vec2 v)
     {
         const static glm::vec2 up(0.0f, 1.0f);
@@ -66,7 +67,7 @@ namespace prim
     void Node2D::lookAtSmooth(glm::vec2 v, float stiffness)
     {
         const static glm::vec2 up(0.0f, 1.0f);
-        setGlobalRotation(Utils::lerpAngle(getGlobalRotation(),-glm::orientedAngle(glm::normalize(v - getGlobalPosition()), up), Utils::clamp(stiffness, 0.0f, 1.0f)));
+        setGlobalRotation(Utils::lerpAngle(getGlobalRotation(), -glm::orientedAngle(glm::normalize(v - getGlobalPosition()), up), Utils::clamp(stiffness, 0.0f, 1.0f)));
     }
 
     glm::vec2 Node2D::getPosition() const
@@ -216,6 +217,24 @@ namespace prim
         {
             transform.scale = s;
         }
+    }
+
+    std::string Node2D::serialize() const
+    {
+        std::stringstream ss;
+        ss << NodeFields::header << std::endl;
+        ss << createKeyValuePair(NodeFields::type, getNodeTypeName<Node2D>()) << std::endl;
+        ss << createKeyValuePair(NodeFields::name, name) << std::endl;
+        ss << createKeyValuePair(NodeFields::position, serializeVec2(getPosition())) << std::endl;
+        ss << createKeyValuePair(NodeFields::rotation, std::to_string(getRotation())) << std::endl;
+        ss << createKeyValuePair(NodeFields::scale, serializeVec2(getScale())) << std::endl;
+        ss << createKeyValuePair(NodeFields::pivot, serializeVec2(getPivot())) << std::endl;
+        ss << NodeFields::children << std::endl;
+        ss << "{\n";
+        for (Node* child : children)
+            ss << child->serialize() << std::endl;
+        ss << "}\n";
+        return ss.str();
     }
 
 }

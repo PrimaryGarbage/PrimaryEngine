@@ -27,6 +27,9 @@ namespace prim
         inline Node2D* getTarget() const { return target; }
         void setStiffness(float value);
         inline float getStiffness() const { return stiffness; }
+        inline glm::vec2 getInitialOffset() const { return initialOffset; }
+
+        virtual std::string serialize() const override;
     };
 }
 

@@ -25,6 +25,8 @@ namespace prim
         virtual void start() override;
         virtual void update(float deltaTime) override;
         virtual void draw(Renderer& renderer) override;
+
+        virtual std::string serialize() const override;
     };
 
 }

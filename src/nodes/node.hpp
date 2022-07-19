@@ -2,7 +2,6 @@
 #define __NODE_HPP__
 
 #include <vector>
-#include <string>
 #include <unordered_map>
 #include "node_base.hpp"
 #include "glm.hpp"
@@ -35,6 +34,8 @@ namespace prim
         virtual void addChild(Node* node);
         virtual void removeChild(Node* node);
         virtual const std::vector<Node*>& getChildren() const;
+
+        virtual std::string serialize() const override;
 
         template<class T>
         T* findChild(std::string name)

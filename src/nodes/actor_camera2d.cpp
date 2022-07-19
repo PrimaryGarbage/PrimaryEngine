@@ -2,6 +2,7 @@
 #include "gtx/rotate_vector.hpp"
 #include "utils.hpp"
 #include "globals.hpp"
+#include "node_utils.hpp"
 
 namespace prim
 {
@@ -30,7 +31,7 @@ namespace prim
     {
         UPDATE_CHILDREN
 
-        auto followTargetFunction = [this]() {
+            auto followTargetFunction = [this]() {
             glm::vec2 position;
             if (rotateWithTarget)
             {
@@ -60,5 +61,29 @@ namespace prim
     void ActorCamera2D::setStiffness(float value)
     {
         stiffness = Utils::clamp(value, 0.0f, 1.0f);
+    }
+
+    std::string ActorCamera2D::serialize() const
+    {
+        std::stringstream ss;
+        ss << NodeFields::header << std::endl;
+        ss << createKeyValuePair(NodeFields::type, getNodeTypeName<ActorCamera2D>()) << std::endl;
+        ss << createKeyValuePair(NodeFields::name, name) << std::endl;
+        ss << createKeyValuePair(NodeFields::position, serializeVec2(getPosition())) << std::endl;
+        ss << createKeyValuePair(NodeFields::rotation, std::to_string(getRotation())) << std::endl;
+        ss << createKeyValuePair(NodeFields::scale, serializeVec2(getScale())) << std::endl;
+        ss << createKeyValuePair(NodeFields::pivot, serializeVec2(getPivot())) << std::endl;
+        ss << createKeyValuePair(NodeFields::zNear, std::to_string(zNear)) << std::endl;
+        ss << createKeyValuePair(NodeFields::zFar, std::to_string(zFar)) << std::endl;
+        ss << createKeyValuePair(NodeFields::zoom, std::to_string(zoom)) << std::endl;
+        ss << createKeyValuePair(NodeFields::target, target->name) << std::endl;
+        ss << createKeyValuePair(NodeFields::initialOffset, serializeVec2(initialOffset)) << std::endl;
+        ss << createKeyValuePair(NodeFields::stiffness, std::to_string(stiffness)) << std::endl;
+        ss << NodeFields::children << std::endl;
+        ss << "{\n";
+        for (Node* child : children)
+            ss << child->serialize() << std::endl;
+        ss << "}\n";
+        return ss.str();
     }
 }

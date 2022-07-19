@@ -12,12 +12,15 @@ namespace prim
     private:
         const static inline char* sceneFileExtension = ".psc";
         const static inline char keyValueSeparator = '=';
+        const char* savePath;
 
         std::string serialize(Node* node);
         //void appendNodeToFile(Node* )
     public:
-        void loadScene(const char* filePath, Node* parentNode);
-        void saveScene(Node* scene, const char* filePath, bool ovewrite = false);
+        SceneManager(const char* savePath);
+
+        void loadScene(std::string fileName, Node* parentNode);
+        void saveScene(Node* scene, std::string fileName, bool ovewrite = false);
 
     };
 }

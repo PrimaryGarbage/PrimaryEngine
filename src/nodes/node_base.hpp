@@ -2,6 +2,7 @@
 #define __NODE_BASE_HPP__
 
 #include <stack>
+#include <string>
 
 namespace prim
 {
@@ -20,8 +21,8 @@ namespace prim
     public:
         NodeBase();
         virtual ~NodeBase();
-        
-        virtual inline const char* getTypeName() const = 0;
+
+        virtual std::string serialize() const = 0;
     };
 }
 
