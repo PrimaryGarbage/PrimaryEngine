@@ -15,8 +15,9 @@ namespace prim
     public:
         bool rotateWithTarget = true;
 
-        ActorCamera2D(std::string name, Renderer* renderer, Node2D* target);
-        ActorCamera2D(std::string name, Renderer* renderer, float zNear, float zFar, Node2D* target);
+        ActorCamera2D(std::string name, Node2D* target);
+        ActorCamera2D(std::string name, float zNear, float zFar, Node2D* target);
+        ActorCamera2D(std::unordered_map<std::string, std::string>& fieldValues);
         virtual ~ActorCamera2D();
 
         virtual void start() override;

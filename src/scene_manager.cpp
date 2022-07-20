@@ -3,7 +3,9 @@
 #include <fstream>
 #include <filesystem>
 #include <sstream>
-#include "node.hpp"
+#include <unordered_map>
+#include <stack>
+#include "node_utils.hpp"
 
 namespace prim
 {
@@ -23,14 +25,73 @@ namespace prim
     {
         fs::path path(savePath + fileName + sceneFileExtension);
         if (!fs::exists(path)) throw PRIM_EXCEPTION("File with the path '" + path.string() + "' doesn't exists.");
-        
+
         std::ifstream stream(path.string(), std::ios::in);
         if (!stream.good()) throw PRIM_EXCEPTION("Unable to open file stream.");
 
-        std::stringstream ss;
-        ss << stream.rdbuf();
-        std::string data = std::move(ss.str());
+        std::string line;
 
+        Node* node = parentNode;
+        std::stack<std::pair<Node*, std::unordered_map<std::string, std::string>>> parentNodes;
+        std::unordered_map<std::string, std::string> fields;
+
+        while (true)
+        {
+            std::getline(stream, line);
+            if (stream.eof()) break;
+
+            if (line == NodeFields::header)
+            {
+                if (!fields.empty())
+                {
+                    node = createNode(fields[NodeFields::type].c_str(), fields);
+                    parentNodes.top().first->addChild(node);
+                    fields.clear();
+                    node = nullptr;
+                }
+                continue;
+            }
+
+            if (line == NodeFields::children)
+            {
+                if (!fields.empty())
+                {
+                    node = createNode(fields[NodeFields::type].c_str(), fields);
+                    parentNodes.top().first->addChild(node);
+                    fields.clear();
+                    node = nullptr;
+                }
+                std::getline(stream, line); // skip '{'
+                parentNodes.push(std::pair(node, fields));
+                fields.clear();
+                continue;
+            }
+
+            if (line == "}")
+            {
+                if (!fields.empty())
+                {
+                    node = createNode(fields[NodeFields::type].c_str(), fields);
+                    parentNodes.top().first->addChild(node);
+                }
+
+                node = parentNodes.top().first;
+                fields = parentNodes.top().second;
+                parentNodes.pop();
+                continue;
+            }
+
+            std::pair<std::string, std::string> keyValuePair = parseKeyValuePair(line);
+            fields.insert(keyValuePair);
+        }
+
+        if (!fields.empty())
+        {
+            node = createNode(fields[NodeFields::type].c_str(), fields);
+            parentNodes.top().first->addChild(node);
+            fields.clear();
+            node = nullptr;
+        }
 
         stream.close();
     }
@@ -48,4 +109,10 @@ namespace prim
         stream.close();
     }
 
+    void SceneManager::freeScene(Node* scene)
+    {
+        for (Node* child : scene->getChildren())
+            freeScene(child);
+        delete scene;
+    }
 }

@@ -21,6 +21,7 @@ PrimaryApp::PrimaryApp(const char* appPath) : appPath(appPath), deltaTime(0.0f),
 PrimaryApp::~PrimaryApp()
 {
 	Logger::terminate();
+	if(currentScene) sceneManager.freeScene(currentScene);
 }
 
 void PrimaryApp::init()
@@ -31,6 +32,7 @@ void PrimaryApp::init()
 	mainUI.init(&renderer);
 
 	Globals::app = this;
+	Globals::mainRenderer = &renderer;
 }
 
 void PrimaryApp::run()
@@ -58,31 +60,10 @@ void PrimaryApp::deferFunctionExecution(deferred_func_type function, short order
 
 void PrimaryApp::mainLoop()
 {
-	Node scene("TestScene");
+	Node* scene = new Node("TestScene");
+	setCurrentScene(scene);
 
-	Sprite sprite1("testSprite", "res/textures/TestTexture.png");
-	Sprite sprite2("testSprite", "res/textures/TestTexture.png");
-	Sprite background("background", "res/textures/abstract_stairs.png");
-
-	ActorCamera2D camera("Player camera", &renderer, &sprite1);
-	camera.move(0.0f, -100.0f);
-	camera.setStiffness(0.01f);
-	background.setSize(1920.0f, 1080.0f);
-	background.setCenterPivot();
-	sprite1.setCenterPivot();
-	sprite2.setCenterPivot();
-	sprite2.move(200.0f, 200.0f);
-	sprite2.setZIndex(1.0f);
-	float speed = 10.0f;
-
-	scene.addChild(&background);
-	scene.addChild(&sprite1);
-	scene.addChild(&sprite2);
-	scene.addChild(&camera);
-
-	setCurrentScene(&scene);
-
-	sceneManager.saveScene(&scene, "testSceneSprite1", true);
+	sceneManager.loadScene("testSceneSprite1", scene);
 
 	while(!renderer.windowShouldClose())
 	{
@@ -99,18 +80,6 @@ void PrimaryApp::mainLoop()
 		if(currentScene)
 			currentScene->update(deltaTime);
 
-		sprite2.lookAtSmooth(sprite1.getGlobalPosition(), 0.05f);
-
-		sprite1.move(Input::getAxis("Vertical") * speed * sprite1.forward());
-		sprite1.rotate(-Input::getAxis("Horizontal") * 0.03); 
-
-		mainUI.print(std::to_string(sprite1.getGlobalRotation()));
-
-		if(Input::isPressed(Key::comma)) camera.zoom -= 0.01f;
-		if(Input::isPressed(Key::period)) camera.zoom += 0.01f;
-
-		mainUI.addDragFloat("Zoom", &camera.zoom, 0.01f);
-		
 		executeDeferredFunctions();
 		/////////////////
 

@@ -2,6 +2,7 @@
 #define __UTILS_HPP__
 
 #include "glm.hpp"
+#include "gtc/constants.hpp"
 #include "logger.hpp"
 
 namespace prim
@@ -67,6 +68,33 @@ namespace prim
             return std::min(max, std::max(value, min));
         }
 
+        static std::vector<std::string> splitString(std::string str, std::string delimiter)
+        {
+            std::vector<std::string> strings;
+            size_t pos = 0, prevPos = 0;
+            while ((pos = str.find(delimiter)) != std::string::npos)
+            {
+                strings.emplace_back(std::move(str.substr(prevPos, pos)));
+                prevPos = pos;
+            }
+            strings.push_back(std::move(str.substr(pos)));
+
+            return strings;
+        }
+
+        static inline std::vector<std::string> splitString(const std::string& str, const char delimiter)
+        {
+            std::vector<std::string> strings;
+            size_t pos = 0, prevPos = 0;
+            while ((pos = str.find(delimiter)) != std::string::npos)
+            {
+                strings.emplace_back(std::move(str.substr(prevPos, pos)));
+                prevPos = pos;
+            }
+            strings.push_back(std::move(str.substr(pos + 1)));
+
+            return strings;
+        }
     };
 
 }

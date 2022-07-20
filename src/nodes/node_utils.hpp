@@ -7,7 +7,9 @@
 #include "sprite.hpp"
 #include "camera2d.hpp"
 #include "actor_camera2d.hpp"
+#include "utils.hpp"
 #include <sstream>
+
 
 namespace prim
 {
@@ -31,6 +33,9 @@ namespace prim
         { getNodeTypeName<Camera2D>(), 3 },
         { getNodeTypeName<ActorCamera2D>(), 4 }
     };
+
+    static const char keyValueSeparator = '=';
+    static const char vecSeparator = ',';
 
     struct NodeFields
     {
@@ -56,7 +61,7 @@ namespace prim
     };
 
     template<class... Args>
-    Node* createNode(const char* type, const char* name, Args&&... args)
+    inline Node* createNode(const char* type, const char* name, Args&&... args)
     {
         switch (nodeTypeMap.at(type))
         {
@@ -75,15 +80,45 @@ namespace prim
         }
     }
 
+    inline Node* createNode(const char* type, std::unordered_map<std::string, std::string>& fieldValues)
+    {
+        switch (nodeTypeMap.at(type))
+        {
+        case 0:
+            return new Node(fieldValues);
+        case 1:
+            return new Node2D(fieldValues);
+        case 2:
+            return new Sprite(fieldValues);
+        case 3:
+            return new Camera2D(fieldValues);
+        case 4:
+            return new ActorCamera2D(fieldValues);
+        default:
+            return nullptr;
+        }
+    }
+
     inline std::string createKeyValuePair(std::string key, std::string value)
     {
-        static const char keyValueSeparator = '=';
         return std::string(std::move(key) + keyValueSeparator + std::move(value));
+    }
+
+    inline std::pair<std::string, std::string> parseKeyValuePair(const std::string& line)
+    {
+        size_t pos = line.find(keyValueSeparator);
+        return std::pair(line.substr(0, pos), line.substr(pos + 1));
     }
 
     inline std::string serializeVec2(const glm::vec2& vec)
     {
-        return std::to_string(vec.x) + ',' + std::to_string(vec.y);
+        return std::to_string(vec.x) + vecSeparator + std::to_string(vec.y);
+    }
+
+    inline glm::vec2 deserializeVec2(const std::string& line)
+    {
+        std::vector<std::string> values = Utils::splitString(line, vecSeparator);
+        return glm::vec2(std::stof(values[0]), std::stof(values[1]));
     }
 }
 

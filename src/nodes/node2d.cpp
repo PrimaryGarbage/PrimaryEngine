@@ -12,6 +12,15 @@ namespace prim
     Node2D::Node2D(std::string name) : Node(name)
     {
     }
+    
+    Node2D::Node2D(std::unordered_map<std::string, std::string>& fieldValues) 
+        : Node(fieldValues[NodeFields::name])
+    {
+        transform.position = deserializeVec2(fieldValues[NodeFields::position]);
+        transform.rotation = std::stof(fieldValues[NodeFields::rotation]);
+        transform.scale = deserializeVec2(fieldValues[NodeFields::scale]);
+        transform.pivot = deserializeVec2(fieldValues[NodeFields::pivot]);
+    }
 
     Node2D::~Node2D()
     {

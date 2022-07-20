@@ -19,6 +19,19 @@ namespace prim
         planeMesh.compositions[0].texture.load(image);
     }
 
+    Sprite::Sprite(std::unordered_map<std::string, std::string>& fieldValues)
+        : Node2D(fieldValues), planeMesh(Primitives::createSquareMesh(defaultSize)), width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
+    {
+        if (!fieldValues[NodeFields::imagePath].empty())
+        {
+            image.load(fieldValues[NodeFields::imagePath]);
+            planeMesh.compositions[0].texture.load(image);
+        }
+        setWidth(std::stof(fieldValues[NodeFields::width]));
+        setHeight(std::stof(fieldValues[NodeFields::height]));
+        setZIndex(std::stof(fieldValues[NodeFields::zIndex]));
+    }
+
     Sprite::~Sprite()
     {
     }

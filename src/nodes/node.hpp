@@ -8,9 +8,9 @@
 
 namespace prim
 {
-    #define START_CHILDREN for(Node* child : children) child->start();
-    #define UPDATE_CHILDREN for(Node* child : children) child->update(deltaTime);
-    #define DRAW_CHILDREN for(Node* child : children) child->draw(renderer);
+#define START_CHILDREN for(Node* child : children) child->start();
+#define UPDATE_CHILDREN for(Node* child : children) child->update(deltaTime);
+#define DRAW_CHILDREN for(Node* child : children) child->draw(renderer);
 
     class Renderer;
 
@@ -25,6 +25,7 @@ namespace prim
         std::string name;
 
         Node(std::string name);
+        Node(std::unordered_map<std::string, std::string>& fieldValues);
         virtual ~Node();
 
         virtual void start();
@@ -41,21 +42,37 @@ namespace prim
         T* findChild(std::string name)
         {
             T* childT = nullptr;
-            for(Node* child : children)
+            for (Node* child : children)
             {
                 childT = dynamic_cast<T*>(child);
-                if(childT)
+                if (childT)
                 {
-                    if(childT->name == name)
+                    if (childT->name == name)
                         return childT;
                     else
                         childT = nullptr;
                 }
 
-                return child->findChild<T>(std::move(name));
+                childT = child->findChild<T>(name);
+                if(childT) return childT;
             }
 
             return childT;
+        }
+
+        Node* findChild(std::string name)
+        {
+            Node* child = nullptr;
+            for (Node* child : children)
+            {
+                if (child->name == name)
+                    return child;
+
+                child = child->findChild(name);
+                if(child) return child;
+            }
+
+            return child;
         }
 
     };

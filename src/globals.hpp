@@ -8,6 +8,7 @@ namespace prim
     struct Globals
     {
         static inline PrimaryApp* app = nullptr;
+        static inline Renderer* mainRenderer = nullptr;
     };
 }
 

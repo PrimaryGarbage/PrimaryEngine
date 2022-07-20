@@ -21,6 +21,7 @@ namespace prim
 
         void loadScene(std::string fileName, Node* parentNode);
         void saveScene(Node* scene, std::string fileName, bool ovewrite = false);
+        void freeScene(Node* scene);
 
     };
 }

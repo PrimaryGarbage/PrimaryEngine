@@ -15,8 +15,9 @@ namespace prim
         float zFar;
         float zoom = 1.0f;
 
-        Camera2D(std::string name, Renderer* renderer);
-        Camera2D(std::string name, Renderer* renderer, float zNear, float zFar);
+        Camera2D(std::string name);
+        Camera2D(std::string name, float zNear, float zFar);
+        Camera2D(std::unordered_map<std::string, std::string>& fieldValues);
         virtual ~Camera2D();
 
         virtual glm::mat4 calculateViewMatrix() const override;

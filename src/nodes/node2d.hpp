@@ -10,10 +10,11 @@ namespace prim
 
     class Node2D : public Node
     {
-    private:
+    protected:
         Transform2D transform;
     public:
         Node2D(std::string name);
+        Node2D(std::unordered_map<std::string, std::string>& fieldValues);
         virtual ~Node2D();
 
         virtual void start() override;

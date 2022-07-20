@@ -12,7 +12,7 @@ namespace prim
         Renderer* renderer;
         bool current = false;
     public:
-        CameraBase(std::string name, Renderer* renderer);
+        CameraBase(std::string name);
         virtual ~CameraBase();
 
         virtual glm::mat4 calculateViewMatrix() const = 0;

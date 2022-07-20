@@ -6,14 +6,21 @@
 
 namespace prim
 {
-    ActorCamera2D::ActorCamera2D(std::string name, Renderer* renderer, Node2D* target)
-        : ActorCamera2D(name, renderer, -1.0f, 1.0f, target)
+    ActorCamera2D::ActorCamera2D(std::string name, Node2D* target)
+        : ActorCamera2D(name, -1.0f, 1.0f, target)
     {
     }
 
-    ActorCamera2D::ActorCamera2D(std::string name, Renderer* renderer, float zNear, float zFar, Node2D* target)
-        : Camera2D(name, renderer, zNear, zFar), target(target)
+    ActorCamera2D::ActorCamera2D(std::string name, float zNear, float zFar, Node2D* target)
+        : Camera2D(name, zNear, zFar), target(target)
     {
+    }
+    
+    ActorCamera2D::ActorCamera2D(std::unordered_map<std::string, std::string>& fieldValues) 
+        : Camera2D(fieldValues), stiffness(std::stof(fieldValues[NodeFields::stiffness])),
+        target(Globals::app->getCurrentScene()->findChild<Node2D>(fieldValues[NodeFields::target]))
+    {
+        
     }
 
     ActorCamera2D::~ActorCamera2D()
@@ -79,6 +86,7 @@ namespace prim
         ss << createKeyValuePair(NodeFields::target, target->name) << std::endl;
         ss << createKeyValuePair(NodeFields::initialOffset, serializeVec2(initialOffset)) << std::endl;
         ss << createKeyValuePair(NodeFields::stiffness, std::to_string(stiffness)) << std::endl;
+        ss << createKeyValuePair(NodeFields::rotateWithTarget, std::to_string((int)rotateWithTarget)) << std::endl;
         ss << NodeFields::children << std::endl;
         ss << "{\n";
         for (Node* child : children)

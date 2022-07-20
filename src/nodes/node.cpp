@@ -12,6 +12,11 @@ namespace prim
         
     }
     
+    Node::Node(std::unordered_map<std::string, std::string>& fieldValues) 
+        : name(fieldValues[NodeFields::name])
+    {
+    }
+    
     Node::~Node()
     {
         

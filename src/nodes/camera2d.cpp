@@ -7,17 +7,24 @@
 namespace prim
 {
 
-    Camera2D::Camera2D(std::string name, Renderer* renderer)
-        : Camera2D(name, renderer, -1.0f, 1.0f)
+    Camera2D::Camera2D(std::string)
+        : Camera2D(name, -1.0f, 1.0f)
     {
     }
 
-    Camera2D::Camera2D(std::string name, Renderer* renderer, float zNear, float zFar)
-        : CameraBase(name, renderer), zNear(zNear), zFar(zFar)
+    Camera2D::Camera2D(std::string name, float zNear, float zFar)
+        : CameraBase(name), zNear(zNear), zFar(zFar)
     {
         setAsCurrent();
         glm::vec2 windowSize = getWindowSize();
         setPivot(glm::vec2(0.5f, 0.5f));
+    }
+    
+    Camera2D::Camera2D(std::unordered_map<std::string, std::string>& fieldValues) 
+        : Camera2D(fieldValues[NodeFields::name], std::stof(fieldValues[NodeFields::zNear]), std::stof(fieldValues[NodeFields::zFar]))
+    {
+        zoom = std::stof(fieldValues[NodeFields::zoom]);
+        transform.pivot = deserializeVec2(fieldValues[NodeFields::pivot]);
     }
 
     Camera2D::~Camera2D()

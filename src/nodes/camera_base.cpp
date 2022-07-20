@@ -1,9 +1,10 @@
 #include "camera_base.hpp"
 #include "renderer.hpp"
+#include "globals.hpp"
 
 namespace prim
 {
-    CameraBase::CameraBase(std::string name, Renderer* renderer) : Node2D(name), renderer(renderer) 
+    CameraBase::CameraBase(std::string name) : Node2D(name), renderer(Globals::mainRenderer) 
     {
         setAsCurrent();
     }
