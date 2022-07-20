@@ -98,7 +98,7 @@ namespace prim
     void Image::load(std::string filePath)
     {
         unload();
-        assert(std::filesystem::exists(filePath));
+        if(!std::filesystem::exists(filePath)) throw PRIM_EXCEPTION("File not found. Path: '" + filePath + "'.");
         stbi_set_flip_vertically_on_load(1);
         type = parseType(filePath);
         data = stbi_load(filePath.c_str(), &width, &height, &channelCount, getChannelCountOfType(type));

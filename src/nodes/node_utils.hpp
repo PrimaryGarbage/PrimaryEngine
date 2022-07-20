@@ -42,7 +42,8 @@ namespace prim
         inline static const char* header = "Node";
         inline static const char* type = "type";
         inline static const char* name = "name";
-        inline static const char* children = "children";
+        inline static const char* childrenStart = "children_start";
+        inline static const char* childrenEnd = "children_end";
         inline static const char* position = "position";
         inline static const char* rotation = "rotation";
         inline static const char* scale = "scale";

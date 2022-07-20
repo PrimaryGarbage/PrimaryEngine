@@ -231,18 +231,16 @@ namespace prim
     std::string Node2D::serialize() const
     {
         std::stringstream ss;
-        ss << NodeFields::header << std::endl;
         ss << createKeyValuePair(NodeFields::type, getNodeTypeName<Node2D>()) << std::endl;
         ss << createKeyValuePair(NodeFields::name, name) << std::endl;
         ss << createKeyValuePair(NodeFields::position, serializeVec2(getPosition())) << std::endl;
         ss << createKeyValuePair(NodeFields::rotation, std::to_string(getRotation())) << std::endl;
         ss << createKeyValuePair(NodeFields::scale, serializeVec2(getScale())) << std::endl;
         ss << createKeyValuePair(NodeFields::pivot, serializeVec2(getPivot())) << std::endl;
-        ss << NodeFields::children << std::endl;
-        ss << "{\n";
+        ss << NodeFields::childrenStart << std::endl;
         for (Node* child : children)
             ss << child->serialize() << std::endl;
-        ss << "}\n";
+        ss << NodeFields::childrenEnd << std::endl;
         return ss.str();
     }
 

@@ -86,7 +86,7 @@ namespace prim
         {
             std::vector<std::string> strings;
             size_t pos = 0, prevPos = 0;
-            while ((pos = str.find(delimiter)) != std::string::npos)
+            while ((pos = str.find(delimiter, pos + 1)) != std::string::npos)
             {
                 strings.emplace_back(std::move(str.substr(prevPos, pos)));
                 prevPos = pos;

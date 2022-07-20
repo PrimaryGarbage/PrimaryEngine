@@ -60,14 +60,12 @@ namespace prim
     std::string Node::serialize() const
     {
         std::stringstream ss;
-        ss << NodeFields::header << std::endl;
         ss << createKeyValuePair(NodeFields::type, getNodeTypeName<Node>()) << std::endl;
         ss << createKeyValuePair(NodeFields::name, name) << std::endl;
-        ss << NodeFields::children << std::endl;
-        ss << "{\n";
+        ss << NodeFields::childrenStart << std::endl;
         for (Node* child : children)
             ss << child->serialize() << std::endl;
-        ss << "}\n";
+        ss << NodeFields::childrenEnd << std::endl;
         return ss.str();
     }
 

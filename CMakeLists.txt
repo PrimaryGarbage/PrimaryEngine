@@ -21,6 +21,7 @@ set(PRIMARY_SRC
 	globals.hpp
 	ui.hpp ui.cpp
 	scene_manager.hpp scene_manager.cpp
+	test_scenes_creator.hpp
 	)
 
 set(NODES_SRC

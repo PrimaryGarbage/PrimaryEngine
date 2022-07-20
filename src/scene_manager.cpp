@@ -21,7 +21,7 @@ namespace prim
     }
 
 
-    void SceneManager::loadScene(std::string fileName, Node* parentNode)
+    Node* SceneManager::loadScene(std::string fileName)
     {
         fs::path path(savePath + fileName + sceneFileExtension);
         if (!fs::exists(path)) throw PRIM_EXCEPTION("File with the path '" + path.string() + "' doesn't exists.");
@@ -31,7 +31,7 @@ namespace prim
 
         std::string line;
 
-        Node* node = parentNode;
+        Node* node = nullptr;
         std::stack<std::pair<Node*, std::unordered_map<std::string, std::string>>> parentNodes;
         std::unordered_map<std::string, std::string> fields;
 
@@ -40,34 +40,18 @@ namespace prim
             std::getline(stream, line);
             if (stream.eof()) break;
 
-            if (line == NodeFields::header)
-            {
-                if (!fields.empty())
-                {
-                    node = createNode(fields[NodeFields::type].c_str(), fields);
-                    parentNodes.top().first->addChild(node);
-                    fields.clear();
-                    node = nullptr;
-                }
-                continue;
-            }
+            if (line.empty()) continue;
 
-            if (line == NodeFields::children)
+            if (line == NodeFields::childrenStart)
             {
-                if (!fields.empty())
-                {
-                    node = createNode(fields[NodeFields::type].c_str(), fields);
-                    parentNodes.top().first->addChild(node);
-                    fields.clear();
-                    node = nullptr;
-                }
-                std::getline(stream, line); // skip '{'
+                node = createNode(fields[NodeFields::type].c_str(), fields);
+                if (!parentNodes.empty()) parentNodes.top().first->addChild(node);
                 parentNodes.push(std::pair(node, fields));
                 fields.clear();
                 continue;
             }
 
-            if (line == "}")
+            if (line == NodeFields::childrenEnd)
             {
                 if (!fields.empty())
                 {
@@ -75,9 +59,8 @@ namespace prim
                     parentNodes.top().first->addChild(node);
                 }
 
-                node = parentNodes.top().first;
-                fields = parentNodes.top().second;
                 parentNodes.pop();
+                node = nullptr;
                 continue;
             }
 
@@ -94,6 +77,8 @@ namespace prim
         }
 
         stream.close();
+
+        return parentNodes.top().first;
     }
 
     void SceneManager::saveScene(Node* scene, std::string fileName, bool ovewrite)

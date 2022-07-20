@@ -70,7 +70,6 @@ namespace prim
     std::string Camera2D::serialize() const
     {
         std::stringstream ss;
-        ss << NodeFields::header << std::endl;
         ss << createKeyValuePair(NodeFields::type, getNodeTypeName<Camera2D>()) << std::endl;
         ss << createKeyValuePair(NodeFields::name, name) << std::endl;
         ss << createKeyValuePair(NodeFields::position, serializeVec2(getPosition())) << std::endl;
@@ -80,11 +79,10 @@ namespace prim
         ss << createKeyValuePair(NodeFields::zNear, std::to_string(zNear)) << std::endl;
         ss << createKeyValuePair(NodeFields::zFar, std::to_string(zFar)) << std::endl;
         ss << createKeyValuePair(NodeFields::zoom, std::to_string(zoom)) << std::endl;
-        ss << NodeFields::children << std::endl;
-        ss << "{\n";
+        ss << NodeFields::childrenStart << std::endl;
         for (Node* child : children)
             ss << child->serialize() << std::endl;
-        ss << "}\n";
+        ss << NodeFields::childrenEnd << std::endl;
         return ss.str();
     }
 

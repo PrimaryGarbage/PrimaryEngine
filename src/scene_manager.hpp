@@ -19,7 +19,7 @@ namespace prim
     public:
         SceneManager(const char* savePath);
 
-        void loadScene(std::string fileName, Node* parentNode);
+        Node* loadScene(std::string fileName);
         void saveScene(Node* scene, std::string fileName, bool ovewrite = false);
         void freeScene(Node* scene);
 

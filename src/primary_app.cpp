@@ -7,9 +7,8 @@
 #include <filesystem>
 #include <algorithm>
 #include "glm.hpp"
-#include "sprite.hpp"
-#include "actor_camera2d.hpp"
 #include "globals.hpp"
+#include "test_scenes_creator.hpp"
 
 namespace prim
 {
@@ -60,10 +59,11 @@ void PrimaryApp::deferFunctionExecution(deferred_func_type function, short order
 
 void PrimaryApp::mainLoop()
 {
-	Node* scene = new Node("TestScene");
-	setCurrentScene(scene);
+	setCurrentScene(sceneManager.loadScene("TestScene1"));
 
-	sceneManager.loadScene("testSceneSprite1", scene);
+	float speed = 10.0f;
+
+	Sprite* sprite = currentScene->findChild<Sprite>("TestSprite1");
 
 	while(!renderer.windowShouldClose())
 	{
@@ -76,6 +76,9 @@ void PrimaryApp::mainLoop()
 		deferredFunctions.clear();
 
 		Input::update();
+
+		sprite->move(sprite->forward() * Input::getAxis("Vertical") * speed);
+		sprite->rotate(-Input::getAxis("Horizontal") * 0.05f);
 
 		if(currentScene)
 			currentScene->update(deltaTime);

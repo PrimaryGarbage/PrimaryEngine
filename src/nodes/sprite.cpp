@@ -100,7 +100,6 @@ namespace prim
     std::string Sprite::serialize() const
     {
         std::stringstream ss;
-        ss << NodeFields::header << std::endl;
         ss << createKeyValuePair(NodeFields::type, getNodeTypeName<Sprite>()) << std::endl;
         ss << createKeyValuePair(NodeFields::name, name) << std::endl;
         ss << createKeyValuePair(NodeFields::position, serializeVec2(getPosition())) << std::endl;
@@ -111,11 +110,10 @@ namespace prim
         ss << createKeyValuePair(NodeFields::height, std::to_string(height)) << std::endl;
         ss << createKeyValuePair(NodeFields::zIndex, std::to_string(zIndex)) << std::endl;
         ss << createKeyValuePair(NodeFields::imagePath, image.getFilePath()) << std::endl;
-        ss << NodeFields::children << std::endl;
-        ss << "{\n";
+        ss << NodeFields::childrenStart << std::endl;
         for (Node* child : children)
             ss << child->serialize() << std::endl;
-        ss << "}\n";
+        ss << NodeFields::childrenEnd << std::endl;
         return ss.str();
     }
 
