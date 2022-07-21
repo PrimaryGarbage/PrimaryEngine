@@ -2,6 +2,8 @@
 #include "renderer.hpp"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "globals.hpp"
+#include "node.hpp"
 
 namespace prim
 {
@@ -44,8 +46,35 @@ namespace prim
         {
             panelSize = ImVec2(ImGui::GetWindowSize().x, renderer->getWindowHeight());
 
+            static PrimaryApp* app = Globals::app;
+            Node* currentScene = app->getCurrentScene();
+            if (currentScene)
+            {
+                if (ImGui::TreeNode(currentScene->getName().c_str()))
+                {
+                    for (Node* child : currentScene->getChildren())
+                    {
+                        drawNodeInTree(child);
+                    }
+                    ImGui::TreePop();
+                }
+            }
         }
         ImGui::End();
+    }
+
+    void UI::drawNodeInTree(Node* node)
+    {
+        static const ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+        ImGuiTreeNodeFlags flags = baseFlags;
+        if (node == selectedNode) flags |= ImGuiTreeNodeFlags_Selected;
+        bool nodeIsOpen = ImGui::TreeNodeEx(node->getName().c_str(), flags);
+        if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) selectedNode = node;
+        if (nodeIsOpen)
+        {
+            for (Node* child : node->getChildren()) drawNodeInTree(child);
+            ImGui::TreePop();
+        }
     }
 
     UI::~UI()

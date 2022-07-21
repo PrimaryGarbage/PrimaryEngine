@@ -10,6 +10,7 @@ namespace prim
 {
 
     class Renderer;
+    class Node;
 
     struct DragFloat
     {
@@ -26,9 +27,11 @@ namespace prim
         ImGuiIO* io;
         std::vector<std::string> printLines;
         std::vector<DragFloat> dragFloats;
+        Node* selectedNode = nullptr;
         
         void drawRightPanel();
         void drawLeftPanel();
+        void drawNodeInTree(Node* node);
 
     public:
         UI() = default;

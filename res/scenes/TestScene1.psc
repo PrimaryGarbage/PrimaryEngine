@@ -25,8 +25,6 @@ height=100.000000
 zIndex=0.000000
 imagePath=./res/textures/TestTexture.png
 children_start
-children_end
-
 type=Sprite
 name=TestSprite2
 position=200.000000,200.000000
@@ -51,7 +49,6 @@ height=100.000000
 zIndex=0.000000
 imagePath=./res/textures/TestTexture.png
 children_start
-children_end
 
 type=Sprite
 name=TestSprite4
@@ -65,6 +62,11 @@ zIndex=0.000000
 imagePath=./res/textures/TestTexture.png
 children_start
 children_end
+children_end
+
+
+children_end
+
 
 type=ActorCamera2D
 name=TestActorCamera
