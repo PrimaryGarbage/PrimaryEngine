@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include "node_base.hpp"
 #include "glm.hpp"
+#include "node_path.hpp"
 
 namespace prim
 {
@@ -17,12 +18,14 @@ namespace prim
     class Node : public NodeBase
     {
     private:
+        void updateNodePath();
     protected:
+        std::string name;
         Node* parent = nullptr;
         std::vector<Node*> children;
+        NodePath nodePath;
 
     public:
-        std::string name;
 
         Node(std::string name);
         Node(std::unordered_map<std::string, std::string>& fieldValues);
@@ -35,11 +38,15 @@ namespace prim
         virtual void addChild(Node* node);
         virtual void removeChild(Node* node);
         virtual const std::vector<Node*>& getChildren() const;
-
+        virtual const Node* getParent() const;
         virtual std::string serialize() const override;
+        NodePath getNodePath() const;
+        std::string getName() const;
+        void setName(std::string name);
+        Node* findChild(std::string name) const;
 
         template<class T>
-        T* findChild(std::string name)
+        T* findChild(std::string name = "") const
         {
             T* childT = nullptr;
             for (Node* child : children)
@@ -47,34 +54,21 @@ namespace prim
                 childT = dynamic_cast<T*>(child);
                 if (childT)
                 {
-                    if (childT->name == name)
-                        return childT;
+                    if (!name.empty())
+                        if (childT->name == name)
+                            return childT;
+                        else
+                            childT = nullptr;
                     else
-                        childT = nullptr;
+                        return childT;
                 }
 
                 childT = child->findChild<T>(name);
-                if(childT) return childT;
+                if (childT) return childT;
             }
 
             return childT;
         }
-
-        Node* findChild(std::string name)
-        {
-            Node* child = nullptr;
-            for (Node* child : children)
-            {
-                if (child->name == name)
-                    return child;
-
-                child = child->findChild(name);
-                if(child) return child;
-            }
-
-            return child;
-        }
-
     };
 
 }

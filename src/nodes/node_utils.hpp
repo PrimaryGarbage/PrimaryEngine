@@ -55,7 +55,7 @@ namespace prim
         inline static const char* zNear = "zNear";
         inline static const char* zFar = "zFar";
         inline static const char* zoom = "zoom";
-        inline static const char* target = "target";
+        inline static const char* targetPath = "targetPath";
         inline static const char* initialOffset = "initialOffset";
         inline static const char* stiffness = "stiffness";
         inline static const char* rotateWithTarget = "rotateWithTarget";

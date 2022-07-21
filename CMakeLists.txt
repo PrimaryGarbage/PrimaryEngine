@@ -34,6 +34,7 @@ set(NODES_SRC
 	camera2d.hpp camera2d.cpp
 	actor_camera2d.hpp actor_camera2d.cpp
 	node_utils.hpp
+	node_path.hpp node_path.cpp
 )
 
 set(GRAPHICS_SRC

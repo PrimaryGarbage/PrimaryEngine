@@ -6,21 +6,20 @@
 
 namespace prim
 {
-    ActorCamera2D::ActorCamera2D(std::string name, Node2D* target)
+    ActorCamera2D::ActorCamera2D(std::string name, const NodePath& target)
         : ActorCamera2D(name, -1.0f, 1.0f, target)
     {
     }
 
-    ActorCamera2D::ActorCamera2D(std::string name, float zNear, float zFar, Node2D* target)
-        : Camera2D(name, zNear, zFar), target(target)
+    ActorCamera2D::ActorCamera2D(std::string name, float zNear, float zFar, const NodePath& target)
+        : Camera2D(name, zNear, zFar), targetPath(target)
     {
     }
     
     ActorCamera2D::ActorCamera2D(std::unordered_map<std::string, std::string>& fieldValues) 
         : Camera2D(fieldValues), stiffness(std::stof(fieldValues[NodeFields::stiffness])),
-        target(Globals::app->getCurrentScene()->findChild<Node2D>(fieldValues[NodeFields::target]))
+        targetPath(fieldValues[NodeFields::targetPath])
     {
-        
     }
 
     ActorCamera2D::~ActorCamera2D()
@@ -31,7 +30,9 @@ namespace prim
     {
         START_CHILDREN
 
-            initialOffset = getGlobalPosition() - target->getGlobalPosition();
+        target = dynamic_cast<Node2D*>(Globals::app->getNode(targetPath));
+        initialOffset = getGlobalPosition() - target->getGlobalPosition();
+        setAsCurrent();
     }
 
     void ActorCamera2D::update(float deltaTime)
@@ -60,9 +61,10 @@ namespace prim
         DRAW_CHILDREN
     }
 
-    void ActorCamera2D::setTarget(Node2D* target)
+    void ActorCamera2D::setTarget(const NodePath& target)
     {
-        this->target = target;
+        targetPath = target;
+        this->target = dynamic_cast<Node2D*>(Globals::app->getNode(targetPath));
     }
 
     void ActorCamera2D::setStiffness(float value)
@@ -82,7 +84,7 @@ namespace prim
         ss << createKeyValuePair(NodeFields::zNear, std::to_string(zNear)) << std::endl;
         ss << createKeyValuePair(NodeFields::zFar, std::to_string(zFar)) << std::endl;
         ss << createKeyValuePair(NodeFields::zoom, std::to_string(zoom)) << std::endl;
-        ss << createKeyValuePair(NodeFields::target, target->name) << std::endl;
+        ss << createKeyValuePair(NodeFields::targetPath, targetPath.string()) << std::endl;
         ss << createKeyValuePair(NodeFields::initialOffset, serializeVec2(initialOffset)) << std::endl;
         ss << createKeyValuePair(NodeFields::stiffness, std::to_string(stiffness)) << std::endl;
         ss << createKeyValuePair(NodeFields::rotateWithTarget, std::to_string((int)rotateWithTarget)) << std::endl;

@@ -42,6 +42,7 @@ public:
 
 	void setCurrentScene(Node* scene);
 	Node* getCurrentScene() const;
+	Node* getNode(NodePath nodePath);
 
 	void deferFunctionExecution(deferred_func_type function, short order = 1);
 };

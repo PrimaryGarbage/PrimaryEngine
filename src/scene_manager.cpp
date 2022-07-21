@@ -32,7 +32,9 @@ namespace prim
         std::string line;
 
         Node* node = nullptr;
-        std::stack<std::pair<Node*, std::unordered_map<std::string, std::string>>> parentNodes;
+        std::stack<Node*> parentNodes;
+        Node rootNode("Root");
+        parentNodes.push(&rootNode);
         std::unordered_map<std::string, std::string> fields;
 
         while (true)
@@ -45,8 +47,8 @@ namespace prim
             if (line == NodeFields::childrenStart)
             {
                 node = createNode(fields[NodeFields::type].c_str(), fields);
-                if (!parentNodes.empty()) parentNodes.top().first->addChild(node);
-                parentNodes.push(std::pair(node, fields));
+                if (!parentNodes.empty()) parentNodes.top()->addChild(node);
+                parentNodes.push(node);
                 fields.clear();
                 continue;
             }
@@ -56,9 +58,8 @@ namespace prim
                 if (!fields.empty())
                 {
                     node = createNode(fields[NodeFields::type].c_str(), fields);
-                    parentNodes.top().first->addChild(node);
+                    parentNodes.top()->addChild(node);
                 }
-
                 parentNodes.pop();
                 node = nullptr;
                 continue;
@@ -71,14 +72,15 @@ namespace prim
         if (!fields.empty())
         {
             node = createNode(fields[NodeFields::type].c_str(), fields);
-            parentNodes.top().first->addChild(node);
+            parentNodes.top()->addChild(node);
             fields.clear();
             node = nullptr;
         }
 
         stream.close();
 
-        return parentNodes.top().first;
+        if(parentNodes.top()->getChildren().size() > 1) throw PRIM_EXCEPTION("Scene file is corrupted of was written badly. More than one root nodes");
+        return parentNodes.top()->getChildren().front();
     }
 
     void SceneManager::saveScene(Node* scene, std::string fileName, bool ovewrite)

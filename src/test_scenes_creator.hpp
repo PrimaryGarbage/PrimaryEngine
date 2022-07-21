@@ -20,7 +20,7 @@ namespace prim
             Sprite* sprite2 = new Sprite("TestSprite2", "./res/textures/TestTexture.png");
             sprite2->setCenterPivot();
             sprite2->move(200.0f, 200.0f);
-            ActorCamera2D* actorCamera = new ActorCamera2D("TestActorCamera", sprite1);
+            ActorCamera2D* actorCamera = new ActorCamera2D("TestActorCamera", sprite1->getNodePath());
             actorCamera->setStiffness(0.01f);
 
             scene->addChild(background);
@@ -41,7 +41,7 @@ namespace prim
             Sprite* sprite2 = new Sprite("TestSprite2", "./res/textures/TestTexture.png");
             sprite2->setCenterPivot();
             sprite2->move(200.0f, 200.0f);
-            ActorCamera2D* actorCamera = new ActorCamera2D("TestActorCamera", sprite1);
+            ActorCamera2D* actorCamera = new ActorCamera2D("TestActorCamera", sprite1->getNodePath());
             actorCamera->setStiffness(0.01f);
 
             scene->addChild(background);

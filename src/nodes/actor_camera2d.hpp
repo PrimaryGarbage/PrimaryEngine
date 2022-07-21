@@ -9,14 +9,15 @@ namespace prim
     {
     private:
         Node2D* target;
+        NodePath targetPath;
         glm::vec2 initialOffset { 0.0f, 0.0f };
         float stiffness = 1.0f;
         
     public:
         bool rotateWithTarget = true;
 
-        ActorCamera2D(std::string name, Node2D* target);
-        ActorCamera2D(std::string name, float zNear, float zFar, Node2D* target);
+        ActorCamera2D(std::string name, const NodePath& target);
+        ActorCamera2D(std::string name, float zNear, float zFar, const NodePath& target);
         ActorCamera2D(std::unordered_map<std::string, std::string>& fieldValues);
         virtual ~ActorCamera2D();
 
@@ -24,8 +25,8 @@ namespace prim
         virtual void update(float deltaTime) override;
         virtual void draw(Renderer& renderer) override;
 
-        void setTarget(Node2D* target);
-        inline Node2D* getTarget() const { return target; }
+        void setTarget(const NodePath& target);
+        inline NodePath getTarget() const { return targetPath; }
         void setStiffness(float value);
         inline float getStiffness() const { return stiffness; }
         inline glm::vec2 getInitialOffset() const { return initialOffset; }
