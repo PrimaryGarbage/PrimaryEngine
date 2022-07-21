@@ -4,6 +4,7 @@
 #include "glm.hpp"
 #include "gtc/constants.hpp"
 #include "logger.hpp"
+#include <vector>
 
 namespace prim
 {
