@@ -31,23 +31,19 @@ namespace prim
 
     std::string NodePath::string() const
     {
-        if (pathString.empty())
+        std::stringstream ss;
+        for (const std::string nodeName : pathList)
         {
-            std::stringstream ss;
-            for (const std::string nodeName : pathList)
-            {
-                ss << pathDelimiter << nodeName;
-            }
-            pathString = std::move(ss.str());
+            ss << pathDelimiter << nodeName;
         }
-
+        pathString = std::move(ss.str());
         return pathString;
     }
 
     void NodePath::setPath(const Node* node)
     {
         pathList.clear();
-        if (node->getParent()) pathList = node->getNodePath().pathList;
+        if (node->getParent()) pathList = node->getParent()->getNodePath().pathList;
         pathList.push_back(node->getName());
         pathString = string();
     }

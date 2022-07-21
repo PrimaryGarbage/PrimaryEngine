@@ -32,7 +32,7 @@ namespace prim
 
         target = dynamic_cast<Node2D*>(Globals::app->getNode(targetPath));
         initialOffset = getGlobalPosition() - target->getGlobalPosition();
-        setAsCurrent();
+        //setAsCurrent();
     }
 
     void ActorCamera2D::update(float deltaTime)

@@ -108,6 +108,7 @@ namespace prim
     inline std::pair<std::string, std::string> parseKeyValuePair(const std::string& line)
     {
         size_t pos = line.find(keyValueSeparator);
+        std::pair<std::string, std::string> result(line.substr(0, pos), line.substr(pos + 1));
         return std::pair(line.substr(0, pos), line.substr(pos + 1));
     }
 

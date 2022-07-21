@@ -85,14 +85,14 @@ namespace prim
         static inline std::vector<std::string> splitString(const std::string& str, const char delimiter)
         {
             std::vector<std::string> strings;
-            int pos = -1, prevPos = 0;
+            int pos = -1, prevPos = -1;
             while ((pos = str.find(delimiter, pos + 1)) != std::string::npos)
             {
-                std::string substr = str.substr(prevPos + 1, pos - prevPos);
+                std::string substr = str.substr(prevPos, pos - ++prevPos);
                 if(!substr.empty()) strings.emplace_back(std::move(substr));
                 prevPos = pos;
             }
-            strings.push_back(std::move(str.substr(prevPos + 1)));
+            strings.push_back(std::move(str.substr(++prevPos)));
 
             return strings;
         }

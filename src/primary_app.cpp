@@ -83,12 +83,12 @@ namespace prim
 
 	void PrimaryApp::mainLoop()
 	{
-		Node* scene1 = TestScenesCreator::createScene1();
-		sceneManager.saveScene(scene1, "TestScene1", true);
+		// Node* scene1 = TestScenesCreator::createScene1();
+		// sceneManager.saveScene(scene1, "TestScene1", true);
 		// setCurrentScene(scene1);
 
-		Node* scene2 = sceneManager.loadScene("TestScene1");
-		setCurrentScene(scene2);
+		Node* scene1 = sceneManager.loadScene("TestScene1");
+		setCurrentScene(scene1);
 
 		float speed = 10.0f;
 

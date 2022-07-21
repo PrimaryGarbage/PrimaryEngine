@@ -80,6 +80,7 @@ namespace prim
         stream.close();
 
         if(parentNodes.top()->getChildren().size() > 1) throw PRIM_EXCEPTION("Scene file is corrupted of was written badly. More than one root nodes");
+        rootNode.removeChild(parentNodes.top()->getChildren().front());
         return parentNodes.top()->getChildren().front();
     }
 
