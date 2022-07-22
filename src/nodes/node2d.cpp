@@ -5,6 +5,7 @@
 #include "utils.hpp"
 #include "logger.hpp"
 #include "node_utils.hpp"
+#include "imgui.h"
 
 namespace prim
 {
@@ -16,10 +17,10 @@ namespace prim
     Node2D::Node2D(std::unordered_map<std::string, std::string>& fieldValues) 
         : Node(fieldValues[NodeFields::name])
     {
-        transform.position = deserializeVec2(fieldValues[NodeFields::position]);
+        transform.position = Utils::deserializeVec2(fieldValues[NodeFields::position]);
         transform.rotation = std::stof(fieldValues[NodeFields::rotation]);
-        transform.scale = deserializeVec2(fieldValues[NodeFields::scale]);
-        transform.pivot = deserializeVec2(fieldValues[NodeFields::pivot]);
+        transform.scale = Utils::deserializeVec2(fieldValues[NodeFields::scale]);
+        transform.pivot = Utils::deserializeVec2(fieldValues[NodeFields::pivot]);
     }
 
     Node2D::~Node2D()
@@ -231,17 +232,54 @@ namespace prim
     std::string Node2D::serialize() const
     {
         std::stringstream ss;
-        ss << createKeyValuePair(NodeFields::type, getNodeTypeName<Node2D>()) << std::endl;
-        ss << createKeyValuePair(NodeFields::name, name) << std::endl;
-        ss << createKeyValuePair(NodeFields::position, serializeVec2(getPosition())) << std::endl;
-        ss << createKeyValuePair(NodeFields::rotation, std::to_string(getRotation())) << std::endl;
-        ss << createKeyValuePair(NodeFields::scale, serializeVec2(getScale())) << std::endl;
-        ss << createKeyValuePair(NodeFields::pivot, serializeVec2(getPivot())) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::type, typeName) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::name, name) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::position, Utils::serializeVec2(getPosition())) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::rotation, std::to_string(getRotation())) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::scale, Utils::serializeVec2(getScale())) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::pivot, Utils::serializeVec2(getPivot())) << std::endl;
         ss << NodeFields::childrenStart << std::endl;
         for (Node* child : children)
             ss << child->serialize() << std::endl;
         ss << NodeFields::childrenEnd << std::endl;
         return ss.str();
     }
+    
+    void Node2D::visualizeOnUi() 
+    {
+        Node::visualizeOnUi();
 
+        static float posBuffer[2];
+        static float rotBuffer;
+        static float scaleBuffer[2];
+        static float pivotBuffer[2];
+
+        posBuffer[0] = transform.position.x;
+        posBuffer[1] = transform.position.y;
+
+        rotBuffer = transform.rotation;
+
+        scaleBuffer[0] = transform.scale.x;
+        scaleBuffer[1] = transform.scale.y;
+
+        pivotBuffer[0] = transform.pivot.x;
+        pivotBuffer[1] = transform.pivot.y;
+
+        if (ImGui::DragFloat2("Position", posBuffer))
+        {
+            setPosition(glm::vec2(posBuffer[0], posBuffer[1]));
+        }
+        if (ImGui::DragFloat("Rotation", &rotBuffer, 0.01f))
+        {
+            setRotation(rotBuffer);
+        }
+        if (ImGui::DragFloat2("Scale", scaleBuffer, 0.01f))
+        {
+            setScale(glm::vec2(scaleBuffer[0], scaleBuffer[1]));
+        }
+        if (ImGui::DragFloat2("Pivot", pivotBuffer, 0.01f))
+        {
+            setPivot(glm::vec2(pivotBuffer[0], pivotBuffer[1]));
+        }
+    }
 }

@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <stack>
 #include "node_utils.hpp"
+#include "utils.hpp"
 
 namespace prim
 {
@@ -65,7 +66,7 @@ namespace prim
                 continue;
             }
 
-            std::pair<std::string, std::string> keyValuePair = parseKeyValuePair(line);
+            std::pair<std::string, std::string> keyValuePair = Utils::parseKeyValuePair(line);
             fields.insert(keyValuePair);
         }
 

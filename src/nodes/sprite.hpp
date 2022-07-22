@@ -12,8 +12,8 @@ namespace prim
 
     class Sprite : public Node2D
     {
-    private:
-        const static inline float defaultSize = 100.0f;
+    protected:
+        inline static const float defaultSize = 100.0f;
         Mesh planeMesh;
         Image image;
         float width;
@@ -22,6 +22,8 @@ namespace prim
         float relativeHeight;
         float zIndex = 0.0f;
     public:
+        inline static const std::string typeName = "Sprite";
+
         Sprite(std::string name);
         Sprite(std::string name, std::string imagePath);
         Sprite(std::unordered_map<std::string, std::string>& fieldValues);
@@ -45,6 +47,9 @@ namespace prim
         inline const Image* getImage() const { return &image; }
 
         virtual std::string serialize() const override;
+        virtual inline const std::string getTypeName() const override { return typeName; }
+        virtual void visualizeOnUi() override;
+
     };
 
 }

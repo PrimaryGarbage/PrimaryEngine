@@ -4,6 +4,8 @@
 #include "gtc/matrix_transform.hpp"
 #include "utils.hpp"
 #include "node_utils.hpp"
+#include "imgui.h"
+#include "ImGuiFileDialog.h"
 
 namespace prim
 {
@@ -100,21 +102,58 @@ namespace prim
     std::string Sprite::serialize() const
     {
         std::stringstream ss;
-        ss << createKeyValuePair(NodeFields::type, getNodeTypeName<Sprite>()) << std::endl;
-        ss << createKeyValuePair(NodeFields::name, name) << std::endl;
-        ss << createKeyValuePair(NodeFields::position, serializeVec2(getPosition())) << std::endl;
-        ss << createKeyValuePair(NodeFields::rotation, std::to_string(getRotation())) << std::endl;
-        ss << createKeyValuePair(NodeFields::scale, serializeVec2(getScale())) << std::endl;
-        ss << createKeyValuePair(NodeFields::pivot, serializeVec2(getPivot())) << std::endl;
-        ss << createKeyValuePair(NodeFields::width, std::to_string(width)) << std::endl;
-        ss << createKeyValuePair(NodeFields::height, std::to_string(height)) << std::endl;
-        ss << createKeyValuePair(NodeFields::zIndex, std::to_string(zIndex)) << std::endl;
-        ss << createKeyValuePair(NodeFields::imagePath, image.getFilePath()) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::type, typeName) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::name, name) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::position, Utils::serializeVec2(getPosition())) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::rotation, std::to_string(getRotation())) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::scale, Utils::serializeVec2(getScale())) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::pivot, Utils::serializeVec2(getPivot())) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::width, std::to_string(width)) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::height, std::to_string(height)) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::zIndex, std::to_string(zIndex)) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::imagePath, image.getFilePath()) << std::endl;
         ss << NodeFields::childrenStart << std::endl;
         for (Node* child : children)
             ss << child->serialize() << std::endl;
         ss << NodeFields::childrenEnd << std::endl;
         return ss.str();
+    }
+
+    void Sprite::visualizeOnUi()
+    {
+        Node2D::visualizeOnUi();
+
+        static float widthBuffer;
+        widthBuffer = width;
+        if (ImGui::DragFloat("Width", &widthBuffer))
+        {
+            setWidth(widthBuffer);
+        }
+        static float heightBuffer;
+        heightBuffer = height;
+        if (ImGui::DragFloat("Height", &heightBuffer))
+        {
+            setHeight(heightBuffer);
+        }
+        ImGui::DragFloat("Z-Index", &zIndex, 0.01f);
+        ImGui::LabelText("Image", image.getFilePath().c_str());
+        ImGui::SameLine();
+
+        if (ImGui::Button("...")) // change image button
+            ImGuiFileDialog::Instance()->OpenDialog("ChooseImageKey", "Open Image", "Image files (*.png *.jpg *.jpeg){.png,.jpg,.jpeg}", ".", 1, nullptr, ImGuiFileDialogFlags_Modal);
+
+        if(ImGuiFileDialog::Instance()->Display("ChooseImageKey"))
+        {
+            if (ImGuiFileDialog::Instance()->IsOk())
+            {
+                std::string newFilePath = ImGuiFileDialog::Instance()->GetFilePathName();
+                image.load(newFilePath);
+                planeMesh.compositions.front().texture.load(image);
+            }
+            
+            ImGuiFileDialog::Instance()->Close();
+        }
+
     }
 
 }

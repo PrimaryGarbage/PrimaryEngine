@@ -9,7 +9,7 @@
 #include "glm.hpp"
 #include "globals.hpp"
 #include "test_scenes_creator.hpp"
-#include "node_utils.hpp"
+#include "utils.hpp"
 
 namespace prim
 {
@@ -95,6 +95,8 @@ namespace prim
 		Sprite* sprite = currentScene->findChild<Sprite>("TestSprite1");
 		ActorCamera2D* camera = currentScene->findChild<ActorCamera2D>();
 
+
+
 		while (!renderer.windowShouldClose())
 		{
 			deltaTime = timer.peekSinceLastPeek() * 0.001f;
@@ -113,7 +115,7 @@ namespace prim
 			if (currentScene)
 				currentScene->update(deltaTime);
 
-			mainUI.print(serializeVec2(camera->getGlobalPosition()));
+			mainUI.print(Utils::serializeVec2(camera->getGlobalPosition()));
 
 			executeDeferredFunctions();
 			/////////////////

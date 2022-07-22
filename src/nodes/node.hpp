@@ -26,6 +26,7 @@ namespace prim
         NodePath nodePath;
 
     public:
+        inline static const std::string typeName = "Node";
 
         Node(std::string name);
         Node(std::unordered_map<std::string, std::string>& fieldValues);
@@ -37,13 +38,16 @@ namespace prim
 
         virtual void addChild(Node* node);
         virtual void removeChild(Node* node);
+        virtual void orphanize();
         virtual const std::vector<Node*>& getChildren() const;
         virtual const Node* getParent() const;
         virtual std::string serialize() const override;
+        virtual inline const std::string getTypeName() const { return typeName; }
         NodePath getNodePath() const;
         std::string getName() const;
         void setName(std::string name);
         Node* findChild(std::string name) const;
+        virtual void visualizeOnUi();
 
         template<class T>
         T* findChild(std::string name = "") const

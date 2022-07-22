@@ -5,6 +5,8 @@
 #include "gtc/constants.hpp"
 #include "logger.hpp"
 #include <vector>
+#include <unordered_map>
+#include <sstream>
 
 namespace prim
 {
@@ -16,6 +18,8 @@ namespace prim
         constexpr static inline float degreesInRadian = 180.0f * glm::one_over_pi<float>();
         constexpr static inline float pi = glm::pi<float>();
         constexpr static inline float twoPi = glm::two_pi<float>();
+        constexpr static inline char keyValueSeparator = '=';
+        constexpr static inline char vecSeparator = ',';
 
     public:
         static inline glm::vec3 toVec3(glm::vec2 vec, float z = 0.0f)
@@ -90,12 +94,35 @@ namespace prim
             while ((pos = str.find(delimiter, pos + 1)) != std::string::npos)
             {
                 std::string substr = str.substr(prevPos, pos - ++prevPos);
-                if(!substr.empty()) strings.emplace_back(std::move(substr));
+                if (!substr.empty()) strings.emplace_back(std::move(substr));
                 prevPos = pos;
             }
             strings.push_back(std::move(str.substr(++prevPos)));
 
             return strings;
+        }
+
+        inline static std::string createKeyValuePair(std::string key, std::string value)
+        {
+            return std::string(std::move(key) + keyValueSeparator + std::move(value));
+        }
+
+        inline static std::pair<std::string, std::string> parseKeyValuePair(const std::string& line)
+        {
+            size_t pos = line.find(keyValueSeparator);
+            std::pair<std::string, std::string> result(line.substr(0, pos), line.substr(pos + 1));
+            return std::pair(line.substr(0, pos), line.substr(pos + 1));
+        }
+
+        inline static std::string serializeVec2(const glm::vec2& vec)
+        {
+            return std::to_string(vec.x) + vecSeparator + std::to_string(vec.y);
+        }
+
+        inline static glm::vec2 deserializeVec2(const std::string& line)
+        {
+            std::vector<std::string> values = Utils::splitString(line, vecSeparator);
+            return glm::vec2(std::stof(values[0]), std::stof(values[1]));
         }
     };
 

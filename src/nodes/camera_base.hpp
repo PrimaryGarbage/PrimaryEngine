@@ -12,6 +12,8 @@ namespace prim
         Renderer* renderer;
         bool current = false;
     public:
+        inline static const std::string typeName = "CameraBase";
+
         CameraBase(std::string name);
         virtual ~CameraBase();
 
@@ -22,6 +24,7 @@ namespace prim
         virtual void draw(Renderer& renderer) override = 0;
         virtual void setAsCurrent();
         inline virtual bool isCurrent() const { return current; }
+        virtual inline const std::string getTypeName() const override { return typeName; }
     };
 }
 

@@ -7,13 +7,15 @@ namespace prim
 {
     class ActorCamera2D : public Camera2D
     {
-    private:
+    protected:
         Node2D* target;
         NodePath targetPath;
         glm::vec2 initialOffset { 0.0f, 0.0f };
         float stiffness = 1.0f;
         
     public:
+        inline static const std::string typeName = "ActorCamera2D";
+
         bool rotateWithTarget = true;
 
         ActorCamera2D(std::string name, const NodePath& target);
@@ -32,6 +34,8 @@ namespace prim
         inline glm::vec2 getInitialOffset() const { return initialOffset; }
 
         virtual std::string serialize() const override;
+        virtual inline const std::string getTypeName() const override { return typeName; }
+        virtual void visualizeOnUi() override;
     };
 }
 

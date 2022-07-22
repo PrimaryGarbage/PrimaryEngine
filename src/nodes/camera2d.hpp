@@ -8,9 +8,11 @@ namespace prim
 
     class Camera2D : public CameraBase 
     {
-    private:
+    protected:
         glm::vec2 getWindowSize() const;
     public:
+        inline static const std::string typeName = "Camera2D";
+
         float zNear;
         float zFar;
         float zoom = 1.0f;
@@ -28,6 +30,8 @@ namespace prim
         virtual void draw(Renderer& renderer) override;
 
         virtual std::string serialize() const override;
+        virtual inline const std::string getTypeName() const override { return typeName; }
+        virtual void visualizeOnUi() override;
     };
 
 }

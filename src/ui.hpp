@@ -21,6 +21,7 @@ namespace prim
 
     class UI
     {
+    private:
         const float rightPanelWidth = 200.0f;
 
         Renderer* renderer;
@@ -34,6 +35,8 @@ namespace prim
         void drawNodeInTree(Node* node);
 
     public:
+        static inline const char* dragNodePayloadType = "NODE";
+
         UI() = default;
         ~UI();
         void init(Renderer* renderer);

@@ -21,4 +21,5 @@ namespace prim
         renderer->setCurrentCamera(this);
         current = true;
     }
+
 }

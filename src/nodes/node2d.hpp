@@ -13,6 +13,8 @@ namespace prim
     protected:
         Transform2D transform;
     public:
+        inline static const std::string typeName = "Node2D";
+
         Node2D(std::string name);
         Node2D(std::unordered_map<std::string, std::string>& fieldValues);
         virtual ~Node2D();
@@ -55,6 +57,8 @@ namespace prim
         void setGlobalScale(glm::vec2 s);
 
         virtual std::string serialize() const override;
+        virtual inline const std::string getTypeName() const override { return typeName; }
+        virtual void visualizeOnUi() override;
     };
 
 }

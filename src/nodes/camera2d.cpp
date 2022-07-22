@@ -3,6 +3,7 @@
 #include "gtc/matrix_transform.hpp"
 #include "utils.hpp"
 #include "node_utils.hpp"
+#include "imgui.h"
 
 namespace prim
 {
@@ -24,7 +25,7 @@ namespace prim
         : Camera2D(fieldValues[NodeFields::name], std::stof(fieldValues[NodeFields::zNear]), std::stof(fieldValues[NodeFields::zFar]))
     {
         zoom = std::stof(fieldValues[NodeFields::zoom]);
-        transform.pivot = deserializeVec2(fieldValues[NodeFields::pivot]);
+        transform.pivot = Utils::deserializeVec2(fieldValues[NodeFields::pivot]);
     }
 
     Camera2D::~Camera2D()
@@ -70,20 +71,29 @@ namespace prim
     std::string Camera2D::serialize() const
     {
         std::stringstream ss;
-        ss << createKeyValuePair(NodeFields::type, getNodeTypeName<Camera2D>()) << std::endl;
-        ss << createKeyValuePair(NodeFields::name, name) << std::endl;
-        ss << createKeyValuePair(NodeFields::position, serializeVec2(getPosition())) << std::endl;
-        ss << createKeyValuePair(NodeFields::rotation, std::to_string(getRotation())) << std::endl;
-        ss << createKeyValuePair(NodeFields::scale, serializeVec2(getScale())) << std::endl;
-        ss << createKeyValuePair(NodeFields::pivot, serializeVec2(getPivot())) << std::endl;
-        ss << createKeyValuePair(NodeFields::zNear, std::to_string(zNear)) << std::endl;
-        ss << createKeyValuePair(NodeFields::zFar, std::to_string(zFar)) << std::endl;
-        ss << createKeyValuePair(NodeFields::zoom, std::to_string(zoom)) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::type, typeName) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::name, name) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::position, Utils::serializeVec2(getPosition())) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::rotation, std::to_string(getRotation())) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::scale, Utils::serializeVec2(getScale())) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::pivot, Utils::serializeVec2(getPivot())) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::zNear, std::to_string(zNear)) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::zFar, std::to_string(zFar)) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::zoom, std::to_string(zoom)) << std::endl;
         ss << NodeFields::childrenStart << std::endl;
         for (Node* child : children)
             ss << child->serialize() << std::endl;
         ss << NodeFields::childrenEnd << std::endl;
         return ss.str();
+    }
+    
+    void Camera2D::visualizeOnUi() 
+    {
+        Node2D::visualizeOnUi();
+
+        ImGui::DragFloat("Z-Near", &zNear);
+        ImGui::DragFloat("Z-Far", &zFar);
+        ImGui::DragFloat("Zoom", &zoom);
     }
 
 }

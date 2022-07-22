@@ -3,6 +3,7 @@
 #include "utils.hpp"
 #include "globals.hpp"
 #include "node_utils.hpp"
+#include "imgui.h"
 
 namespace prim
 {
@@ -75,23 +76,49 @@ namespace prim
     std::string ActorCamera2D::serialize() const
     {
         std::stringstream ss;
-        ss << createKeyValuePair(NodeFields::type, getNodeTypeName<ActorCamera2D>()) << std::endl;
-        ss << createKeyValuePair(NodeFields::name, name) << std::endl;
-        ss << createKeyValuePair(NodeFields::position, serializeVec2(getPosition())) << std::endl;
-        ss << createKeyValuePair(NodeFields::rotation, std::to_string(getRotation())) << std::endl;
-        ss << createKeyValuePair(NodeFields::scale, serializeVec2(getScale())) << std::endl;
-        ss << createKeyValuePair(NodeFields::pivot, serializeVec2(getPivot())) << std::endl;
-        ss << createKeyValuePair(NodeFields::zNear, std::to_string(zNear)) << std::endl;
-        ss << createKeyValuePair(NodeFields::zFar, std::to_string(zFar)) << std::endl;
-        ss << createKeyValuePair(NodeFields::zoom, std::to_string(zoom)) << std::endl;
-        ss << createKeyValuePair(NodeFields::targetPath, targetPath.string()) << std::endl;
-        ss << createKeyValuePair(NodeFields::initialOffset, serializeVec2(initialOffset)) << std::endl;
-        ss << createKeyValuePair(NodeFields::stiffness, std::to_string(stiffness)) << std::endl;
-        ss << createKeyValuePair(NodeFields::rotateWithTarget, std::to_string((int)rotateWithTarget)) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::type, typeName) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::name, name) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::position, Utils::serializeVec2(getPosition())) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::rotation, std::to_string(getRotation())) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::scale, Utils::serializeVec2(getScale())) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::pivot, Utils::serializeVec2(getPivot())) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::zNear, std::to_string(zNear)) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::zFar, std::to_string(zFar)) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::zoom, std::to_string(zoom)) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::targetPath, targetPath.string()) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::initialOffset, Utils::serializeVec2(initialOffset)) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::stiffness, std::to_string(stiffness)) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::rotateWithTarget, std::to_string((int)rotateWithTarget)) << std::endl;
         ss << NodeFields::childrenStart << std::endl;
         for (Node* child : children)
             ss << child->serialize() << std::endl;
         ss << NodeFields::childrenEnd << std::endl;
         return ss.str();
     }
+    
+    void ActorCamera2D::visualizeOnUi() 
+    {
+        Camera2D::visualizeOnUi();
+        
+        ImGui::LabelText("Target", targetPath.string().c_str());
+        if(ImGui::BeginDragDropTarget())
+        {
+            const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(UI::dragNodePayloadType);
+            Node* node = *static_cast<Node**>(payload->Data);
+            Node2D* node2d = dynamic_cast<Node2D*>(node);
+            if(node2d) setTarget(node2d->getNodePath());
+            ImGui::EndDragDropTarget();
+        }
+
+        static float initialOffsetBuffer[2];
+        initialOffsetBuffer[0] = initialOffset.x;
+        initialOffsetBuffer[1] = initialOffset.y;
+        if(ImGui::DragFloat2("Initial Offset", initialOffsetBuffer))
+        {
+            initialOffset = glm::vec2(initialOffsetBuffer[0], initialOffsetBuffer[1]);
+        }
+
+        ImGui::DragFloat("Stiffness", &stiffness);
+    }
+
 }

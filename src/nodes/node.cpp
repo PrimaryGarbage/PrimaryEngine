@@ -3,6 +3,7 @@
 #include <algorithm>
 #include "renderer.hpp"
 #include "node_utils.hpp"
+#include "imgui.h"
 
 namespace prim
 {
@@ -35,10 +36,10 @@ namespace prim
         DRAW_CHILDREN
     }
 
-    void Node::updateNodePath() 
+    void Node::updateNodePath()
     {
         nodePath.setPath(this);
-        for(Node* child : children) child->updateNodePath();
+        for (Node* child : children) child->updateNodePath();
     }
 
 
@@ -59,6 +60,11 @@ namespace prim
         node->updateNodePath();
     }
 
+    void Node::orphanize()
+    {
+        if (parent) parent->removeChild(this);
+    }
+
     const std::vector<Node*>& Node::getChildren() const
     {
         return children;
@@ -72,25 +78,25 @@ namespace prim
     std::string Node::serialize() const
     {
         std::stringstream ss;
-        ss << createKeyValuePair(NodeFields::type, getNodeTypeName<Node>()) << std::endl;
-        ss << createKeyValuePair(NodeFields::name, name) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::type, typeName) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::name, name) << std::endl;
         ss << NodeFields::childrenStart << std::endl;
         for (Node* child : children)
             ss << child->serialize() << std::endl;
         ss << NodeFields::childrenEnd << std::endl;
         return ss.str();
     }
-    
+
     NodePath Node::getNodePath() const
     {
         return nodePath;
     }
-    
+
     std::string Node::getName() const
     {
         return name;
     }
-    
+
     void Node::setName(std::string name)
     {
         this->name = name;
@@ -110,5 +116,14 @@ namespace prim
 
         return child;
     }
-    
+
+    void Node::visualizeOnUi()
+    {
+        static const unsigned int maxBufferSize = 200u;
+        static char nameBuffer[maxBufferSize];
+        std::copy(name.begin(), name.end(), nameBuffer);
+        if (ImGui::InputText("Name", nameBuffer, maxBufferSize))
+            name = nameBuffer;
+    }
+
 }

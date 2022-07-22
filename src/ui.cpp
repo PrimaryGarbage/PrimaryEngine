@@ -19,6 +19,10 @@ namespace prim
         {
             panelSize = ImVec2(ImGui::GetWindowSize().x, renderer->getWindowHeight());
 
+            if(selectedNode) selectedNode->visualizeOnUi();
+
+            ImGui::Separator();
+
             for (const std::string& str : printLines)
             {
                 ImGui::Text(str.c_str());
@@ -65,17 +69,36 @@ namespace prim
 
     void UI::drawNodeInTree(Node* node)
     {
-        static const ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+        static const ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow;
         ImGuiTreeNodeFlags flags = baseFlags;
         if (node == selectedNode) flags |= ImGuiTreeNodeFlags_Selected;
+        if (node->getChildren().empty()) flags |= ImGuiTreeNodeFlags_Leaf;
         bool nodeIsOpen = ImGui::TreeNodeEx(node->getName().c_str(), flags);
         if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) selectedNode = node;
+        if (ImGui::BeginDragDropSource())
+        {
+            ImGui::SetDragDropPayload(dragNodePayloadType, static_cast<void*>(&node), sizeof(size_t), ImGuiCond_Once);
+            ImGui::Text(node->getName().c_str());
+            ImGui::EndDragDropSource();
+        }
+        if (ImGui::BeginDragDropTarget())
+        {
+            const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(dragNodePayloadType);
+            if (payload)
+            {
+                Node* payloadNode = *static_cast<Node**>(payload->Data);
+                payloadNode->orphanize();
+                node->addChild(payloadNode);
+            }
+            ImGui::EndDragDropTarget();
+        }
         if (nodeIsOpen)
         {
             for (Node* child : node->getChildren()) drawNodeInTree(child);
             ImGui::TreePop();
         }
     }
+    
 
     UI::~UI()
     {
