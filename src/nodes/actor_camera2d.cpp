@@ -118,7 +118,7 @@ namespace prim
             initialOffset = glm::vec2(initialOffsetBuffer[0], initialOffsetBuffer[1]);
         }
 
-        ImGui::DragFloat("Stiffness", &stiffness);
+        ImGui::DragFloat("Stiffness", &stiffness, 0.01f, 0.0f, 1.0f);
     }
 
 }

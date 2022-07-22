@@ -91,9 +91,9 @@ namespace prim
     {
         Node2D::visualizeOnUi();
 
-        ImGui::DragFloat("Z-Near", &zNear);
-        ImGui::DragFloat("Z-Far", &zFar);
-        ImGui::DragFloat("Zoom", &zoom);
+        ImGui::DragFloat("Z-Near", &zNear, 0.01f);
+        ImGui::DragFloat("Z-Far", &zFar, 0.01f);
+        ImGui::DragFloat("Zoom", &zoom, 0.01f);
     }
 
 }
