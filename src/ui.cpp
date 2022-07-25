@@ -5,6 +5,7 @@
 #include "globals.hpp"
 #include "node.hpp"
 #include "input.hpp"
+#include "ImGuiFileDialog.h"
 
 namespace prim
 {
@@ -75,6 +76,22 @@ namespace prim
                     }
 
                     ImGui::TreePop();
+                }
+
+                ImGui::Separator();
+
+                if (ImGui::Button("Load Scene"))
+                    ImGuiFileDialog::Instance()->OpenDialog("LoadSceneKey", "Open Image", ".psc", "./res/scenes/", 1, nullptr, ImGuiFileDialogFlags_Modal);
+
+                if (ImGuiFileDialog::Instance()->Display("LoadSceneKey"))
+                {
+                    if (ImGuiFileDialog::Instance()->IsOk())
+                    {
+                        std::string name = ImGuiFileDialog::Instance()->GetCurrentFileName();
+                        name = name.substr(0, name.size() - 4);
+                        app->loadCurrentScene(name);
+                    }
+                    ImGuiFileDialog::Instance()->Close();
                 }
             }
         }

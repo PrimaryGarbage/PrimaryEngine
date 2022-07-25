@@ -41,6 +41,8 @@ public:
 	void run();
 
 	void setCurrentScene(Node* scene);
+	void loadCurrentScene(std::string name);
+	Node* loadScene(std::string name);
 	Node* getCurrentScene() const;
 	Node* getNode(NodePath nodePath);
 

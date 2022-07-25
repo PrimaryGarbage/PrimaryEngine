@@ -44,8 +44,19 @@ namespace prim
 
 	void PrimaryApp::setCurrentScene(Node* scene)
 	{
+		if(currentScene) sceneManager.freeScene(currentScene);
 		currentScene = scene;
 		currentScene->start();
+	}
+	
+	void PrimaryApp::loadCurrentScene(std::string name) 
+	{
+		setCurrentScene(sceneManager.loadScene(name));
+	}
+	
+	Node* PrimaryApp::loadScene(std::string name) 
+	{
+		return sceneManager.loadScene(name);
 	}
 
 	Node* PrimaryApp::getCurrentScene() const
