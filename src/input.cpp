@@ -100,8 +100,9 @@ void Input::cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 
 void Input::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-	mouse.buttons[button].just = action != mouse.buttons[button].pressed;
-	mouse.buttons[button].pressed = action == GLFW_PRESS;
+	bool act = static_cast<bool>(action);
+	mouse.buttons[button].just = act != mouse.buttons[button].pressed;
+	mouse.buttons[button].pressed = act;
 }
 
 void Input::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -176,8 +177,14 @@ void Input::update()
 			gamepad.axes[i] = state.axes[i];
 		}
 	}
+}
 
-	//std::cout << std::to_string(keys[32].just) << std::endl;
+void Input::clear() 
+{
+	for(int i = 0; i < MouseInfo::buttonCount; ++i)
+	{
+		mouse.buttons[i].just = false;
+	}
 
 	for(int i = 0; i < keysCount; ++i)
 	{

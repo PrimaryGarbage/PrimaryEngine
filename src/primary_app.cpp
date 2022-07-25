@@ -57,6 +57,8 @@ namespace prim
 	{
 		if (!currentScene) return nullptr;
 		Node* currentNode = currentScene;
+		if(nodePath.front() == currentScene->getName())
+			nodePath = nodePath.pop_front();
 		start:
 		while(!nodePath.empty())
 		{
@@ -107,6 +109,8 @@ namespace prim
 			///// Update /////
 			deferredFunctions.clear();
 
+			Input::clear();
+			renderer.pollEvents();
 			Input::update();
 
 			sprite->move(sprite->forward() * Input::getAxis("Vertical") * speed);
@@ -129,7 +133,6 @@ namespace prim
 			////////////////
 
 			renderer.swapBuffers();
-			renderer.pollEvents();
 		}
 	}
 

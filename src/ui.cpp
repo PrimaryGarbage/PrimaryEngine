@@ -4,6 +4,7 @@
 #include "imgui_impl_opengl3.h"
 #include "globals.hpp"
 #include "node.hpp"
+#include "input.hpp"
 
 namespace prim
 {
@@ -19,7 +20,7 @@ namespace prim
         {
             panelSize = ImVec2(ImGui::GetWindowSize().x, renderer->getWindowHeight());
 
-            if(selectedNode) selectedNode->visualizeOnUi();
+            if (selectedNode) selectedNode->visualizeOnUi();
 
             ImGui::Separator();
 
@@ -56,10 +57,23 @@ namespace prim
             {
                 if (ImGui::TreeNode(currentScene->getName().c_str()))
                 {
+                    if (ImGui::BeginDragDropTarget())
+                    {
+                        const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(dragNodePayloadType);
+                        if (payload)
+                        {
+                            Node* payloadNode = *static_cast<Node**>(payload->Data);
+                            payloadNode->orphanize();
+                            currentScene->addChild(payloadNode);
+                        }
+                        ImGui::EndDragDropTarget();
+                    }
+
                     for (Node* child : currentScene->getChildren())
                     {
                         drawNodeInTree(child);
                     }
+
                     ImGui::TreePop();
                 }
             }
@@ -74,7 +88,7 @@ namespace prim
         if (node == selectedNode) flags |= ImGuiTreeNodeFlags_Selected;
         if (node->getChildren().empty()) flags |= ImGuiTreeNodeFlags_Leaf;
         bool nodeIsOpen = ImGui::TreeNodeEx(node->getName().c_str(), flags);
-        if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) selectedNode = node;
+        if (ImGui::IsItemHovered() && Input::isJustReleased(MouseButton::left) && !ImGui::IsItemToggledOpen()) selectedNode = node;
         if (ImGui::BeginDragDropSource())
         {
             ImGui::SetDragDropPayload(dragNodePayloadType, static_cast<void*>(&node), sizeof(size_t), ImGuiCond_Once);
@@ -98,7 +112,7 @@ namespace prim
             ImGui::TreePop();
         }
     }
-    
+
 
     UI::~UI()
     {

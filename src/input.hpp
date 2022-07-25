@@ -29,6 +29,7 @@ private:
 public:
 	static void init(GLFWwindow* window);
 	static void update();
+	static void clear();
 	
 	static bool isPressed(const Key key);
 	static bool isPressed(const MouseButton button);

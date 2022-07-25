@@ -16,8 +16,8 @@ namespace prim
         : Camera2D(name, zNear, zFar), targetPath(target)
     {
     }
-    
-    ActorCamera2D::ActorCamera2D(std::unordered_map<std::string, std::string>& fieldValues) 
+
+    ActorCamera2D::ActorCamera2D(std::unordered_map<std::string, std::string>& fieldValues)
         : Camera2D(fieldValues), stiffness(std::stof(fieldValues[NodeFields::stiffness])),
         targetPath(fieldValues[NodeFields::targetPath])
     {
@@ -31,7 +31,7 @@ namespace prim
     {
         START_CHILDREN
 
-        target = dynamic_cast<Node2D*>(Globals::app->getNode(targetPath));
+            target = dynamic_cast<Node2D*>(Globals::app->getNode(targetPath));
         initialOffset = getGlobalPosition() - target->getGlobalPosition();
         //setAsCurrent();
     }
@@ -95,25 +95,28 @@ namespace prim
         ss << NodeFields::childrenEnd << std::endl;
         return ss.str();
     }
-    
-    void ActorCamera2D::visualizeOnUi() 
+
+    void ActorCamera2D::visualizeOnUi()
     {
         Camera2D::visualizeOnUi();
-        
+
         ImGui::LabelText("Target", targetPath.string().c_str());
-        if(ImGui::BeginDragDropTarget())
+        if (ImGui::BeginDragDropTarget())
         {
             const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(UI::dragNodePayloadType);
-            Node* node = *static_cast<Node**>(payload->Data);
-            Node2D* node2d = dynamic_cast<Node2D*>(node);
-            if(node2d) setTarget(node2d->getNodePath());
-            ImGui::EndDragDropTarget();
+            if (payload)
+            {
+                Node* node = *static_cast<Node**>(payload->Data);
+                Node2D* node2d = dynamic_cast<Node2D*>(node);
+                if (node2d) setTarget(node2d->getNodePath());
+                ImGui::EndDragDropTarget();
+            }
         }
 
         static float initialOffsetBuffer[2];
         initialOffsetBuffer[0] = initialOffset.x;
         initialOffsetBuffer[1] = initialOffset.y;
-        if(ImGui::DragFloat2("Initial Offset", initialOffsetBuffer))
+        if (ImGui::DragFloat2("Initial Offset", initialOffsetBuffer))
         {
             initialOffset = glm::vec2(initialOffsetBuffer[0], initialOffsetBuffer[1]);
         }
