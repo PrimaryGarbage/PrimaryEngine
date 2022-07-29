@@ -35,7 +35,7 @@ namespace prim
 
         virtual std::string serialize() const override;
         virtual inline const std::string getTypeName() const override { return typeName; }
-        virtual void visualizeOnUi() override;
+        virtual void renderFields() override;
     };
 }
 

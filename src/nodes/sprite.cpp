@@ -119,9 +119,9 @@ namespace prim
         return ss.str();
     }
 
-    void Sprite::visualizeOnUi()
+    void Sprite::renderFields()
     {
-        Node2D::visualizeOnUi();
+        Node2D::renderFields();
 
         static float widthBuffer;
         widthBuffer = width;

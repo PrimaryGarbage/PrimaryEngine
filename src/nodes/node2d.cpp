@@ -245,9 +245,9 @@ namespace prim
         return ss.str();
     }
     
-    void Node2D::visualizeOnUi() 
+    void Node2D::renderFields() 
     {
-        Node::visualizeOnUi();
+        Node::renderFields();
 
         static float posBuffer[2];
         static float rotBuffer;

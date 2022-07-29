@@ -21,7 +21,7 @@ namespace prim
         {
             panelSize = ImVec2(ImGui::GetWindowSize().x, renderer->getWindowHeight());
 
-            if (selectedNode) selectedNode->visualizeOnUi();
+            if (selectedNode) selectedNode->renderFields();
 
             ImGui::Separator();
 

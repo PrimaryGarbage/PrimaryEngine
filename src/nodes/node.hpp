@@ -47,7 +47,7 @@ namespace prim
         std::string getName() const;
         void setName(std::string name);
         Node* findChild(std::string name) const;
-        virtual void visualizeOnUi();
+        virtual void renderFields();
 
         template<class T>
         T* findChild(std::string name = "") const

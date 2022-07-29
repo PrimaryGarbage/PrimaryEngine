@@ -117,7 +117,7 @@ namespace prim
         return child;
     }
 
-    void Node::visualizeOnUi()
+    void Node::renderFields()
     {
         static const unsigned int maxBufferSize = 200u;
         static char nameBuffer[maxBufferSize];

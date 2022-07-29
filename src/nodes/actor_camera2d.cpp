@@ -96,9 +96,11 @@ namespace prim
         return ss.str();
     }
 
-    void ActorCamera2D::visualizeOnUi()
+    void ActorCamera2D::renderFields()
     {
-        Camera2D::visualizeOnUi();
+        Camera2D::renderFields();
+
+        ImGui::Checkbox("Rotate with target", &rotateWithTarget);
 
         ImGui::LabelText("Target", targetPath.string().c_str());
         if (ImGui::BeginDragDropTarget())

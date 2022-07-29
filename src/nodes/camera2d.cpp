@@ -87,9 +87,9 @@ namespace prim
         return ss.str();
     }
     
-    void Camera2D::visualizeOnUi() 
+    void Camera2D::renderFields() 
     {
-        Node2D::visualizeOnUi();
+        Node2D::renderFields();
 
         ImGui::DragFloat("Z-Near", &zNear, 0.01f);
         ImGui::DragFloat("Z-Far", &zFar, 0.01f);
