@@ -96,19 +96,10 @@ namespace prim
 
 	void PrimaryApp::mainLoop()
 	{
-		// Node* scene1 = TestScenesCreator::createScene1();
-		// sceneManager.saveScene(scene1, "TestScene1", true);
-		// setCurrentScene(scene1);
-
 		Node* scene1 = sceneManager.loadScene("TestScene1");
 		setCurrentScene(scene1);
 
 		float speed = 10.0f;
-
-		Sprite* sprite = currentScene->findChild<Sprite>("TestSprite1");
-		ActorCamera2D* camera = currentScene->findChild<ActorCamera2D>();
-
-
 
 		while (!renderer.windowShouldClose())
 		{
@@ -124,13 +115,8 @@ namespace prim
 			renderer.pollEvents();
 			Input::update();
 
-			sprite->move(sprite->forward() * Input::getAxis("Vertical") * speed);
-			sprite->rotate(-Input::getAxis("Horizontal") * 0.05f);
-
 			if (currentScene)
 				currentScene->update(deltaTime);
-
-			mainUI.print(Utils::serializeVec2(camera->getGlobalPosition()));
 
 			executeDeferredFunctions();
 			/////////////////
