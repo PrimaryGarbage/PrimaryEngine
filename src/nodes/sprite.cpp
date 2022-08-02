@@ -6,6 +6,7 @@
 #include "node_utils.hpp"
 #include "imgui.h"
 #include "ImGuiFileDialog.h"
+#include "globals.hpp"
 
 namespace prim
 {
@@ -52,7 +53,7 @@ namespace prim
     {
         DRAW_CHILDREN
 
-            glm::vec2 globalPosition = getGlobalPosition();
+        glm::vec2 globalPosition = getGlobalPosition();
         glm::vec2 globalScale = getGlobalScale();
         glm::mat4 modelMat(1.0f);
         modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x, globalPosition.y, zIndex));
@@ -62,12 +63,17 @@ namespace prim
 
         renderer.setModelMat(std::move(modelMat));
 
-        renderer.drawMesh(planeMesh);
+        renderer.drawMesh(planeMesh, Globals::mainRenderer->selectShader);
     }
 
     void Sprite::setCenterPivot()
     {
         setPivot(glm::vec2(0.5f, 0.5f));
+    }
+
+    void Sprite::setCornerPivot()
+    {
+        setPivot(glm::vec2(0.0f, 0.0f));
     }
 
     void Sprite::setSize(float width, float height)

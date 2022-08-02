@@ -34,6 +34,7 @@ namespace prim
         virtual void draw(Renderer& renderer) override;
 
         void setCenterPivot();
+        void setCornerPivot();
 
         void setSize(float width, float height);
         void setWidth(float width);
