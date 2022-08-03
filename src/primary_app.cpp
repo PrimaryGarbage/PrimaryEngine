@@ -29,10 +29,11 @@ namespace prim
 		Logger::init(appPath);
 		renderer.init(windowWidth, windowHeight, windowName);
 		Input::init(renderer.getWindow());
-		mainUI.init(&renderer);
+		editorUI.init(&renderer);
 
 		Globals::app = this;
 		Globals::mainRenderer = &renderer;
+		Globals::editorUI = &editorUI;
 	}
 
 	void PrimaryApp::run()
@@ -125,7 +126,7 @@ namespace prim
 
 			currentScene->draw(renderer);
 
-			mainUI.draw();
+			editorUI.draw();
 
 			////////////////
 

@@ -37,19 +37,22 @@ private:
 	glm::mat4 modelMat;
 	bool preparedForDrawing = false;
 	CameraBase* currentCamera = nullptr;
+	Shader* selectShader = nullptr;
 
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	static void error_callback(int error, const char* description);
 
 	void prepareForDrawing();
+	void drawSelectedNode();
 
 public:
-	Renderer() = default;
+	Renderer();
 	~Renderer();
 
 	void init(unsigned int windowWidth, unsigned int windowHeight, const char* windowName);
 	void drawLists();
 	void drawMesh(const Mesh& mesh);
+	void drawMesh(const Mesh& mesh, const Shader* shader);
 	void addMesh(Mesh* mesh);
 	void clear();
 	bool windowShouldClose();

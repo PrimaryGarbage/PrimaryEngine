@@ -1,6 +1,8 @@
 #include "renderer.hpp"
 #include "logger.hpp"
 #include "gtc/matrix_transform.hpp"
+#include "globals.hpp"
+#include "drawable.hpp"
 
 namespace prim
 {
@@ -19,6 +21,10 @@ namespace prim
 			return false;
 		}
 		return true;
+	}
+
+	Renderer::Renderer()
+	{
 	}
 
 	Renderer::~Renderer()
@@ -48,7 +54,7 @@ namespace prim
 
 		this->windowWidth = windowWidth;
 		this->windowHeight = windowHeight;
-		
+
 		windowRendererMap[window] = this;
 
 		glfwMakeContextCurrent(window);
@@ -70,11 +76,13 @@ namespace prim
 		GL_CALL(glEnable(GL_DEPTH_TEST));
 		GL_CALL(glDepthFunc(GL_LEQUAL));
 
-		GL_CALL(GL_STENCIL_TEST);
+		GL_CALL(glEnable(GL_STENCIL_TEST));
 
 		Logger::log("GLFW and GLEW initialized successfully", true);
 		Logger::log("OpenGL version: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))), true);
 		Logger::log("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
+
+		selectShader = new Shader("./res/shader/select.shader");
 	}
 
 	void Renderer::drawLists()
@@ -101,13 +109,13 @@ namespace prim
 
 	void Renderer::prepareForDrawing()
 	{
-		if(preparedForDrawing) return;
-		
-		if(currentCamera)
+		if (preparedForDrawing) return;
+
+		if (currentCamera)
 		{
 			setViewMat(currentCamera->calculateViewMatrix());
 			setProjectMat(currentCamera->calculateProjectMatrix());
-		} 
+		}
 		else
 		{
 			setViewMat(glm::mat4(1.0f));
@@ -115,6 +123,23 @@ namespace prim
 		}
 
 		preparedForDrawing = true;
+	}
+
+	void Renderer::drawSelectedNode()
+	{
+		Node* selectedNode = Globals::editorUI->getSelectedNode();
+		if (!selectedNode) return;
+		const static float scaleDelta = 0.01f;
+		Drawable* drawable = dynamic_cast<Drawable*>(selectedNode);
+		if(drawable)
+		{
+			drawable->scale(1.0f + scaleDelta);
+			GL_CALL(glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE));
+			glStencilFunc(GL_ALWAYS, 1, 0xFF);
+			GL_CALL(glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE));
+			drawable->Node2D::draw(*this);
+			drawable->scale(1.0f - scaleDelta);
+		}
 	}
 
 	void Renderer::drawMesh(const Mesh& mesh)
@@ -134,6 +159,23 @@ namespace prim
 			}
 
 			composition.shader.setUniformMat4f("u_mvp", mvp);
+
+			GL_CALL(glDrawElements(GL_TRIANGLES, composition.getCount(), GL_UNSIGNED_INT, nullptr));
+		}
+	}
+
+	void Renderer::drawMesh(const Mesh& mesh, const Shader* shader)
+	{
+		prepareForDrawing();
+
+		mesh.va.bind();
+		const glm::mat4 mvp = projectMat * viewMat * modelMat;
+		shader->bind();
+		shader->setUniformMat4f("u_mvp", mvp);
+		for (const MeshComposition& composition : mesh.compositions)
+		{
+			composition.ib.bind();
+			composition.texture.bind();
 
 			GL_CALL(glDrawElements(GL_TRIANGLES, composition.getCount(), GL_UNSIGNED_INT, nullptr));
 		}

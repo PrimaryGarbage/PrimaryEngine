@@ -23,7 +23,7 @@ private:
 	float timeSinceStart;
 	Timer timer;
 	Renderer renderer;
-	UI mainUI;
+	UI editorUI;
 	Node* currentScene = nullptr;
 	SceneManager sceneManager;
 	std::vector<std::pair<deferred_func_type, short>> deferredFunctions;

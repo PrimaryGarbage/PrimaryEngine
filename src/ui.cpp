@@ -3,9 +3,9 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "globals.hpp"
-#include "node.hpp"
 #include "input.hpp"
 #include "ImGuiFileDialog.h"
+#include "drawable.hpp"
 
 namespace prim
 {
@@ -130,7 +130,6 @@ namespace prim
         }
     }
 
-
     UI::~UI()
     {
         ImGui_ImplOpenGL3_Shutdown();
@@ -147,6 +146,7 @@ namespace prim
         ImGui::StyleColorsDark();
         io = &ImGui::GetIO();
         io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
     }
 
     void UI::draw()

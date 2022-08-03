@@ -51,6 +51,7 @@ set(GRAPHICS_SRC
 	mesh_composition.hpp
 	primitives.hpp primitives.cpp
 	image.hpp image.cpp image_utils.hpp
+	drawable.hpp drawable.cpp
 )
 
 set(IMGUI_SRC

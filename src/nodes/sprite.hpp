@@ -1,7 +1,7 @@
 #ifndef __SPRITE_HPP__
 #define __SPRITE_HPP__
 
-#include "node2d.hpp"
+#include "drawable.hpp"
 #include "mesh.hpp"
 #include "image.hpp"
 
@@ -10,7 +10,7 @@ namespace prim
 
     enum class ImageType;
 
-    class Sprite : public Node2D
+    class Sprite : public Drawable
     {
     protected:
         inline static const float defaultSize = 100.0f;
@@ -32,6 +32,7 @@ namespace prim
         virtual void start() override;
         virtual void update(float deltaTime) override;
         virtual void draw(Renderer& renderer) override;
+        virtual void draw(Renderer& renderer, Shader* shader) override;
 
         void setCenterPivot();
         void setCornerPivot();

@@ -11,19 +11,19 @@
 namespace prim
 {
     Sprite::Sprite(std::string name)
-        : Node2D(name), planeMesh(Primitives::createSquareMesh(defaultSize)), width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
+        : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
     {
     }
 
     Sprite::Sprite(std::string name, std::string imagePath)
-        : Node2D(name), planeMesh(Primitives::createSquareMesh(defaultSize)), width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
+        : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
     {
         image.load(imagePath);
         planeMesh.compositions[0].texture.load(image);
     }
 
     Sprite::Sprite(std::unordered_map<std::string, std::string>& fieldValues)
-        : Node2D(fieldValues), planeMesh(Primitives::createSquareMesh(defaultSize)), width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
+        : Drawable(fieldValues), planeMesh(Primitives::createSquareMesh(defaultSize)), width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
     {
         if (!fieldValues[NodeFields::imagePath].empty())
         {
@@ -51,6 +51,8 @@ namespace prim
 
     void Sprite::draw(Renderer& renderer)
     {
+        if(customShader) return draw(renderer, customShader);
+
         DRAW_CHILDREN
 
         glm::vec2 globalPosition = getGlobalPosition();
@@ -63,7 +65,24 @@ namespace prim
 
         renderer.setModelMat(std::move(modelMat));
 
-        renderer.drawMesh(planeMesh, Globals::mainRenderer->selectShader);
+        renderer.drawMesh(planeMesh);
+    }
+    
+    void Sprite::draw(Renderer& renderer, Shader* shader) 
+    {
+        DRAW_CHILDREN
+
+        glm::vec2 globalPosition = getGlobalPosition();
+        glm::vec2 globalScale = getGlobalScale();
+        glm::mat4 modelMat(1.0f);
+        modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x, globalPosition.y, zIndex));
+        modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
+        modelMat = glm::scale(modelMat, glm::vec3(globalScale.x * relativeWidth, globalScale.y * relativeHeight, 1.0f));
+        modelMat = glm::translate(modelMat, -Utils::toVec3(getPivot() * defaultSize));
+
+        renderer.setModelMat(std::move(modelMat));
+
+        renderer.drawMesh(planeMesh, shader);
     }
 
     void Sprite::setCenterPivot()
