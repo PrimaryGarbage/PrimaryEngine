@@ -18,6 +18,8 @@ namespace prim
 void glClearError();
 bool glLogCall(const char* function, const char* file, int line);
 
+class Drawable;
+
 class Renderer
 {
 private:
@@ -43,7 +45,6 @@ private:
 	static void error_callback(int error, const char* description);
 
 	void prepareForDrawing();
-	void drawSelectedNode();
 
 public:
 	Renderer();
@@ -53,6 +54,7 @@ public:
 	void drawLists();
 	void drawMesh(const Mesh& mesh);
 	void drawMesh(const Mesh& mesh, const Shader* shader);
+	void drawSelectedNodeFraming(Drawable* node);
 	void addMesh(Mesh* mesh);
 	void clear();
 	bool windowShouldClose();

@@ -16,4 +16,9 @@ namespace prim
     {
         
     }
+    
+    void Drawable::draw(Renderer& renderer)
+    {
+        DRAW_CHILDREN
+    }
 }

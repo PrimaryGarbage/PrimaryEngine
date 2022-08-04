@@ -33,6 +33,7 @@ namespace prim
         void drawRightPanel();
         void drawLeftPanel();
         void drawNodeInTree(Node* node);
+        void drawSelectedNodeFraming();
 
     public:
         static inline const char* dragNodePayloadType = "NODE";

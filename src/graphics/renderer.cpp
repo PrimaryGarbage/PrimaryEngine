@@ -76,13 +76,11 @@ namespace prim
 		GL_CALL(glEnable(GL_DEPTH_TEST));
 		GL_CALL(glDepthFunc(GL_LEQUAL));
 
-		GL_CALL(glEnable(GL_STENCIL_TEST));
-
 		Logger::log("GLFW and GLEW initialized successfully", true);
 		Logger::log("OpenGL version: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))), true);
 		Logger::log("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
 
-		selectShader = new Shader("./res/shader/select.shader");
+		selectShader = new Shader("./res/shaders/select.shader");
 	}
 
 	void Renderer::drawLists()
@@ -125,21 +123,23 @@ namespace prim
 		preparedForDrawing = true;
 	}
 
-	void Renderer::drawSelectedNode()
+	void Renderer::drawSelectedNodeFraming(Drawable* node)
 	{
-		Node* selectedNode = Globals::editorUI->getSelectedNode();
-		if (!selectedNode) return;
-		const static float scaleDelta = 0.01f;
-		Drawable* drawable = dynamic_cast<Drawable*>(selectedNode);
-		if(drawable)
-		{
-			drawable->scale(1.0f + scaleDelta);
-			GL_CALL(glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE));
-			glStencilFunc(GL_ALWAYS, 1, 0xFF);
-			GL_CALL(glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE));
-			drawable->Node2D::draw(*this);
-			drawable->scale(1.0f - scaleDelta);
-		}
+		GL_CALL(glEnable(GL_STENCIL_TEST));
+
+		GL_CALL(glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE));
+		GL_CALL(glStencilFunc(GL_ALWAYS, 1, 0xFF));
+		GL_CALL(glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE));
+		node->draw(*this, selectShader);
+
+		GL_CALL(glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE));
+		GL_CALL(glStencilFunc(GL_NOTEQUAL, 1, 0xFF));
+		GL_CALL(glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP));
+		node->scale(1.05f);
+		node->draw(*this, selectShader);
+		node->scale(1.0f/1.05f);
+		
+		GL_CALL(glDisable(GL_STENCIL_TEST));
 	}
 
 	void Renderer::drawMesh(const Mesh& mesh)

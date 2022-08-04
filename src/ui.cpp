@@ -129,6 +129,13 @@ namespace prim
             ImGui::TreePop();
         }
     }
+    
+    void UI::drawSelectedNodeFraming()
+    {
+        if(!selectedNode) return;
+        Drawable* node = dynamic_cast<Drawable*>(selectedNode);
+        if(node) renderer->drawSelectedNodeFraming(node);
+    }
 
     UI::~UI()
     {
@@ -163,8 +170,11 @@ namespace prim
 
         /////////////////////////////
 
+        drawSelectedNodeFraming();
+
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 
         printLines.clear();
         dragFloats.clear();

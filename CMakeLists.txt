@@ -36,6 +36,7 @@ set(NODES_SRC
 	actor_camera2d.hpp actor_camera2d.cpp
 	node_utils.hpp
 	node_path.hpp node_path.cpp
+	drawable.hpp drawable.cpp
 )
 
 set(GRAPHICS_SRC
@@ -51,7 +52,6 @@ set(GRAPHICS_SRC
 	mesh_composition.hpp
 	primitives.hpp primitives.cpp
 	image.hpp image.cpp image_utils.hpp
-	drawable.hpp drawable.cpp
 )
 
 set(IMGUI_SRC

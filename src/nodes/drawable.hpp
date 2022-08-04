@@ -16,6 +16,7 @@ namespace prim
         Drawable(std::unordered_map<std::string, std::string>& fieldValues);
         virtual ~Drawable();
 
+        virtual void draw(Renderer& renderer) override;
         virtual void draw(Renderer& renderer, Shader* shader) = 0;
     };
 }

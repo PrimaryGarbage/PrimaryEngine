@@ -51,9 +51,9 @@ namespace prim
 
     void Sprite::draw(Renderer& renderer)
     {
-        if(customShader) return draw(renderer, customShader);
-
         DRAW_CHILDREN
+
+        if(customShader) return draw(renderer, customShader);
 
         glm::vec2 globalPosition = getGlobalPosition();
         glm::vec2 globalScale = getGlobalScale();
@@ -70,8 +70,6 @@ namespace prim
     
     void Sprite::draw(Renderer& renderer, Shader* shader) 
     {
-        DRAW_CHILDREN
-
         glm::vec2 globalPosition = getGlobalPosition();
         glm::vec2 globalScale = getGlobalScale();
         glm::mat4 modelMat(1.0f);
