@@ -35,7 +35,7 @@ public:
 	VertexBufferLayout() : stride(0) {}
 
 	template<class T>
-	void push(unsigned int count)
+	void push(unsigned int count, bool normalized = false)
 	{
 		assert(false);
 	}
@@ -47,23 +47,23 @@ public:
 };
 
 template<>
-inline void VertexBufferLayout::push<float>(unsigned int count)
+inline void VertexBufferLayout::push<float>(unsigned int count, bool normalized)
 {
-	elements.push_back({ GL_FLOAT, count, GL_FALSE });
+	elements.push_back({ GL_FLOAT, count, (unsigned char)normalized });
 	stride += VertexBufferElement::getSizeOfType(GL_FLOAT) * count;
 }
 
 template<>
-inline void VertexBufferLayout::push<unsigned int>(unsigned int count)
+inline void VertexBufferLayout::push<unsigned int>(unsigned int count, bool normalized)
 {
-	elements.push_back({ GL_UNSIGNED_INT, count, GL_FALSE });
+	elements.push_back({ GL_UNSIGNED_INT, count, (unsigned char)normalized });
 	stride += VertexBufferElement::getSizeOfType(GL_UNSIGNED_INT) * count;
 }
 
 template<>
-inline void VertexBufferLayout::push<unsigned char>(unsigned int count)
+inline void VertexBufferLayout::push<unsigned char>(unsigned int count, bool normalized)
 {
-	elements.push_back({ GL_UNSIGNED_BYTE, count, GL_TRUE });
+	elements.push_back({ GL_UNSIGNED_BYTE, count, (unsigned char)normalized });
 	stride += sizeof(GLubyte) * count;
 	stride += VertexBufferElement::getSizeOfType(GL_UNSIGNED_BYTE) * count;
 }

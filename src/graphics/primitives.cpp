@@ -3,6 +3,8 @@
 
 namespace prim
 {
+    const float sinPiOver4 = glm::sqrt(2.0f) / 2.0f;
+
     Mesh Primitives::createCubeMesh(float size)
     {
         const static float vertices[] = {
@@ -87,10 +89,10 @@ namespace prim
     Mesh Primitives::createSquareMesh(float size)
     {
         const static float vertices[] = {
-        0.0f, 0.0f, 0.0f, 0.0f,
-        size, 0.0f, 1.0f, 0.0f,
-        size, size, 1.0f, 1.0f,
-        0.0f, size, 0.0f, 1.0f
+        0.0f, 0.0f, 0.0f, 0.0f, -sinPiOver4, -sinPiOver4,
+        size, 0.0f, 1.0f, 0.0f, sinPiOver4, -sinPiOver4,
+        size, size, 1.0f, 1.0f, sinPiOver4, sinPiOver4,
+        0.0f, size, 0.0f, 1.0f, -sinPiOver4, sinPiOver4
         };
 
         const static unsigned int indices[] = {
@@ -101,8 +103,9 @@ namespace prim
         VertexBufferLayout layout;
         layout.push<float>(2);
         layout.push<float>(2);
+        layout.push<float>(2, true);
 
-        VertexBuffer vb(vertices, 16 * sizeof(float), layout);
+        VertexBuffer vb(vertices, 24 * sizeof(float), layout);
 
         Shader shader("res/shaders/default.shader");
 

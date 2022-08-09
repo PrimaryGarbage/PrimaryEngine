@@ -130,14 +130,12 @@ namespace prim
 		GL_CALL(glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE));
 		GL_CALL(glStencilFunc(GL_ALWAYS, 1, 0xFF));
 		GL_CALL(glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE));
-		node->draw(*this, selectShader);
+		node->draw(*this);
 
 		GL_CALL(glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE));
 		GL_CALL(glStencilFunc(GL_NOTEQUAL, 1, 0xFF));
 		GL_CALL(glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP));
-		node->scale(1.05f);
 		node->draw(*this, selectShader);
-		node->scale(1.0f/1.05f);
 		
 		GL_CALL(glDisable(GL_STENCIL_TEST));
 	}
