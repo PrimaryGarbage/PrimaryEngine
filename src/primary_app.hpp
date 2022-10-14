@@ -38,7 +38,7 @@ public:
 	const std::filesystem::path appPath;
 
 	void init();
-	void run();
+	int run();
 
 	void setCurrentScene(Node* scene);
 	void loadCurrentScene(std::string name);

@@ -10,6 +10,7 @@
 #include "globals.hpp"
 #include "test_scenes_creator.hpp"
 #include "utils.hpp"
+#include <iostream>
 
 namespace prim
 {
@@ -36,26 +37,51 @@ namespace prim
 		Globals::editorUI = &editorUI;
 	}
 
-	void PrimaryApp::run()
+	int PrimaryApp::run()
 	{
-		timer.start();
+		try
+		{
+			init();
 
-		mainLoop();
+			timer.start();
+
+			mainLoop();
+
+			return 0;
+		}
+		catch (const prim::Exception& e)
+		{
+			std::cerr << e.what() << '\n';
+			Logger::log(e.what());
+			return 1;
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << e.what() << '\n';
+			Logger::log(e.what());
+			return 1;
+		}
+		catch (...)
+		{
+			std::cerr << "Unknown exception was caught!" << '\n';
+			Logger::log("Unknown exception was caught!");
+			return 1;
+		}
 	}
 
 	void PrimaryApp::setCurrentScene(Node* scene)
 	{
-		if(currentScene) sceneManager.freeScene(currentScene);
+		if (currentScene) sceneManager.freeScene(currentScene);
 		currentScene = scene;
 		currentScene->start();
 	}
-	
-	void PrimaryApp::loadCurrentScene(std::string name) 
+
+	void PrimaryApp::loadCurrentScene(std::string name)
 	{
 		setCurrentScene(sceneManager.loadScene(name));
 	}
-	
-	Node* PrimaryApp::loadScene(std::string name) 
+
+	Node* PrimaryApp::loadScene(std::string name)
 	{
 		return sceneManager.loadScene(name);
 	}
@@ -69,10 +95,10 @@ namespace prim
 	{
 		if (!currentScene) return nullptr;
 		Node* currentNode = currentScene;
-		if(nodePath.front() == currentScene->getName())
+		if (nodePath.front() == currentScene->getName())
 			nodePath = nodePath.pop_front();
-		start:
-		while(!nodePath.empty())
+	start:
+		while (!nodePath.empty())
 		{
 			std::string name = nodePath.front();
 			for (Node* child : currentNode->getChildren())

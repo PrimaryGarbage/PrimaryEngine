@@ -9,6 +9,7 @@
 
 namespace prim
 {
+
 #define START_CHILDREN for(Node* child : children) child->start();
 #define UPDATE_CHILDREN for(Node* child : children) child->update(deltaTime);
 #define DRAW_CHILDREN for(Node* child : children) child->draw(renderer);
