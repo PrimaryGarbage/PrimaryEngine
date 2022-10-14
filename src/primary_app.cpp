@@ -15,7 +15,7 @@
 namespace prim
 {
 
-	PrimaryApp::PrimaryApp(const char* appPath) : appPath(appPath), deltaTime(0.0f), timeSinceStart(0.0f), sceneManager("./res/scenes/")
+	PrimaryApp::PrimaryApp() : deltaTime(0.0f), timeSinceStart(0.0f), sceneManager("./res/scenes/")
 	{
 	}
 
@@ -27,7 +27,7 @@ namespace prim
 
 	void PrimaryApp::init()
 	{
-		Logger::init(appPath);
+		Logger::init("./");
 		renderer.init(windowWidth, windowHeight, windowName);
 		Input::init(renderer.getWindow());
 		editorUI.init(&renderer);

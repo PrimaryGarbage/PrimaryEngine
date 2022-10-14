@@ -31,11 +31,9 @@ private:
 	void mainLoop();
 	void executeDeferredFunctions();
 public:
-	explicit PrimaryApp(const char* appPath);
+	explicit PrimaryApp();
 	PrimaryApp(const PrimaryApp& other) = delete;
 	~PrimaryApp();
-
-	const std::filesystem::path appPath;
 
 	void init();
 	int run();

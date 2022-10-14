@@ -18,7 +18,8 @@ namespace prim
 
     class Node : public NodeBase
     {
-    private:
+        REGISTER_NODE(Node)
+
         void updateNodePath();
     protected:
         std::string name;

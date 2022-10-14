@@ -45,6 +45,7 @@ namespace prim
         void draw();
         void print(std::string str);
         void addDragFloat(const char* label, float* f, float speed = 0.1f);
+        inline void setSelectedNode(Node* node) { selectedNode = node; }
         inline Node* getSelectedNode() const { return selectedNode; }
     };
 }

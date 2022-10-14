@@ -1,7 +1,7 @@
 #ifndef __TEST_SCENES_CREATOR_HPP__
 #define __TEST_SCENES_CREATOR_HPP__
 
-#include "node_utils.hpp"
+#include "node_includes.hpp"
 
 namespace prim
 {

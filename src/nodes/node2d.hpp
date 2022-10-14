@@ -10,6 +10,7 @@ namespace prim
 
     class Node2D : public Node
     {
+        REGISTER_NODE(Node2D)
     protected:
         Transform2D transform;
     public:

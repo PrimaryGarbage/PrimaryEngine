@@ -12,6 +12,7 @@ namespace prim
 
     class Sprite : public Drawable
     {
+        REGISTER_NODE(Sprite)
     protected:
         inline static const float defaultSize = 100.0f;
         Mesh planeMesh;

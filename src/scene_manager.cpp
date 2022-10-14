@@ -6,7 +6,9 @@
 #include <unordered_map>
 #include <stack>
 #include "node_utils.hpp"
+#include "node.hpp"
 #include "utils.hpp"
+#include "globals.hpp"
 
 namespace prim
 {
@@ -47,7 +49,7 @@ namespace prim
 
             if (line == NodeFields::childrenStart)
             {
-                node = createNode(fields[NodeFields::type].c_str(), fields);
+                node = NodeFactory::createNode(fields[NodeFields::type], fields);
                 if (!parentNodes.empty()) parentNodes.top()->addChild(node);
                 parentNodes.push(node);
                 fields.clear();
@@ -58,7 +60,7 @@ namespace prim
             {
                 if (!fields.empty())
                 {
-                    node = createNode(fields[NodeFields::type].c_str(), fields);
+                    node = NodeFactory::createNode(fields[NodeFields::type], fields);
                     parentNodes.top()->addChild(node);
                 }
                 parentNodes.pop();
@@ -72,7 +74,7 @@ namespace prim
 
         if (!fields.empty())
         {
-            node = createNode(fields[NodeFields::type].c_str(), fields);
+            node = NodeFactory::createNode(fields[NodeFields::type], fields);
             parentNodes.top()->addChild(node);
             fields.clear();
             node = nullptr;
@@ -103,5 +105,6 @@ namespace prim
         for (Node* child : scene->getChildren())
             freeScene(child);
         delete scene;
+        Globals::editorUI->setSelectedNode(nullptr);
     }
 }

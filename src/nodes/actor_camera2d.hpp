@@ -7,6 +7,7 @@ namespace prim
 {
     class ActorCamera2D : public Camera2D
     {
+        REGISTER_NODE(ActorCamera2D)
     protected:
         Node2D* target;
         NodePath targetPath;

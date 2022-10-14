@@ -1,13 +1,10 @@
 #include "primary_app.hpp"
-#include "prim_exception.hpp"
-#include "logger.hpp"
-#include "node_includes.hpp"
 
 int main(int argc, char* argv[])
 {
-	prim::PrimaryApp app(argv[0]);
+	prim::PrimaryApp app;
 
-	prim::Sprite
+	//app.editor = true;
 
 	return app.run();
 }

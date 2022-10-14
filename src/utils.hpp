@@ -124,6 +124,14 @@ namespace prim
             std::vector<std::string> values = Utils::splitString(line, vecSeparator);
             return glm::vec2(std::stof(values[0]), std::stof(values[1]));
         }
+
+        inline static std::string toLower(const std::string& str)
+        {
+            std::string lowerStr;
+            lowerStr.reserve(str.size());
+            for(const char& c : str) lowerStr.push_back(std::tolower(c));
+            return lowerStr;
+        }
     };
 
 }

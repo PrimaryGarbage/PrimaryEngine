@@ -8,6 +8,7 @@ namespace prim
 
     class Camera2D : public CameraBase 
     {
+        REGISTER_NODE(Camera2D)
     protected:
         glm::vec2 getWindowSize() const;
     public:
