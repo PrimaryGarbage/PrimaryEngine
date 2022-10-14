@@ -83,7 +83,7 @@ namespace prim
                 if (ImGui::Button("Load Scene"))
                     ImGuiFileDialog::Instance()->OpenDialog("LoadSceneKey", "Open Image", ".psc", "./res/scenes/", 1, nullptr, ImGuiFileDialogFlags_Modal);
 
-                if (ImGuiFileDialog::Instance()->Display("LoadSceneKey"))
+                if (ImGuiFileDialog::Instance()->Display("LoadSceneKey", 32, fileExplorerMinSize))
                 {
                     if (ImGuiFileDialog::Instance()->IsOk())
                     {

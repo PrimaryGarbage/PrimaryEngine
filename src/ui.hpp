@@ -23,6 +23,7 @@ namespace prim
     {
     private:
         const float rightPanelWidth = 200.0f;
+        const ImVec2 fileExplorerMinSize = { 640.0f, 480.0f };
 
         Renderer* renderer;
         ImGuiIO* io;
