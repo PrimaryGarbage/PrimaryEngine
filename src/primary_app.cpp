@@ -31,10 +31,7 @@ namespace prim
 		renderer.init(windowWidth, windowHeight, windowName);
 		Input::init(renderer.getWindow());
 		initEditor();
-
-		Globals::app = this;
-		Globals::mainRenderer = &renderer;
-		Globals::editorUI = &editorUI;
+		initGlobals();
 	}
 
 	int PrimaryApp::run()
@@ -80,7 +77,13 @@ namespace prim
 	{
 		setCurrentScene(sceneManager.loadScene(name));
 	}
-
+	
+	void PrimaryApp::saveCurrentScene(std::string name, bool overwrite)
+	{
+		if(!currentScene) return;
+		sceneManager.saveScene(currentScene, name, overwrite);
+	}
+	
 	Node* PrimaryApp::loadScene(std::string name)
 	{
 		return sceneManager.loadScene(name);
@@ -177,6 +180,14 @@ namespace prim
 	{
 		if(!useEditor) return;
 		editorUI.init(&renderer);
+	}
+	
+	void PrimaryApp::initGlobals()
+	{
+		Globals::app = this;
+		Globals::mainRenderer = &renderer;
+		Globals::editorUI = &editorUI;
+		Globals::sceneManager = &sceneManager;
 	}
 
 }

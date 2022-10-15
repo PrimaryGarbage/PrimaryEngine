@@ -32,6 +32,7 @@ private:
 	void executeDeferredFunctions();
 	void drawEditor();
 	void initEditor();
+	void initGlobals();
 public:
 	bool useEditor = false;
 
@@ -44,6 +45,7 @@ public:
 
 	void setCurrentScene(Node* scene);
 	void loadCurrentScene(std::string name);
+	void saveCurrentScene(std::string name, bool overwrite = false);
 	Node* loadScene(std::string name);
 	Node* getCurrentScene() const;
 	Node* getNode(NodePath nodePath);

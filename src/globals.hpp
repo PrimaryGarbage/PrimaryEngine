@@ -10,6 +10,7 @@ namespace prim
         static inline PrimaryApp* app = nullptr;
         static inline Renderer* mainRenderer = nullptr;
         static inline UI* editorUI = nullptr;
+        static inline SceneManager* sceneManager = nullptr;
     };
 }
 

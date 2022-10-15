@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 
+#define INPUT_STRING_MAX_LENGTH 50
 
 namespace prim
 {
@@ -24,6 +25,7 @@ namespace prim
     private:
         const float rightPanelWidth = 200.0f;
         const ImVec2 fileExplorerMinSize = { 640.0f, 480.0f };
+        const ImVec2 popupMinSize = { 250.0f, 170.0f };
 
         Renderer* renderer;
         ImGuiIO* io;
@@ -36,6 +38,8 @@ namespace prim
         void drawLeftPanel();
         void drawNodeInTree(Node* node);
         void drawSelectedNodeFraming();
+        void drawLoadSceneButton();
+        void drawSaveSceneButton();
 
     public:
         static inline const char* dragNodePayloadType = "NODE";

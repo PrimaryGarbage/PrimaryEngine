@@ -52,8 +52,7 @@ namespace prim
         {
             panelSize = ImVec2(ImGui::GetWindowSize().x, renderer->getWindowHeight());
 
-            static PrimaryApp* app = Globals::app;
-            Node* currentScene = app->getCurrentScene();
+            Node* currentScene = Globals::app->getCurrentScene();
             if (currentScene)
             {
                 if (ImGui::TreeNode(currentScene->getName().c_str()))
@@ -80,19 +79,9 @@ namespace prim
 
                 ImGui::Separator();
 
-                if (ImGui::Button("Load Scene"))
-                    ImGuiFileDialog::Instance()->OpenDialog("LoadSceneKey", "Open Scene", ".psc", "./res/scenes/", 1, nullptr, ImGuiFileDialogFlags_Modal);
-
-                if (ImGuiFileDialog::Instance()->Display("LoadSceneKey", 32, fileExplorerMinSize))
-                {
-                    if (ImGuiFileDialog::Instance()->IsOk())
-                    {
-                        std::string name = ImGuiFileDialog::Instance()->GetCurrentFileName();
-                        name = Utils::removeSceneFileExtension(name);
-                        app->loadCurrentScene(name);
-                    }
-                    ImGuiFileDialog::Instance()->Close();
-                }
+                drawLoadSceneButton();
+                ImGui::SameLine();
+                drawSaveSceneButton();
             }
         }
         ImGui::End();
@@ -129,17 +118,101 @@ namespace prim
             ImGui::TreePop();
         }
     }
-    
+
     void UI::drawSelectedNodeFraming()
     {
-        if(!selectedNode) return;
+        if (!selectedNode) return;
         Drawable* node = dynamic_cast<Drawable*>(selectedNode);
-        if(node) renderer->drawSelectedNodeFraming(node);
+        if (node) renderer->drawSelectedNodeFraming(node);
+    }
+
+    void UI::drawLoadSceneButton()
+    {
+        if (ImGui::Button("Load Scene"))
+            ImGuiFileDialog::Instance()->OpenDialog("LoadSceneKey", "Open Scene", ".psc", "./res/scenes/", 1, nullptr, ImGuiFileDialogFlags_Modal);
+
+        if (ImGuiFileDialog::Instance()->Display("LoadSceneKey", 32, fileExplorerMinSize))
+        {
+            if (ImGuiFileDialog::Instance()->IsOk())
+            {
+                std::string name = ImGuiFileDialog::Instance()->GetCurrentFileName();
+                name = Utils::removeSceneFileExtension(name);
+                Globals::app->loadCurrentScene(name);
+            }
+            ImGuiFileDialog::Instance()->Close();
+        }
+    }
+
+    void UI::drawSaveSceneButton()
+    {
+        static char sceneNameBuf[INPUT_STRING_MAX_LENGTH];
+        static bool openOverwritePopup = false;
+        static Node* currentScene = Globals::app->getCurrentScene();
+
+        if (ImGui::Button("Save Scene"))
+        {
+            ImGui::OpenPopup("Save Scene");
+            strcpy(sceneNameBuf, currentScene->getName().c_str());
+        }
+
+        if (ImGui::BeginPopupModal("Save Scene", nullptr, ImGuiWindowFlags_NoResize))
+        {
+            ImGui::SetWindowSize(popupMinSize);
+
+            ImGui::Text("Scene name:");
+            ImGui::InputText("##SceneNameInput", sceneNameBuf, INPUT_STRING_MAX_LENGTH);
+
+            if (ImGui::Button("Ok"))
+            {
+                if (Globals::sceneManager->sceneExists(sceneNameBuf))
+                {
+                    openOverwritePopup = true;
+                }
+                else
+                {
+                    Globals::app->saveCurrentScene(sceneNameBuf, false);
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel"))
+            {
+                ImGui::CloseCurrentPopup();
+            }
+
+            ImGui::EndPopup();
+        }
+
+        if (openOverwritePopup)
+        {
+            ImGui::OpenPopup("Overwrite warning");
+            openOverwritePopup = false;
+        }
+
+        if (ImGui::BeginPopupModal("Overwrite warning", nullptr, ImGuiWindowFlags_NoResize))
+        {
+            ImGui::SetWindowSize(popupMinSize);
+
+            ImGui::TextWrapped(std::string("Scene with the name '" + std::string(sceneNameBuf) + "' already exists. Overwrite?").c_str());
+
+            if (ImGui::Button("Yes"))
+            {
+                Globals::app->saveCurrentScene(sceneNameBuf, true);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("No"))
+            {
+                ImGui::CloseCurrentPopup();
+            }
+
+            ImGui::EndPopup();
+        }
     }
 
     UI::~UI()
     {
-        if(!initialized) return;
+        if (!initialized) return;
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();

@@ -1,7 +1,6 @@
 #include "scene_manager.hpp"
 #include "prim_exception.hpp"
 #include <fstream>
-#include <filesystem>
 #include <sstream>
 #include <unordered_map>
 #include <stack>
@@ -14,6 +13,14 @@ namespace prim
 {
     namespace fs = std::filesystem;
 
+    fs::path SceneManager::createPathToScene(std::string sceneName)
+    {
+        fs::path path(savePath + sceneName);
+        if(!path.has_extension()) path += sceneFileExtension;
+        else if(path.extension().string() != sceneFileExtension) throw PRIM_EXCEPTION("File '" + sceneName + "' has wrong extension");
+        return path;
+    }
+
     SceneManager::SceneManager(const char* savePath) : savePath(savePath)
     {
         fs::path path(savePath);
@@ -23,11 +30,10 @@ namespace prim
         }
     }
 
-
-    Node* SceneManager::loadScene(std::string fileName)
+    Node* SceneManager::loadScene(std::string name)
     {
-        fs::path path(savePath + fileName + sceneFileExtension);
-        if (!fs::exists(path)) throw PRIM_EXCEPTION("File with the path '" + path.string() + "' doesn't exists.");
+        fs::path path = createPathToScene(name);
+        if (!sceneExists(name)) throw PRIM_EXCEPTION("File with the path '" + path.string() + "' doesn't exists.");
 
         std::ifstream stream(path.string(), std::ios::in);
         if (!stream.good()) throw PRIM_EXCEPTION("Unable to open file stream.");
@@ -87,13 +93,15 @@ namespace prim
         return parentNodes.top()->getChildren().front();
     }
 
-    void SceneManager::saveScene(Node* scene, std::string fileName, bool ovewrite)
+    void SceneManager::saveScene(Node* scene, std::string name, bool ovewrite)
     {
-        fs::path path(savePath + fileName + sceneFileExtension);
-        if (fs::exists(path) && !ovewrite) throw PRIM_EXCEPTION("File with the path '" + path.string() + "' already exists.");
+        fs::path path = createPathToScene(name);
+        if (sceneExists(name) && !ovewrite) throw PRIM_EXCEPTION("File with the path '" + path.string() + "' already exists.");
 
         std::ofstream stream(path.string(), std::ios::out | std::ios::trunc);
         if (!stream.good()) throw PRIM_EXCEPTION("Unable to open file stream.");
+
+        scene->setName(name);
 
         stream << scene->serialize();
 
@@ -106,5 +114,11 @@ namespace prim
             freeScene(child);
         delete scene;
         Globals::editorUI->setSelectedNode(nullptr);
+    }
+    
+    bool SceneManager::sceneExists(std::string name)
+    {
+        fs::path path = createPathToScene(name);
+        return fs::exists(path);
     }
 }

@@ -2,6 +2,7 @@
 #define __SCENE_MANAGER_HPP__
 
 #include <string>
+#include <filesystem>
 
 namespace prim
 {
@@ -15,14 +16,14 @@ namespace prim
         const char* savePath;
 
         std::string serialize(Node* node);
-        //void appendNodeToFile(Node* )
+        std::filesystem::path createPathToScene(std::string sceneName);
     public:
         SceneManager(const char* savePath);
 
-        Node* loadScene(std::string fileName);
-        void saveScene(Node* scene, std::string fileName, bool ovewrite = false);
+        Node* loadScene(std::string name);
+        void saveScene(Node* scene, std::string name, bool ovewrite = false);
         void freeScene(Node* scene);
-
+        bool sceneExists(std::string name);
     };
 }
 
