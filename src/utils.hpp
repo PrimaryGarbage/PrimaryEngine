@@ -132,6 +132,11 @@ namespace prim
             for(const char& c : str) lowerStr.push_back(std::tolower(c));
             return lowerStr;
         }
+
+        inline static std::string removeSceneFileExtension(const std::string& filename)
+        {
+            return filename.substr(0, filename.size() - 4);
+        }
     };
 
 }

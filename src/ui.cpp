@@ -88,7 +88,7 @@ namespace prim
                     if (ImGuiFileDialog::Instance()->IsOk())
                     {
                         std::string name = ImGuiFileDialog::Instance()->GetCurrentFileName();
-                        name = name.substr(0, name.size() - 4);
+                        name = Utils::removeSceneFileExtension(name);
                         app->loadCurrentScene(name);
                     }
                     ImGuiFileDialog::Instance()->Close();
