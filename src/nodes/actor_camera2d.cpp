@@ -20,6 +20,7 @@ namespace prim
 
     ActorCamera2D::ActorCamera2D(std::unordered_map<std::string, std::string>& fieldValues)
         : Camera2D(fieldValues), stiffness(std::stof(fieldValues[NodeFields::stiffness])),
+        initialOffset(Utils::deserializeVec2(fieldValues[NodeFields::initialOffset])),
         targetPath(fieldValues[NodeFields::targetPath])
     {
     }
@@ -34,7 +35,7 @@ namespace prim
 
             target = dynamic_cast<Node2D*>(Globals::app->getNode(targetPath));
         if (!target) return;
-        initialOffset = getGlobalPosition() - target->getGlobalPosition();
+        //initialOffset = getGlobalPosition() - target->getGlobalPosition();
     }
 
     void ActorCamera2D::update(float deltaTime)
