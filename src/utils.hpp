@@ -6,6 +6,7 @@
 #include "logger.hpp"
 #include <vector>
 #include <unordered_map>
+#include "imgui.h"
 #include <sstream>
 
 namespace prim
@@ -22,6 +23,18 @@ namespace prim
         constexpr static inline char vecSeparator = ',';
 
     public:
+
+        class Color
+        {
+        public:
+            static inline constexpr ImVec4 White = { 1.0f, 1.0f, 1.0f, 1.0f };
+            static inline constexpr ImVec4 Red = { 1.0f, 0.0f, 0.0f, 1.0f };
+            static inline constexpr ImVec4 Green = { 0.0f, 1.0f, 0.0f, 1.0f };
+            static inline constexpr ImVec4 Blue = { 0.0f, 0.0f, 1.0f, 1.0f };
+            static inline constexpr ImVec4 Black = { 0.0f, 0.0f, 0.0f, 1.0f };
+        };
+
+
         static inline glm::vec3 toVec3(glm::vec2 vec, float z = 0.0f)
         {
             return glm::vec3(vec.x, vec.y, z);
@@ -129,7 +142,7 @@ namespace prim
         {
             std::string lowerStr;
             lowerStr.reserve(str.size());
-            for(const char& c : str) lowerStr.push_back(std::tolower(c));
+            for (const char& c : str) lowerStr.push_back(std::tolower(c));
             return lowerStr;
         }
 

@@ -4,6 +4,7 @@
 #include "globals.hpp"
 #include "node_utils.hpp"
 #include "imgui.h"
+#include "utils.hpp"
 
 namespace prim
 {
@@ -32,29 +33,32 @@ namespace prim
         START_CHILDREN
 
             target = dynamic_cast<Node2D*>(Globals::app->getNode(targetPath));
+        if (!target) return;
         initialOffset = getGlobalPosition() - target->getGlobalPosition();
-        //setAsCurrent();
     }
 
     void ActorCamera2D::update(float deltaTime)
     {
         UPDATE_CHILDREN
 
+        if (target)
+        {
             auto followTargetFunction = [this]() {
-            glm::vec2 position;
-            if (rotateWithTarget)
-            {
-                float targetAngle = target->getGlobalRotation();
-                position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + glm::rotate(initialOffset, targetAngle), stiffness);
-                setGlobalRotation(Utils::lerpAngle(getGlobalRotation(), targetAngle, stiffness));
-            }
-            else
-                position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + initialOffset, stiffness);
+                glm::vec2 position;
+                if (rotateWithTarget)
+                {
+                    float targetAngle = target->getGlobalRotation();
+                    position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + glm::rotate(initialOffset, targetAngle), stiffness);
+                    setGlobalRotation(Utils::lerpAngle(getGlobalRotation(), targetAngle, stiffness));
+                }
+                else
+                    position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + initialOffset, stiffness);
 
-            setGlobalPosition(position);
-        };
+                setGlobalPosition(position);
+            };
 
-        Globals::app->deferFunctionExecution(followTargetFunction);
+            Globals::app->deferFunctionExecution(followTargetFunction);
+        }
     }
 
     void ActorCamera2D::draw(Renderer& renderer)
@@ -102,7 +106,10 @@ namespace prim
 
         ImGui::Checkbox("Rotate with target", &rotateWithTarget);
 
+        ImGui::PushStyleColor(ImGuiCol_Text, target ? Utils::Color::White : Utils::Color::Red);
         ImGui::LabelText("Target", targetPath.string().c_str());
+        ImGui::PopStyleColor();
+
         if (ImGui::BeginDragDropTarget())
         {
             const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(UI::dragNodePayloadType);

@@ -49,13 +49,13 @@ namespace prim
 		catch (const prim::Exception& e)
 		{
 			std::cerr << e.what() << '\n';
-			Logger::log(e.what());
+			Logger::log(e.what(), true);
 			return 1;
 		}
 		catch (const std::exception& e)
 		{
 			std::cerr << e.what() << '\n';
-			Logger::log(e.what());
+			Logger::log(e.what(), true);
 			return 1;
 		}
 		catch (...)

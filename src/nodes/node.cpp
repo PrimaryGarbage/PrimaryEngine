@@ -100,6 +100,7 @@ namespace prim
     void Node::setName(std::string name)
     {
         this->name = name;
+        updateNodePath();
     }
 
     Node* Node::findChild(std::string name) const
@@ -123,7 +124,7 @@ namespace prim
         static char nameBuffer[maxBufferSize];
         std::copy(name.begin(), name.end(), nameBuffer);
         if (ImGui::InputText("Name", nameBuffer, maxBufferSize))
-            name = nameBuffer;
+            setName(nameBuffer);
     }
 
 }

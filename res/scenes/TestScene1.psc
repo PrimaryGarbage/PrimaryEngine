@@ -3,11 +3,11 @@ name=TestScene1
 children_start
 type=Sprite
 name=TestBackground
-position=0.000000,0.000000
-rotation=0.000000
+position=-948.000000,-299.000000
+rotation=0.033000
 scale=1.000000,1.000000
 pivot=0.000000,0.000000
-width=1920.000000
+width=1918.000000
 height=1080.000000
 zIndex=0.000000
 imagePath=./res/textures/abstract_stairs.png
@@ -15,8 +15,8 @@ children_start
 children_end
 
 type=Sprite
-name=TestSprite1
-position=0.000000,0.000000
+name=TestSprite1lelaaaa
+position=611.000000,0.000000
 rotation=0.000000
 scale=1.000000,1.000000
 pivot=0.500000,0.500000
@@ -27,7 +27,7 @@ imagePath=./res/textures/TestTexture.png
 children_start
 type=Sprite
 name=TestSprite2
-position=200.000000,200.000000
+position=179.000000,-302.000000
 rotation=0.000000
 scale=1.000000,1.000000
 pivot=0.500000,0.500000
@@ -40,7 +40,7 @@ children_end
 
 type=Sprite
 name=TestSprite3
-position=250.000000,300.000000
+position=-452.000000,287.000000
 rotation=0.000000
 scale=1.000000,1.000000
 pivot=0.500000,0.500000
@@ -68,14 +68,14 @@ children_end
 
 type=ActorCamera2D
 name=TestActorCamera
-position=0.000000,0.000000
+position=611.000183,0.000000
 rotation=0.000000
 scale=1.000000,1.000000
 pivot=0.500000,0.500000
 zNear=-1.000000
 zFar=1.000000
 zoom=1.000000
-targetPath=/TestSprite1
+targetPath=/TestScene1/TestSprite1lel
 initialOffset=0.000000,0.000000
 stiffness=0.030000
 rotateWithTarget=1
