@@ -7,6 +7,13 @@ PROJECT_NAME='PrimaryEngine'
 BUILD_TYPE=Debug
 POSTFIX='-d'
 
+copy_res_dir() {
+	if [[ -d $CMAKE_BUILD_DIR/bin/res ]]; then
+		rm -rf $CMAKE_BUILD_DIR/bin/res
+	fi
+	cp ./res $CMAKE_BUILD_DIR/bin/res -r
+}
+
 configure() {
 	echo -e "Configuring Cmake..."
 	cmake -G Ninja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -S . -B $CMAKE_BUILD_DIR
@@ -14,8 +21,8 @@ configure() {
 
 build() {
 	echo -e "Building..."
-	{ cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE && cp ./res $CMAKE_BUILD_DIR/bin/res -r; } \
-	|| { configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE && cp ./res $CMAKE_BUILD_DIR/bin/res -r; } \
+	{ cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE && copy_res_dir; } \
+	|| { configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE && copy_res_dir; } \
 	|| { echo -e "${RED}Building failure${NOCOLOR}"; false; }
 }
 
