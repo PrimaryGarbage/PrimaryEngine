@@ -30,7 +30,7 @@ namespace prim
 		Logger::init("./");
 		renderer.init(windowWidth, windowHeight, windowName);
 		Input::init(renderer.getWindow());
-		editorUI.init(&renderer);
+		initEditor();
 
 		Globals::app = this;
 		Globals::mainRenderer = &renderer;
@@ -152,7 +152,7 @@ namespace prim
 
 			currentScene->draw(renderer);
 
-			editorUI.draw();
+			drawEditor();
 
 			////////////////
 
@@ -165,6 +165,18 @@ namespace prim
 		std::sort(deferredFunctions.begin(), deferredFunctions.end(), [](const auto& pair1, const auto& pair2) { return pair1.second < pair2.second; });
 		for (int i = 0; i < deferredFunctions.size(); ++i)
 			deferredFunctions[i].first();
+	}
+
+	void PrimaryApp::drawEditor()
+	{
+		if(!useEditor) return;
+		editorUI.draw();
+	}
+
+	void PrimaryApp::initEditor()
+	{
+		if(!useEditor) return;
+		editorUI.init(&renderer);
 	}
 
 }

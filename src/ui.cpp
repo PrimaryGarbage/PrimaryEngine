@@ -139,6 +139,7 @@ namespace prim
 
     UI::~UI()
     {
+        if(!initialized) return;
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
@@ -153,7 +154,7 @@ namespace prim
         ImGui::StyleColorsDark();
         io = &ImGui::GetIO();
         io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
+        initialized = true;
     }
 
     void UI::draw()

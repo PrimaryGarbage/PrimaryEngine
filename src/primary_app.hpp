@@ -30,8 +30,12 @@ private:
 
 	void mainLoop();
 	void executeDeferredFunctions();
+	void drawEditor();
+	void initEditor();
 public:
-	explicit PrimaryApp();
+	bool useEditor = false;
+
+	PrimaryApp();
 	PrimaryApp(const PrimaryApp& other) = delete;
 	~PrimaryApp();
 
