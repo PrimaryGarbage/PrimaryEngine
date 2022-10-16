@@ -106,7 +106,7 @@ namespace prim
 
         if (ImGui::BeginDragDropTarget())
         {
-            const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(UI::dragNodePayloadType);
+            const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(SceneEditor::dragNodePayloadType);
             if (payload)
             {
                 Node* node = *static_cast<Node**>(payload->Data);

@@ -19,7 +19,7 @@ set(PRIMARY_SRC
 	timer.hpp
 	utils.hpp
 	globals.hpp
-	ui.hpp ui.cpp
+	scene_editor.hpp scene_editor.cpp
 	scene_manager.hpp scene_manager.cpp
 	test_scenes_creator.hpp
 	ImGuiFileDialog.h ImGuiFileDialog.cpp ImGuiFileDialogConfig.h

@@ -174,20 +174,20 @@ namespace prim
 	void PrimaryApp::drawEditor()
 	{
 		if(!useEditor) return;
-		editorUI.draw();
+		sceneEditor.draw();
 	}
 
 	void PrimaryApp::initEditor()
 	{
 		if(!useEditor) return;
-		editorUI.init(&renderer);
+		sceneEditor.init(&renderer);
 	}
 	
 	void PrimaryApp::initGlobals()
 	{
 		Globals::app = this;
 		Globals::mainRenderer = &renderer;
-		Globals::editorUI = &editorUI;
+		Globals::sceneEditor = &sceneEditor;
 		Globals::sceneManager = &sceneManager;
 	}
 

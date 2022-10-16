@@ -112,7 +112,7 @@ namespace prim
         for (Node* child : scene->getChildren())
             freeScene(child);
         delete scene;
-        Globals::editorUI->setSelectedNode(nullptr);
+        Globals::sceneEditor->setSelectedNode(nullptr);
     }
     
     bool SceneManager::sceneExists(std::string name)

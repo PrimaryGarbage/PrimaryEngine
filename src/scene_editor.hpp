@@ -1,5 +1,5 @@
-#ifndef __UI_HPP__
-#define __UI_HPP__
+#ifndef __SCENE_EDITOR_HPP__
+#define __SCENE_EDITOR_HPP__
 
 #include "imgui.h"
 #include <vector>
@@ -20,7 +20,7 @@ namespace prim
         float speed;
     };
 
-    class UI
+    class SceneEditor
     {
     private:
         const float rightPanelWidth = 200.0f;
@@ -44,8 +44,8 @@ namespace prim
     public:
         static inline const char* dragNodePayloadType = "NODE";
 
-        UI() = default;
-        ~UI();
+        SceneEditor() = default;
+        ~SceneEditor();
         void init(Renderer* renderer);
         void draw();
         void print(std::string str);
@@ -55,4 +55,4 @@ namespace prim
     };
 }
 
-#endif // __UI_HPP__
+#endif // __SCENE_EDITOR_HPP__

@@ -1,4 +1,4 @@
-#include "ui.hpp"
+#include "scene_editor.hpp"
 #include "renderer.hpp"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -9,7 +9,7 @@
 
 namespace prim
 {
-    void UI::drawRightPanel()
+    void SceneEditor::drawRightPanel()
     {
         const static ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove;
         const ImVec2 panelPos(renderer->getWindowWidth(), 0.0f);
@@ -41,7 +41,7 @@ namespace prim
         ImGui::End();
     }
 
-    void UI::drawLeftPanel()
+    void SceneEditor::drawLeftPanel()
     {
         const static ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove;
         static ImVec2 panelSize(rightPanelWidth, renderer->getWindowHeight());
@@ -87,7 +87,7 @@ namespace prim
         ImGui::End();
     }
 
-    void UI::drawNodeInTree(Node* node)
+    void SceneEditor::drawNodeInTree(Node* node)
     {
         static const ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow;
         ImGuiTreeNodeFlags flags = baseFlags;
@@ -119,14 +119,14 @@ namespace prim
         }
     }
 
-    void UI::drawSelectedNodeFraming()
+    void SceneEditor::drawSelectedNodeFraming()
     {
         if (!selectedNode) return;
         Drawable* node = dynamic_cast<Drawable*>(selectedNode);
         if (node) renderer->drawSelectedNodeFraming(node);
     }
 
-    void UI::drawLoadSceneButton()
+    void SceneEditor::drawLoadSceneButton()
     {
         if (ImGui::Button("Load Scene"))
             ImGuiFileDialog::Instance()->OpenDialog("LoadSceneKey", "Open Scene", ".psc", "./res/scenes/", 1, nullptr, ImGuiFileDialogFlags_Modal);
@@ -143,7 +143,7 @@ namespace prim
         }
     }
 
-    void UI::drawSaveSceneButton()
+    void SceneEditor::drawSaveSceneButton()
     {
         static char sceneNameBuf[INPUT_STRING_MAX_LENGTH];
         static bool openOverwritePopup = false;
@@ -209,7 +209,7 @@ namespace prim
         }
     }
 
-    UI::~UI()
+    SceneEditor::~SceneEditor()
     {
         if (!initialized) return;
         ImGui_ImplOpenGL3_Shutdown();
@@ -217,7 +217,7 @@ namespace prim
         ImGui::DestroyContext();
     }
 
-    void UI::init(Renderer* renderer)
+    void SceneEditor::init(Renderer* renderer)
     {
         this->renderer = renderer;
         ImGui::CreateContext();
@@ -229,7 +229,7 @@ namespace prim
         initialized = true;
     }
 
-    void UI::draw()
+    void SceneEditor::draw()
     {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -253,12 +253,12 @@ namespace prim
         dragFloats.clear();
     }
 
-    void UI::print(std::string str)
+    void SceneEditor::print(std::string str)
     {
         printLines.push_back(std::move(str));
     }
 
-    void UI::addDragFloat(const char* label, float* f, float speed)
+    void SceneEditor::addDragFloat(const char* label, float* f, float speed)
     {
         dragFloats.push_back(DragFloat{ label, f, speed });
     }

@@ -5,7 +5,7 @@
 #include <functional>
 #include "renderer.hpp"
 #include "timer.hpp"
-#include "ui.hpp"
+#include "scene_editor.hpp"
 #include "scene_manager.hpp"
 
 namespace prim
@@ -23,7 +23,7 @@ private:
 	float timeSinceStart;
 	Timer timer;
 	Renderer renderer;
-	UI editorUI;
+	SceneEditor sceneEditor;
 	Node* currentScene = nullptr;
 	SceneManager sceneManager;
 	std::vector<std::pair<deferred_func_type, short>> deferredFunctions;
