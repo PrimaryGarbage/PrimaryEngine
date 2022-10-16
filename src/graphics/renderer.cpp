@@ -135,7 +135,7 @@ namespace prim
 		GL_CALL(glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE));
 		GL_CALL(glStencilFunc(GL_NOTEQUAL, 1, 0xFF));
 		GL_CALL(glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP));
-		node->draw(*this, selectShader);
+		node->drawWithShader(*this, selectShader);
 		
 		GL_CALL(glDisable(GL_STENCIL_TEST));
 	}

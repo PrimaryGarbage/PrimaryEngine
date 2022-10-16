@@ -53,8 +53,6 @@ namespace prim
     {
         DRAW_CHILDREN
 
-        if(customShader) return draw(renderer, customShader);
-
         glm::vec2 globalPosition = getGlobalPosition();
         glm::vec2 globalScale = getGlobalScale();
         glm::mat4 modelMat(1.0f);
@@ -65,24 +63,12 @@ namespace prim
 
         renderer.setModelMat(std::move(modelMat));
 
-        renderer.drawMesh(planeMesh);
+        if(customShader)
+            renderer.drawMesh(planeMesh, customShader);
+        else
+            renderer.drawMesh(planeMesh);
     }
     
-    void Sprite::draw(Renderer& renderer, Shader* shader) 
-    {
-        glm::vec2 globalPosition = getGlobalPosition();
-        glm::vec2 globalScale = getGlobalScale();
-        glm::mat4 modelMat(1.0f);
-        modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x, globalPosition.y, zIndex));
-        modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
-        modelMat = glm::scale(modelMat, glm::vec3(globalScale.x * relativeWidth, globalScale.y * relativeHeight, 1.0f));
-        modelMat = glm::translate(modelMat, -Utils::toVec3(getPivot() * defaultSize));
-
-        renderer.setModelMat(std::move(modelMat));
-
-        renderer.drawMesh(planeMesh, shader);
-    }
-
     void Sprite::setCenterPivot()
     {
         setPivot(glm::vec2(0.5f, 0.5f));

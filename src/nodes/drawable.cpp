@@ -21,4 +21,12 @@ namespace prim
     {
         DRAW_CHILDREN
     }
+    
+    void Drawable::drawWithShader(Renderer& renderer, Shader* shader)
+    {
+        Shader* oldCustomShader = customShader;
+        customShader = shader;
+        this->draw(renderer);
+        customShader = oldCustomShader;
+    }
 }
