@@ -12,7 +12,7 @@ namespace prim
     {
     }
 
-    Node::Node(std::unordered_map<std::string, std::string>& fieldValues)
+    Node::Node(FieldValues& fieldValues)
         : name(fieldValues[NodeFields::name]), nodePath(this)
     {
     }
@@ -95,7 +95,9 @@ namespace prim
         std::stringstream ss;
         ss << Utils::createKeyValuePair(NodeFields::type, type()) << std::endl;
         ss << Utils::createKeyValuePair(NodeFields::name, name) << std::endl;
+
         if (withChildren) ss << serializeChildren();
+
         return ss.str();
     }
 

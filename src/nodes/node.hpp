@@ -24,7 +24,7 @@ namespace prim
 
     public:
         Node(std::string name);
-        Node(std::unordered_map<std::string, std::string>& fieldValues);
+        Node(FieldValues& fieldValues);
         virtual ~Node();
 
         virtual void start();

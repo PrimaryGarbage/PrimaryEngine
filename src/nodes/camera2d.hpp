@@ -18,7 +18,7 @@ namespace prim
 
         Camera2D(std::string name);
         Camera2D(std::string name, float zNear, float zFar);
-        Camera2D(std::unordered_map<std::string, std::string>& fieldValues);
+        Camera2D(FieldValues& fieldValues);
         virtual ~Camera2D();
 
         virtual glm::mat4 calculateViewMatrix() const override;

@@ -18,7 +18,7 @@ namespace prim
     {
     }
 
-    ActorCamera2D::ActorCamera2D(std::unordered_map<std::string, std::string>& fieldValues)
+    ActorCamera2D::ActorCamera2D(FieldValues& fieldValues)
         : Camera2D(fieldValues), stiffness(std::stof(fieldValues[NodeFields::stiffness])),
         initialOffset(Utils::deserializeVec2(fieldValues[NodeFields::initialOffset])),
         targetPath(fieldValues[NodeFields::targetPath])

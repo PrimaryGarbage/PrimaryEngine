@@ -13,7 +13,7 @@ namespace prim
         Shader* customShader = nullptr;
 
         Drawable(std::string name);
-        Drawable(std::unordered_map<std::string, std::string>& fieldValues);
+        Drawable(FieldValues& fieldValues);
         virtual ~Drawable();
 
         virtual void draw(Renderer& renderer) override;

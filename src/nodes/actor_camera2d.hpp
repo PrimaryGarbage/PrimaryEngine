@@ -19,14 +19,14 @@ namespace prim
 
         ActorCamera2D(std::string name, const NodePath& target);
         ActorCamera2D(std::string name, float zNear, float zFar, const NodePath& target);
-        ActorCamera2D(std::unordered_map<std::string, std::string>& fieldValues);
+        ActorCamera2D(FieldValues& fieldValues);
         virtual ~ActorCamera2D();
 
         virtual void start() override;
         virtual void update(float deltaTime) override;
         virtual void draw(Renderer& renderer) override;
 
-        virtual inline const char* type() const override { return "Camera2D"; }
+        virtual inline const char* type() const override { return "ActorCamera2D"; }
 
         void setTarget(const NodePath& target);
         inline NodePath getTarget() const { return targetPath; }

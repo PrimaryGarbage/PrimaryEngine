@@ -8,6 +8,8 @@
 #define REGISTER_NODE(NODE_NAME) \
     private: inline static const NodeRegistration<NODE_NAME> nodeRegistration = NodeRegistration<NODE_NAME>(#NODE_NAME);
 
+typedef std::unordered_map<std::string, std::string> FieldValues;
+
 namespace prim
 {
     class NodeBase
@@ -32,18 +34,20 @@ namespace prim
     };
 
 
+    // helper function. Serves as a generic node factory
     template<class T>
-    inline static Node* instantiateNode(std::unordered_map<std::string, std::string> fieldValues)
+    inline static Node* constructNode(FieldValues fieldValues)
     {
         return new T(fieldValues);
     }
 
+    // object of this class registers it's node on instantiation
     template<class T>
     struct NodeRegistration : public NodeFactory
     {
         NodeRegistration(const char* type)
         {
-            node_map.insert(std::make_pair(type, &instantiateNode<T>));
+            node_map.insert(std::make_pair(type, &constructNode<T>));
         }
     };
 }

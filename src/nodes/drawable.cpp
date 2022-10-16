@@ -7,7 +7,7 @@ namespace prim
     {
     }
     
-    Drawable::Drawable(std::unordered_map<std::string, std::string>& fieldValues) : Node2D(fieldValues)
+    Drawable::Drawable(FieldValues& fieldValues) : Node2D(fieldValues)
     {
         
     }

@@ -21,7 +21,7 @@ namespace prim
         setPivot(glm::vec2(0.5f, 0.5f));
     }
     
-    Camera2D::Camera2D(std::unordered_map<std::string, std::string>& fieldValues) 
+    Camera2D::Camera2D(FieldValues& fieldValues) 
         : Camera2D(fieldValues[NodeFields::name], std::stof(fieldValues[NodeFields::zNear]), std::stof(fieldValues[NodeFields::zFar]))
     {
         zoom = std::stof(fieldValues[NodeFields::zoom]);

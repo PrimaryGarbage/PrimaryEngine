@@ -14,7 +14,7 @@ namespace prim
     {
     }
     
-    Node2D::Node2D(std::unordered_map<std::string, std::string>& fieldValues) 
+    Node2D::Node2D(FieldValues& fieldValues) 
         : Node(fieldValues[NodeFields::name])
     {
         transform.position = Utils::deserializeVec2(fieldValues[NodeFields::position]);

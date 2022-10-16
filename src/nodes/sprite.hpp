@@ -26,7 +26,7 @@ namespace prim
 
         Sprite(std::string name);
         Sprite(std::string name, std::string imagePath);
-        Sprite(std::unordered_map<std::string, std::string>& fieldValues);
+        Sprite(FieldValues& fieldValues);
         virtual ~Sprite();
 
         virtual void start() override;

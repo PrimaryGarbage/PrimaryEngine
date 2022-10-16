@@ -147,12 +147,11 @@ namespace prim
     {
         static char sceneNameBuf[INPUT_STRING_MAX_LENGTH];
         static bool openOverwritePopup = false;
-        static Node* currentScene = Globals::app->getCurrentScene();
 
         if (ImGui::Button("Save Scene"))
         {
             ImGui::OpenPopup("Save Scene");
-            strcpy(sceneNameBuf, currentScene->getName().c_str());
+            strncpy(sceneNameBuf, Globals::app->getCurrentScene()->getName().c_str(), INPUT_STRING_MAX_LENGTH - 1);
         }
 
         if (ImGui::BeginPopupModal("Save Scene", nullptr, ImGuiWindowFlags_NoResize))
@@ -160,7 +159,7 @@ namespace prim
             ImGui::SetWindowSize(popupMinSize);
 
             ImGui::Text("Scene name:");
-            ImGui::InputText("##SceneNameInput", sceneNameBuf, INPUT_STRING_MAX_LENGTH);
+            ImGui::InputText("##SceneNameInput", sceneNameBuf, INPUT_STRING_MAX_LENGTH, ImGuiInputTextFlags_AutoSelectAll);
 
             if (ImGui::Button("Ok"))
             {

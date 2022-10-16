@@ -22,7 +22,7 @@ namespace prim
         planeMesh.compositions[0].texture.load(image);
     }
 
-    Sprite::Sprite(std::unordered_map<std::string, std::string>& fieldValues)
+    Sprite::Sprite(FieldValues& fieldValues)
         : Drawable(fieldValues), planeMesh(Primitives::createSquareMesh(defaultSize)), width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
     {
         if (!fieldValues[NodeFields::imagePath].empty())

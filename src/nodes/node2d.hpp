@@ -15,7 +15,7 @@ namespace prim
         Transform2D transform;
     public:
         Node2D(std::string name);
-        Node2D(std::unordered_map<std::string, std::string>& fieldValues);
+        Node2D(FieldValues& fieldValues);
         virtual ~Node2D();
 
         virtual void start() override;
