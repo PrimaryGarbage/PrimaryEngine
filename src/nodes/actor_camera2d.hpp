@@ -9,6 +9,15 @@ namespace prim
     {
         REGISTER_NODE(ActorCamera2D)
     protected:
+
+        struct StateFields: public Camera2D::StateFields
+        {
+            inline static const char* targetPath = "targetPath";
+            inline static const char* initialOffset = "initialOffset";
+            inline static const char* stiffness = "stiffness";
+            inline static const char* rotateWithTarget = "rotateWithTarget";
+        };
+
         Node2D* target;
         NodePath targetPath;
         glm::vec2 initialOffset { 0.0f, 0.0f };

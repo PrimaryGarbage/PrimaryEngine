@@ -12,6 +12,15 @@ namespace prim
     {
         REGISTER_NODE(Node2D)
     protected:
+
+        struct StateFields: public Node::StateFields
+        {
+            inline static const char* position = "position";
+            inline static const char* rotation = "rotation";
+            inline static const char* scale = "scale";
+            inline static const char* pivot = "pivot";
+        };
+
         Transform2D transform;
     public:
         Node2D(std::string name);

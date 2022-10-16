@@ -10,6 +10,14 @@ namespace prim
     {
         REGISTER_NODE(Camera2D)
     protected:
+
+        struct StateFields: public Node2D::StateFields
+        {
+            inline static const char* zNear = "zNear";
+            inline static const char* zFar = "zFar";
+            inline static const char* zoom = "zoom";
+        };
+
         glm::vec2 getWindowSize() const;
     public:
         float zNear;

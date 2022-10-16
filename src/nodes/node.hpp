@@ -15,8 +15,18 @@ namespace prim
     {
         REGISTER_NODE(Node)
 
+    private:
         void updateNodePath();
     protected:
+
+        struct StateFields
+        {
+            inline static const char* type = "type";
+            inline static const char* name = "name";
+            inline static const char* childrenStart = "children_start";
+            inline static const char* childrenEnd = "children_end";
+        };
+
         std::string name;
         Node* parent = nullptr;
         std::vector<Node*> children;

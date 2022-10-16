@@ -11,6 +11,15 @@ namespace prim
     class SceneManager
     {
     private:
+
+        struct SceneFileSymbols
+        {
+            inline static const char* header = "Node";
+            inline static const char* type = "type";
+            inline static const char* childrenStart = "children_start";
+            inline static const char* childrenEnd = "children_end";
+        };
+
         const static inline char* sceneFileExtension = ".psc";
         const static inline char keyValueSeparator = '=';
         const char* savePath;

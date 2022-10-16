@@ -8,30 +8,6 @@ namespace prim
 {
     class Node;
 
-    struct NodeFields
-    {
-        inline static const char* header = "Node";
-        inline static const char* type = "type";
-        inline static const char* name = "name";
-        inline static const char* childrenStart = "children_start";
-        inline static const char* childrenEnd = "children_end";
-        inline static const char* position = "position";
-        inline static const char* rotation = "rotation";
-        inline static const char* scale = "scale";
-        inline static const char* pivot = "pivot";
-        inline static const char* width = "width";
-        inline static const char* height = "height";
-        inline static const char* zIndex = "zIndex";
-        inline static const char* imagePath = "imagePath";
-        inline static const char* zNear = "zNear";
-        inline static const char* zFar = "zFar";
-        inline static const char* zoom = "zoom";
-        inline static const char* targetPath = "targetPath";
-        inline static const char* initialOffset = "initialOffset";
-        inline static const char* stiffness = "stiffness";
-        inline static const char* rotateWithTarget = "rotateWithTarget";
-    };
-
     class NodeFactory
     {
     protected:

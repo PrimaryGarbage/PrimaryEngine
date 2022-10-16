@@ -4,7 +4,6 @@
 #include <sstream>
 #include <unordered_map>
 #include <stack>
-#include "node_utils.hpp"
 #include "node.hpp"
 #include "utils.hpp"
 #include "globals.hpp"
@@ -53,20 +52,20 @@ namespace prim
 
             if (line.empty()) continue;
 
-            if (line == NodeFields::childrenStart)
+            if (line == SceneFileSymbols::childrenStart)
             {
-                node = NodeFactory::createNode(fields[NodeFields::type], fields);
+                node = NodeFactory::createNode(fields[SceneFileSymbols::type], fields);
                 if (!parentNodes.empty()) parentNodes.top()->addChild(node);
                 parentNodes.push(node);
                 fields.clear();
                 continue;
             }
 
-            if (line == NodeFields::childrenEnd)
+            if (line == SceneFileSymbols::childrenEnd)
             {
                 if (!fields.empty())
                 {
-                    node = NodeFactory::createNode(fields[NodeFields::type], fields);
+                    node = NodeFactory::createNode(fields[SceneFileSymbols::type], fields);
                     parentNodes.top()->addChild(node);
                 }
                 parentNodes.pop();
@@ -80,7 +79,7 @@ namespace prim
 
         if (!fields.empty())
         {
-            node = NodeFactory::createNode(fields[NodeFields::type], fields);
+            node = NodeFactory::createNode(fields[SceneFileSymbols::type], fields);
             parentNodes.top()->addChild(node);
             fields.clear();
             node = nullptr;

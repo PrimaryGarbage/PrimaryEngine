@@ -14,6 +14,15 @@ namespace prim
     {
         REGISTER_NODE(Sprite)
     protected:
+        
+        struct StateFields: public Node2D::StateFields
+        {
+            inline static const char* width = "width";
+            inline static const char* height = "height";
+            inline static const char* zIndex = "zIndex";
+            inline static const char* imagePath = "imagePath";
+        };
+
         inline static const float defaultSize = 100.0f;
         Mesh planeMesh;
         Image image;

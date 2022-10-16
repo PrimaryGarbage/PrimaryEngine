@@ -15,12 +15,12 @@ namespace prim
     }
     
     Node2D::Node2D(FieldValues& fieldValues) 
-        : Node(fieldValues[NodeFields::name])
+        : Node(fieldValues[StateFields::name])
     {
-        transform.position = Utils::deserializeVec2(fieldValues[NodeFields::position]);
-        transform.rotation = std::stof(fieldValues[NodeFields::rotation]);
-        transform.scale = Utils::deserializeVec2(fieldValues[NodeFields::scale]);
-        transform.pivot = Utils::deserializeVec2(fieldValues[NodeFields::pivot]);
+        transform.position = Utils::deserializeVec2(fieldValues[StateFields::position]);
+        transform.rotation = std::stof(fieldValues[StateFields::rotation]);
+        transform.scale = Utils::deserializeVec2(fieldValues[StateFields::scale]);
+        transform.pivot = Utils::deserializeVec2(fieldValues[StateFields::pivot]);
     }
 
     Node2D::~Node2D()
@@ -235,10 +235,10 @@ namespace prim
 
         ss << Node::serialize(false);
 
-        ss << Utils::createKeyValuePair(NodeFields::position, Utils::serializeVec2(getPosition())) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::rotation, std::to_string(getRotation())) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::scale, Utils::serializeVec2(getScale())) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::pivot, Utils::serializeVec2(getPivot())) << std::endl;
+        ss << Utils::createKeyValuePair(StateFields::position, Utils::serializeVec2(getPosition())) << std::endl;
+        ss << Utils::createKeyValuePair(StateFields::rotation, std::to_string(getRotation())) << std::endl;
+        ss << Utils::createKeyValuePair(StateFields::scale, Utils::serializeVec2(getScale())) << std::endl;
+        ss << Utils::createKeyValuePair(StateFields::pivot, Utils::serializeVec2(getPivot())) << std::endl;
 
         if(withChildren) ss << serializeChildren();
 

@@ -22,10 +22,10 @@ namespace prim
     }
     
     Camera2D::Camera2D(FieldValues& fieldValues) 
-        : Camera2D(fieldValues[NodeFields::name], std::stof(fieldValues[NodeFields::zNear]), std::stof(fieldValues[NodeFields::zFar]))
+        : Camera2D(fieldValues[StateFields::name], std::stof(fieldValues[StateFields::zNear]), std::stof(fieldValues[StateFields::zFar]))
     {
-        zoom = std::stof(fieldValues[NodeFields::zoom]);
-        transform.pivot = Utils::deserializeVec2(fieldValues[NodeFields::pivot]);
+        zoom = std::stof(fieldValues[StateFields::zoom]);
+        transform.pivot = Utils::deserializeVec2(fieldValues[StateFields::pivot]);
     }
 
     Camera2D::~Camera2D()
@@ -74,9 +74,9 @@ namespace prim
 
         ss << Node2D::serialize(false);
 
-        ss << Utils::createKeyValuePair(NodeFields::zNear, std::to_string(zNear)) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::zFar, std::to_string(zFar)) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::zoom, std::to_string(zoom)) << std::endl;
+        ss << Utils::createKeyValuePair(StateFields::zNear, std::to_string(zNear)) << std::endl;
+        ss << Utils::createKeyValuePair(StateFields::zFar, std::to_string(zFar)) << std::endl;
+        ss << Utils::createKeyValuePair(StateFields::zoom, std::to_string(zoom)) << std::endl;
 
         if(withChildren) ss << serializeChildren();
 

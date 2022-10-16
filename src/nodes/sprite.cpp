@@ -25,14 +25,14 @@ namespace prim
     Sprite::Sprite(FieldValues& fieldValues)
         : Drawable(fieldValues), planeMesh(Primitives::createSquareMesh(defaultSize)), width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
     {
-        if (!fieldValues[NodeFields::imagePath].empty())
+        if (!fieldValues[StateFields::imagePath].empty())
         {
-            image.load(fieldValues[NodeFields::imagePath]);
+            image.load(fieldValues[StateFields::imagePath]);
             planeMesh.compositions[0].texture.load(image);
         }
-        setWidth(std::stof(fieldValues[NodeFields::width]));
-        setHeight(std::stof(fieldValues[NodeFields::height]));
-        setZIndex(std::stof(fieldValues[NodeFields::zIndex]));
+        setWidth(std::stof(fieldValues[StateFields::width]));
+        setHeight(std::stof(fieldValues[StateFields::height]));
+        setZIndex(std::stof(fieldValues[StateFields::zIndex]));
     }
 
     Sprite::~Sprite()
@@ -114,10 +114,10 @@ namespace prim
 
         ss << Node2D::serialize(false);
 
-        ss << Utils::createKeyValuePair(NodeFields::width, std::to_string(width)) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::height, std::to_string(height)) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::zIndex, std::to_string(zIndex)) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::imagePath, image.getFilePath()) << std::endl;
+        ss << Utils::createKeyValuePair(StateFields::width, std::to_string(width)) << std::endl;
+        ss << Utils::createKeyValuePair(StateFields::height, std::to_string(height)) << std::endl;
+        ss << Utils::createKeyValuePair(StateFields::zIndex, std::to_string(zIndex)) << std::endl;
+        ss << Utils::createKeyValuePair(StateFields::imagePath, image.getFilePath()) << std::endl;
         
         if(withChildren) ss << serializeChildren();
         
