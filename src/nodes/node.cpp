@@ -23,17 +23,17 @@ namespace prim
 
     void Node::start()
     {
-        START_CHILDREN
+        startChildren();
     }
 
     void Node::update(float deltaTime)
     {
-        UPDATE_CHILDREN
+        updateChildren(deltaTime);
     }
 
     void Node::draw(Renderer& renderer)
     {
-        DRAW_CHILDREN
+        drawChildren(renderer);
     }
 
     void Node::updateNodePath()
@@ -64,6 +64,21 @@ namespace prim
     {
         if (parent) parent->removeChild(this);
     }
+    
+    void Node::startChildren() 
+    {
+        for(Node* child : children) child->start();
+    }
+    
+    void Node::drawChildren(Renderer& renderer) 
+    {
+        for(Node* child : children) child->draw(renderer);
+    }
+    
+    void Node::updateChildren(float deltaTime) 
+    {
+        for(Node* child : children) child->update(deltaTime);
+    }
 
     const std::vector<Node*>& Node::getChildren() const
     {
@@ -75,11 +90,18 @@ namespace prim
         return parent;
     }
 
-    std::string Node::serialize() const
+    std::string Node::serialize(bool withChildren) const
     {
         std::stringstream ss;
-        ss << Utils::createKeyValuePair(NodeFields::type, typeName) << std::endl;
+        ss << Utils::createKeyValuePair(NodeFields::type, type()) << std::endl;
         ss << Utils::createKeyValuePair(NodeFields::name, name) << std::endl;
+        if (withChildren) ss << serializeChildren();
+        return ss.str();
+    }
+
+    std::string Node::serializeChildren() const
+    {
+        std::stringstream ss;
         ss << NodeFields::childrenStart << std::endl;
         for (Node* child : children)
             ss << child->serialize() << std::endl;

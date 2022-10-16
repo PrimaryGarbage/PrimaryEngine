@@ -15,8 +15,6 @@ namespace prim
         float stiffness = 1.0f;
         
     public:
-        inline static const std::string typeName = "ActorCamera2D";
-
         bool rotateWithTarget = true;
 
         ActorCamera2D(std::string name, const NodePath& target);
@@ -28,14 +26,15 @@ namespace prim
         virtual void update(float deltaTime) override;
         virtual void draw(Renderer& renderer) override;
 
+        virtual inline const char* type() const override { return "Camera2D"; }
+
         void setTarget(const NodePath& target);
         inline NodePath getTarget() const { return targetPath; }
         void setStiffness(float value);
         inline float getStiffness() const { return stiffness; }
         inline glm::vec2 getInitialOffset() const { return initialOffset; }
 
-        virtual std::string serialize() const override;
-        virtual inline const std::string getTypeName() const override { return typeName; }
+        virtual std::string serialize(bool withChildren = true) const override;
         virtual void renderFields() override;
     };
 }

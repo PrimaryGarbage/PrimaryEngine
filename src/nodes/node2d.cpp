@@ -29,17 +29,17 @@ namespace prim
 
     void Node2D::start()
     {
-        START_CHILDREN
+        startChildren();
     }
 
     void Node2D::update(float deltaTime)
     {
-        UPDATE_CHILDREN
+        updateChildren(deltaTime);
     }
 
     void Node2D::draw(Renderer& renderer)
     {
-        DRAW_CHILDREN
+        drawChildren(renderer);
     }
 
     void Node2D::move(glm::vec2 v)
@@ -229,19 +229,19 @@ namespace prim
         }
     }
 
-    std::string Node2D::serialize() const
+    std::string Node2D::serialize(bool withChildren) const
     {
         std::stringstream ss;
-        ss << Utils::createKeyValuePair(NodeFields::type, typeName) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::name, name) << std::endl;
+
+        ss << Node::serialize(false);
+
         ss << Utils::createKeyValuePair(NodeFields::position, Utils::serializeVec2(getPosition())) << std::endl;
         ss << Utils::createKeyValuePair(NodeFields::rotation, std::to_string(getRotation())) << std::endl;
         ss << Utils::createKeyValuePair(NodeFields::scale, Utils::serializeVec2(getScale())) << std::endl;
         ss << Utils::createKeyValuePair(NodeFields::pivot, Utils::serializeVec2(getPivot())) << std::endl;
-        ss << NodeFields::childrenStart << std::endl;
-        for (Node* child : children)
-            ss << child->serialize() << std::endl;
-        ss << NodeFields::childrenEnd << std::endl;
+
+        if(withChildren) ss << serializeChildren();
+
         return ss.str();
     }
     

@@ -4,6 +4,9 @@
 
 namespace prim
 {
+    NodeBase::NodeBase() : id(getUniqueId())
+    {
+    }
 
     unsigned int NodeBase::getUniqueId()
     {
@@ -28,21 +31,15 @@ namespace prim
 
         throw PRIM_EXCEPTION("There are no more free node IDs");
     }
-    
+
     void NodeBase::freeUniqueId(unsigned int id)
     {
         idPool[id] = false;
         freeIds.push(id);
     }
 
-    NodeBase::NodeBase() : id(getUniqueId())
-    {
-
-    }
-
     NodeBase::~NodeBase()
     {
         freeUniqueId(id);
     }
-
 }

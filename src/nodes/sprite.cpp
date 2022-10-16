@@ -41,17 +41,17 @@ namespace prim
 
     void Sprite::start()
     {
-        START_CHILDREN
+        startChildren();
     }
 
     void Sprite::update(float deltaTime)
     {
-        UPDATE_CHILDREN
+        updateChildren(deltaTime);
     }
 
     void Sprite::draw(Renderer& renderer)
     {
-        DRAW_CHILDREN
+        drawChildren(renderer);
 
         glm::vec2 globalPosition = getGlobalPosition();
         glm::vec2 globalScale = getGlobalScale();
@@ -108,23 +108,19 @@ namespace prim
         zIndex = value;
     }
 
-    std::string Sprite::serialize() const
+    std::string Sprite::serialize(bool withChildren) const
     {
         std::stringstream ss;
-        ss << Utils::createKeyValuePair(NodeFields::type, typeName) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::name, name) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::position, Utils::serializeVec2(getPosition())) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::rotation, std::to_string(getRotation())) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::scale, Utils::serializeVec2(getScale())) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::pivot, Utils::serializeVec2(getPivot())) << std::endl;
+
+        ss << Node2D::serialize(false);
+
         ss << Utils::createKeyValuePair(NodeFields::width, std::to_string(width)) << std::endl;
         ss << Utils::createKeyValuePair(NodeFields::height, std::to_string(height)) << std::endl;
         ss << Utils::createKeyValuePair(NodeFields::zIndex, std::to_string(zIndex)) << std::endl;
         ss << Utils::createKeyValuePair(NodeFields::imagePath, image.getFilePath()) << std::endl;
-        ss << NodeFields::childrenStart << std::endl;
-        for (Node* child : children)
-            ss << child->serialize() << std::endl;
-        ss << NodeFields::childrenEnd << std::endl;
+        
+        if(withChildren) ss << serializeChildren();
+        
         return ss.str();
     }
 

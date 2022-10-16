@@ -23,7 +23,6 @@ namespace prim
         float relativeHeight;
         float zIndex = 0.0f;
     public:
-        inline static const std::string typeName = "Sprite";
 
         Sprite(std::string name);
         Sprite(std::string name, std::string imagePath);
@@ -33,6 +32,8 @@ namespace prim
         virtual void start() override;
         virtual void update(float deltaTime) override;
         virtual void draw(Renderer& renderer) override;
+
+        virtual inline const char* type() const override { return "Sprite"; }
 
         void setCenterPivot();
         void setCornerPivot();
@@ -48,8 +49,7 @@ namespace prim
         inline float getZIndex() const { return zIndex; }
         inline const Image* getImage() const { return &image; }
 
-        virtual std::string serialize() const override;
-        virtual inline const std::string getTypeName() const override { return typeName; }
+        virtual std::string serialize(bool withChildren = true) const override;
         virtual void renderFields() override;
 
     };

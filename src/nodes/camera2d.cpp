@@ -55,35 +55,31 @@ namespace prim
 
     void Camera2D::start()
     {
-        START_CHILDREN
+        startChildren();
     }
 
     void Camera2D::update(float deltaTime)
     {
-        UPDATE_CHILDREN
+        updateChildren(deltaTime);
     }
 
     void Camera2D::draw(Renderer& renderer)
     {
-        DRAW_CHILDREN
+        drawChildren(renderer);
     }
 
-    std::string Camera2D::serialize() const
+    std::string Camera2D::serialize(bool withChildren) const
     {
         std::stringstream ss;
-        ss << Utils::createKeyValuePair(NodeFields::type, typeName) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::name, name) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::position, Utils::serializeVec2(getPosition())) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::rotation, std::to_string(getRotation())) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::scale, Utils::serializeVec2(getScale())) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::pivot, Utils::serializeVec2(getPivot())) << std::endl;
+
+        ss << Node2D::serialize(false);
+
         ss << Utils::createKeyValuePair(NodeFields::zNear, std::to_string(zNear)) << std::endl;
         ss << Utils::createKeyValuePair(NodeFields::zFar, std::to_string(zFar)) << std::endl;
         ss << Utils::createKeyValuePair(NodeFields::zoom, std::to_string(zoom)) << std::endl;
-        ss << NodeFields::childrenStart << std::endl;
-        for (Node* child : children)
-            ss << child->serialize() << std::endl;
-        ss << NodeFields::childrenEnd << std::endl;
+
+        if(withChildren) ss << serializeChildren();
+
         return ss.str();
     }
     

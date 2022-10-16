@@ -9,11 +9,6 @@
 
 namespace prim
 {
-
-#define START_CHILDREN for(Node* child : children) child->start();
-#define UPDATE_CHILDREN for(Node* child : children) child->update(deltaTime);
-#define DRAW_CHILDREN for(Node* child : children) child->draw(renderer);
-
     class Renderer;
 
     class Node : public NodeBase
@@ -28,8 +23,6 @@ namespace prim
         NodePath nodePath;
 
     public:
-        inline static const std::string typeName = "Node";
-
         Node(std::string name);
         Node(std::unordered_map<std::string, std::string>& fieldValues);
         virtual ~Node();
@@ -38,13 +31,18 @@ namespace prim
         virtual void update(float deltaTime);
         virtual void draw(Renderer& renderer);
 
+        virtual inline const char* type() const { return "Node"; }
+
         virtual void addChild(Node* node);
         virtual void removeChild(Node* node);
         virtual void orphanize();
+        virtual void startChildren();
+        virtual void drawChildren(Renderer& renderer);
+        virtual void updateChildren(float deltaTime);
         virtual const std::vector<Node*>& getChildren() const;
         virtual const Node* getParent() const;
-        virtual std::string serialize() const override;
-        virtual inline const std::string getTypeName() const { return typeName; }
+        virtual std::string serialize(bool withChildren = true) const override;
+        virtual std::string serializeChildren() const override;
         NodePath getNodePath() const;
         std::string getName() const;
         void setName(std::string name);

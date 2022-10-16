@@ -19,7 +19,7 @@ namespace prim
     
     void Drawable::draw(Renderer& renderer)
     {
-        DRAW_CHILDREN
+        drawChildren(renderer);
     }
     
     void Drawable::drawWithShader(Renderer& renderer, Shader* shader)

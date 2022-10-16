@@ -27,7 +27,8 @@ namespace prim
         NodeBase();
         virtual ~NodeBase();
 
-        virtual std::string serialize() const = 0;
+        virtual std::string serialize(bool withChildren = true) const = 0;
+        virtual std::string serializeChildren() const = 0;
     };
 
 

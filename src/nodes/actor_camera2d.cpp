@@ -31,7 +31,7 @@ namespace prim
 
     void ActorCamera2D::start()
     {
-        START_CHILDREN
+        startChildren();
 
             target = dynamic_cast<Node2D*>(Globals::app->getNode(targetPath));
         if (!target) return;
@@ -40,7 +40,7 @@ namespace prim
 
     void ActorCamera2D::update(float deltaTime)
     {
-        UPDATE_CHILDREN
+        updateChildren(deltaTime);
 
         if (target)
         {
@@ -64,7 +64,7 @@ namespace prim
 
     void ActorCamera2D::draw(Renderer& renderer)
     {
-        DRAW_CHILDREN
+        drawChildren(renderer);
     }
 
     void ActorCamera2D::setTarget(const NodePath& target)
@@ -78,26 +78,19 @@ namespace prim
         stiffness = Utils::clamp(value, 0.0f, 1.0f);
     }
 
-    std::string ActorCamera2D::serialize() const
+    std::string ActorCamera2D::serialize(bool withChildren) const
     {
         std::stringstream ss;
-        ss << Utils::createKeyValuePair(NodeFields::type, typeName) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::name, name) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::position, Utils::serializeVec2(getPosition())) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::rotation, std::to_string(getRotation())) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::scale, Utils::serializeVec2(getScale())) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::pivot, Utils::serializeVec2(getPivot())) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::zNear, std::to_string(zNear)) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::zFar, std::to_string(zFar)) << std::endl;
-        ss << Utils::createKeyValuePair(NodeFields::zoom, std::to_string(zoom)) << std::endl;
+
+        ss << Camera2D::serialize(false);
+
         ss << Utils::createKeyValuePair(NodeFields::targetPath, targetPath.string()) << std::endl;
         ss << Utils::createKeyValuePair(NodeFields::initialOffset, Utils::serializeVec2(initialOffset)) << std::endl;
         ss << Utils::createKeyValuePair(NodeFields::stiffness, std::to_string(stiffness)) << std::endl;
         ss << Utils::createKeyValuePair(NodeFields::rotateWithTarget, std::to_string((int)rotateWithTarget)) << std::endl;
-        ss << NodeFields::childrenStart << std::endl;
-        for (Node* child : children)
-            ss << child->serialize() << std::endl;
-        ss << NodeFields::childrenEnd << std::endl;
+
+        if(withChildren) ss << serializeChildren();
+
         return ss.str();
     }
 
