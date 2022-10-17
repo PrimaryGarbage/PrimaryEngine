@@ -18,7 +18,7 @@ namespace prim
             inline static const char* rotateWithTarget = "rotateWithTarget";
         };
 
-        Node2D* target;
+        Node2D* target = nullptr;
         NodePath targetPath;
         glm::vec2 initialOffset { 0.0f, 0.0f };
         float stiffness = 1.0f;
@@ -26,9 +26,10 @@ namespace prim
     public:
         bool rotateWithTarget = true;
 
+        ActorCamera2D();
+        ActorCamera2D(std::string name);
         ActorCamera2D(std::string name, const NodePath& target);
         ActorCamera2D(std::string name, float zNear, float zFar, const NodePath& target);
-        ActorCamera2D(FieldValues& fieldValues);
         virtual ~ActorCamera2D();
 
         virtual void start() override;
@@ -44,6 +45,7 @@ namespace prim
         inline glm::vec2 getInitialOffset() const { return initialOffset; }
 
         virtual std::string serialize(bool withChildren = true) const override;
+        virtual void deserialize(FieldValues& fieldValues) override;
         virtual void renderFields() override;
     };
 }

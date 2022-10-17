@@ -4,25 +4,20 @@
 #include "gtx/vector_angle.hpp"
 #include "utils.hpp"
 #include "logger.hpp"
-#include "node_utils.hpp"
 #include "imgui.h"
+#include "node_utils.hpp"
 
 namespace prim
 {
+    Node2D::Node2D() : Node(generateNodeName(this))
+    {
+
+    }
 
     Node2D::Node2D(std::string name) : Node(name)
     {
     }
     
-    Node2D::Node2D(FieldValues& fieldValues) 
-        : Node(fieldValues[StateFields::name])
-    {
-        transform.position = Utils::deserializeVec2(fieldValues[StateFields::position]);
-        transform.rotation = std::stof(fieldValues[StateFields::rotation]);
-        transform.scale = Utils::deserializeVec2(fieldValues[StateFields::scale]);
-        transform.pivot = Utils::deserializeVec2(fieldValues[StateFields::pivot]);
-    }
-
     Node2D::~Node2D()
     {
     }
@@ -243,6 +238,16 @@ namespace prim
         if(withChildren) ss << serializeChildren();
 
         return ss.str();
+    }
+    
+    void Node2D::deserialize(FieldValues& fieldValues) 
+    {
+        Node::deserialize(fieldValues);
+
+        transform.position = Utils::deserializeVec2(fieldValues[StateFields::position]);
+        transform.rotation = std::stof(fieldValues[StateFields::rotation]);
+        transform.scale = Utils::deserializeVec2(fieldValues[StateFields::scale]);
+        transform.pivot = Utils::deserializeVec2(fieldValues[StateFields::pivot]);
     }
     
     void Node2D::renderFields() 

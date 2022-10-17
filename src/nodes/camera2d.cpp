@@ -2,13 +2,16 @@
 #include "renderer.hpp"
 #include "gtc/matrix_transform.hpp"
 #include "utils.hpp"
-#include "node_utils.hpp"
 #include "imgui.h"
+#include "node_utils.hpp"
 
 namespace prim
 {
+    Camera2D::Camera2D(): Camera2D(generateNodeName(this))
+    {
+    }
 
-    Camera2D::Camera2D(std::string)
+    Camera2D::Camera2D(std::string name)
         : Camera2D(name, -1.0f, 1.0f)
     {
     }
@@ -21,13 +24,6 @@ namespace prim
         setPivot(glm::vec2(0.5f, 0.5f));
     }
     
-    Camera2D::Camera2D(FieldValues& fieldValues) 
-        : Camera2D(fieldValues[StateFields::name], std::stof(fieldValues[StateFields::zNear]), std::stof(fieldValues[StateFields::zFar]))
-    {
-        zoom = std::stof(fieldValues[StateFields::zoom]);
-        transform.pivot = Utils::deserializeVec2(fieldValues[StateFields::pivot]);
-    }
-
     Camera2D::~Camera2D()
     {
     }
@@ -81,6 +77,16 @@ namespace prim
         if(withChildren) ss << serializeChildren();
 
         return ss.str();
+    }
+    
+    void Camera2D::deserialize(FieldValues& fieldValues) 
+    {
+        Node2D::deserialize(fieldValues);
+
+        zNear = std::stof(fieldValues[StateFields::zNear]);
+        zFar = std::stof(fieldValues[StateFields::zFar]);
+        zoom = std::stof(fieldValues[StateFields::zoom]);
+        transform.pivot = Utils::deserializeVec2(fieldValues[StateFields::pivot]);
     }
     
     void Camera2D::renderFields() 

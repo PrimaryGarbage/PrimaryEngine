@@ -54,7 +54,8 @@ namespace prim
 
             if (line == SceneFileSymbols::childrenStart)
             {
-                node = NodeFactory::createNode(fields[SceneFileSymbols::type], fields);
+                node = NodeFactory::createNode(fields[SceneFileSymbols::type]);
+                node->deserialize(fields);
                 if (!parentNodes.empty()) parentNodes.top()->addChild(node);
                 parentNodes.push(node);
                 fields.clear();
@@ -65,7 +66,8 @@ namespace prim
             {
                 if (!fields.empty())
                 {
-                    node = NodeFactory::createNode(fields[SceneFileSymbols::type], fields);
+                    node = NodeFactory::createNode(fields[SceneFileSymbols::type]);
+                    node->deserialize(fields);
                     parentNodes.top()->addChild(node);
                 }
                 parentNodes.pop();
@@ -79,7 +81,8 @@ namespace prim
 
         if (!fields.empty())
         {
-            node = NodeFactory::createNode(fields[SceneFileSymbols::type], fields);
+            node = NodeFactory::createNode(fields[SceneFileSymbols::type]);
+            node->deserialize(fields);
             parentNodes.top()->addChild(node);
             fields.clear();
             node = nullptr;

@@ -6,6 +6,7 @@
 #include "input.hpp"
 #include "ImGuiFileDialog.h"
 #include "drawable.hpp"
+#include "node_utils.hpp"
 
 namespace prim
 {
@@ -77,12 +78,14 @@ namespace prim
                     ImGui::TreePop();
                 }
 
-                ImGui::Separator();
-
-                drawLoadSceneButton();
-                ImGui::SameLine();
-                drawSaveSceneButton();
             }
+            ImGui::Separator();
+            drawLoadSceneButton();
+            ImGui::SameLine();
+            drawSaveSceneButton();
+
+            drawCreateNodeMenu();
+
         }
         ImGui::End();
     }
@@ -94,13 +97,20 @@ namespace prim
         if (node == selectedNode) flags |= ImGuiTreeNodeFlags_Selected;
         if (node->getChildren().empty()) flags |= ImGuiTreeNodeFlags_Leaf;
         bool nodeIsOpen = ImGui::TreeNodeEx(node->getName().c_str(), flags);
-        if (ImGui::IsItemHovered() && Input::isJustReleased(MouseButton::left) && !ImGui::IsItemToggledOpen()) selectedNode = node;
+        bool hovered = ImGui::IsItemHovered();
+
+        if (hovered && Input::isJustReleased(MouseButton::left) && !ImGui::IsItemToggledOpen())
+        {
+            selectedNode = node;
+        }
+
         if (ImGui::BeginDragDropSource())
         {
             ImGui::SetDragDropPayload(dragNodePayloadType, static_cast<void*>(&node), sizeof(size_t), ImGuiCond_Once);
             ImGui::Text(node->getName().c_str());
             ImGui::EndDragDropSource();
         }
+
         if (ImGui::BeginDragDropTarget())
         {
             const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(dragNodePayloadType);
@@ -112,11 +122,16 @@ namespace prim
             }
             ImGui::EndDragDropTarget();
         }
+
         if (nodeIsOpen)
         {
             for (Node* child : node->getChildren()) drawNodeInTree(child);
             ImGui::TreePop();
         }
+
+        // this must reside at the bottom, because of potential
+        // deletion of the current tree node from context menu
+        drawNodeTreeContextMenu(node, hovered);
     }
 
     void SceneEditor::drawSelectedNodeFraming()
@@ -207,6 +222,53 @@ namespace prim
 
             ImGui::EndPopup();
         }
+    }
+
+    void SceneEditor::drawNodeTreeContextMenu(Node* node, bool hovered)
+    {
+        std::string popupId = "Context Menu: " + node->getId();
+
+        if(hovered && Input::isJustReleased(MouseButton::right))
+            ImGui::OpenPopup(popupId.c_str());
+
+        if (ImGui::BeginPopup(popupId.c_str()))
+        {
+            if (ImGui::MenuItem("Add Node"))
+            {
+                nodeToAddTo = node;
+            }
+            if (ImGui::MenuItem("Delete Node"))
+            {
+                node->orphanize();
+                Globals::sceneManager->freeScene(node);
+            }
+            ImGui::EndPopup();
+        }
+    }
+
+    void SceneEditor::drawCreateNodeMenu()
+    {
+        if (!nodeToAddTo) return;
+        static char nodeNameBuf[INPUT_STRING_MAX_LENGTH] = "NewNode";
+        static std::string selectedNodeType;
+        std::vector<std::string> nodeTypes = NodeFactory::getAllNodeTypes();
+        ImGui::Begin("Create Node");
+        ImGui::InputText("Name", nodeNameBuf, INPUT_STRING_MAX_LENGTH, ImGuiInputTextFlags_AutoSelectAll);
+        for (const auto& type : nodeTypes)
+        {
+            if(ImGui::Selectable(type.c_str(), selectedNodeType == type))
+                selectedNodeType = type;
+        }
+        if (ImGui::Button("Create") && !selectedNodeType.empty())
+        {
+            Node* newNode = NodeFactory::createNode(selectedNodeType);
+            newNode->setName(nodeNameBuf);
+            nodeToAddTo->addChild(newNode);
+            nodeToAddTo = nullptr;
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::End();
+
     }
 
     SceneEditor::~SceneEditor()

@@ -32,10 +32,9 @@ namespace prim
         float relativeHeight;
         float zIndex = 0.0f;
     public:
-
+        Sprite();
         Sprite(std::string name);
         Sprite(std::string name, std::string imagePath);
-        Sprite(FieldValues& fieldValues);
         virtual ~Sprite();
 
         virtual void start() override;
@@ -59,6 +58,7 @@ namespace prim
         inline const Image* getImage() const { return &image; }
 
         virtual std::string serialize(bool withChildren = true) const override;
+        virtual void deserialize(FieldValues& fieldValues) override;
         virtual void renderFields() override;
 
     };

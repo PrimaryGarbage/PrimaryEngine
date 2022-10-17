@@ -1,11 +1,12 @@
 #ifndef __NODE_HPP__
 #define __NODE_HPP__
 
+#include "node_factory.hpp"
 #include <vector>
-#include <unordered_map>
 #include "node_base.hpp"
 #include "glm.hpp"
 #include "node_path.hpp"
+#include "utils.hpp"
 
 namespace prim
 {
@@ -33,15 +34,15 @@ namespace prim
         NodePath nodePath;
 
     public:
+        Node();
         Node(std::string name);
-        Node(FieldValues& fieldValues);
         virtual ~Node();
 
         virtual void start();
         virtual void update(float deltaTime);
         virtual void draw(Renderer& renderer);
 
-        virtual inline const char* type() const { return "Node"; }
+        public: virtual inline const char* type() const { return "Node"; }
 
         virtual void addChild(Node* node);
         virtual void removeChild(Node* node);
@@ -53,6 +54,7 @@ namespace prim
         virtual const Node* getParent() const;
         virtual std::string serialize(bool withChildren = true) const override;
         virtual std::string serializeChildren() const override;
+        virtual void deserialize(FieldValues& fieldValues) override;
         NodePath getNodePath() const;
         std::string getName() const;
         void setName(std::string name);

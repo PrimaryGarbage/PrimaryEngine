@@ -12,8 +12,8 @@ namespace prim
     public:
         Shader* customShader = nullptr;
 
+        Drawable();
         Drawable(std::string name);
-        Drawable(FieldValues& fieldValues);
         virtual ~Drawable();
 
         virtual void draw(Renderer& renderer) override;

@@ -23,8 +23,8 @@ namespace prim
 
         Transform2D transform;
     public:
+        Node2D();
         Node2D(std::string name);
-        Node2D(FieldValues& fieldValues);
         virtual ~Node2D();
 
         virtual void start() override;
@@ -67,6 +67,7 @@ namespace prim
         void setGlobalScale(glm::vec2 s);
 
         virtual std::string serialize(bool withChildren = true) const override;
+        virtual void deserialize(FieldValues& fieldValues) override;
         virtual void renderFields() override;
     };
 

@@ -32,6 +32,7 @@ namespace prim
         std::vector<std::string> printLines;
         std::vector<DragFloat> dragFloats;
         Node* selectedNode = nullptr;
+        Node* nodeToAddTo = nullptr;
         bool initialized = false;
         
         void drawRightPanel();
@@ -40,6 +41,8 @@ namespace prim
         void drawSelectedNodeFraming();
         void drawLoadSceneButton();
         void drawSaveSceneButton();
+        void drawNodeTreeContextMenu(Node* node, bool hovered);
+        void drawCreateNodeMenu();
 
     public:
         static inline const char* dragNodePayloadType = "NODE";

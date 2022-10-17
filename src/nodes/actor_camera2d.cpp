@@ -2,12 +2,20 @@
 #include "gtx/rotate_vector.hpp"
 #include "utils.hpp"
 #include "globals.hpp"
-#include "node_utils.hpp"
 #include "imgui.h"
 #include "utils.hpp"
+#include "node_utils.hpp"
 
 namespace prim
 {
+    ActorCamera2D::ActorCamera2D(): ActorCamera2D(generateNodeName(this))
+    {
+    }
+
+    ActorCamera2D::ActorCamera2D(std::string name): Camera2D(name)
+    {
+    }
+
     ActorCamera2D::ActorCamera2D(std::string name, const NodePath& target)
         : ActorCamera2D(name, -1.0f, 1.0f, target)
     {
@@ -15,13 +23,6 @@ namespace prim
 
     ActorCamera2D::ActorCamera2D(std::string name, float zNear, float zFar, const NodePath& target)
         : Camera2D(name, zNear, zFar), targetPath(target)
-    {
-    }
-
-    ActorCamera2D::ActorCamera2D(FieldValues& fieldValues)
-        : Camera2D(fieldValues), stiffness(std::stof(fieldValues[StateFields::stiffness])),
-        initialOffset(Utils::deserializeVec2(fieldValues[StateFields::initialOffset])),
-        targetPath(fieldValues[StateFields::targetPath])
     {
     }
 
@@ -92,6 +93,15 @@ namespace prim
         if(withChildren) ss << serializeChildren();
 
         return ss.str();
+    }
+    
+    void ActorCamera2D::deserialize(FieldValues& fieldValues) 
+    {
+        Camera2D::deserialize(fieldValues);
+
+        stiffness = std::stof(fieldValues[StateFields::stiffness]);
+        initialOffset = Utils::deserializeVec2(fieldValues[StateFields::initialOffset]);
+        targetPath = fieldValues[StateFields::targetPath];
     }
 
     void ActorCamera2D::renderFields()

@@ -1,15 +1,15 @@
 #include "drawable.hpp"
+#include "node_utils.hpp"
 
 
 namespace prim
 {
-    Drawable::Drawable(std::string name) : Node2D(std::move(name))
+    Drawable::Drawable(): Node2D(generateNodeName(this))
     {
     }
-    
-    Drawable::Drawable(FieldValues& fieldValues) : Node2D(fieldValues)
+
+    Drawable::Drawable(std::string name) : Node2D(std::move(name))
     {
-        
     }
     
     Drawable::~Drawable() 

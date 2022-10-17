@@ -17,6 +17,7 @@ namespace prim
 
         static std::list<std::string> parsePath(std::string path);
     public:
+        NodePath() = default;
         NodePath(const Node* node);
         NodePath(std::string nodePath);
         NodePath(std::list<std::string>&& pathList);

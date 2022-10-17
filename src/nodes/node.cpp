@@ -2,18 +2,18 @@
 #include "prim_exception.hpp"
 #include <algorithm>
 #include "renderer.hpp"
-#include "node_utils.hpp"
 #include "imgui.h"
+#include <sstream>
+#include "utils.hpp"
+#include "node_utils.hpp"
 
 namespace prim
 {
-
-    Node::Node(std::string name) : name(name), nodePath(this)
+    Node::Node() : Node(generateNodeName(this))
     {
     }
 
-    Node::Node(FieldValues& fieldValues)
-        : name(fieldValues[StateFields::name]), nodePath(this)
+    Node::Node(std::string name) : name(name), nodePath(this)
     {
     }
 
@@ -41,8 +41,7 @@ namespace prim
         nodePath.setPath(this);
         for (Node* child : children) child->updateNodePath();
     }
-
-
+    
     void Node::addChild(Node* node)
     {
         if (node->parent) throw PRIM_EXCEPTION("Can't add node '" + node->name + "' to children. Remove this node from it's parent first.");
@@ -109,6 +108,11 @@ namespace prim
             ss << child->serialize() << std::endl;
         ss << StateFields::childrenEnd << std::endl;
         return ss.str();
+    }
+    
+    void Node::deserialize(FieldValues& fieldValues) 
+    {
+        setName(fieldValues[StateFields::name]);
     }
 
     NodePath Node::getNodePath() const

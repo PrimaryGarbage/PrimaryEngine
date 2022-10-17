@@ -23,6 +23,7 @@ set(PRIMARY_SRC
 	scene_manager.hpp scene_manager.cpp
 	test_scenes_creator.hpp
 	ImGuiFileDialog.h ImGuiFileDialog.cpp ImGuiFileDialogConfig.h
+	typedefs.hpp
 	)
 
 set(NODES_SRC
@@ -37,6 +38,7 @@ set(NODES_SRC
 	node_utils.hpp
 	node_path.hpp node_path.cpp
 	drawable.hpp drawable.cpp
+	node_factory.hpp
 )
 
 set(GRAPHICS_SRC

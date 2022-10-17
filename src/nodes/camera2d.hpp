@@ -24,9 +24,9 @@ namespace prim
         float zFar;
         float zoom = 1.0f;
 
+        Camera2D();
         Camera2D(std::string name);
         Camera2D(std::string name, float zNear, float zFar);
-        Camera2D(FieldValues& fieldValues);
         virtual ~Camera2D();
 
         virtual glm::mat4 calculateViewMatrix() const override;
@@ -39,6 +39,7 @@ namespace prim
         virtual inline const char* type() const override { return "Camera2D"; }
 
         virtual std::string serialize(bool withChildren = true) const override;
+        virtual void deserialize(FieldValues& fieldValues) override;
         virtual void renderFields() override;
     };
 

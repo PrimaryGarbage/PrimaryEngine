@@ -3,13 +3,17 @@
 #include "renderer.hpp"
 #include "gtc/matrix_transform.hpp"
 #include "utils.hpp"
-#include "node_utils.hpp"
 #include "imgui.h"
 #include "ImGuiFileDialog.h"
 #include "globals.hpp"
+#include "node_utils.hpp"
 
 namespace prim
 {
+    Sprite::Sprite(): Sprite(generateNodeName(this))
+    {
+    }
+
     Sprite::Sprite(std::string name)
         : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
     {
@@ -20,19 +24,6 @@ namespace prim
     {
         image.load(imagePath);
         planeMesh.compositions[0].texture.load(image);
-    }
-
-    Sprite::Sprite(FieldValues& fieldValues)
-        : Drawable(fieldValues), planeMesh(Primitives::createSquareMesh(defaultSize)), width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
-    {
-        if (!fieldValues[StateFields::imagePath].empty())
-        {
-            image.load(fieldValues[StateFields::imagePath]);
-            planeMesh.compositions[0].texture.load(image);
-        }
-        setWidth(std::stof(fieldValues[StateFields::width]));
-        setHeight(std::stof(fieldValues[StateFields::height]));
-        setZIndex(std::stof(fieldValues[StateFields::zIndex]));
     }
 
     Sprite::~Sprite()
@@ -122,6 +113,20 @@ namespace prim
         if(withChildren) ss << serializeChildren();
         
         return ss.str();
+    }
+    
+    void Sprite::deserialize(FieldValues& fieldValues) 
+    {
+        Node2D::deserialize(fieldValues);
+
+        if (!fieldValues[StateFields::imagePath].empty())
+        {
+            image.load(fieldValues[StateFields::imagePath]);
+            planeMesh.compositions[0].texture.load(image);
+        }
+        setWidth(std::stof(fieldValues[StateFields::width]));
+        setHeight(std::stof(fieldValues[StateFields::height]));
+        setZIndex(std::stof(fieldValues[StateFields::zIndex]));
     }
 
     void Sprite::renderFields()

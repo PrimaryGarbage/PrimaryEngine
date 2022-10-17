@@ -3,12 +3,7 @@
 
 #include <stack>
 #include <string>
-#include <node_utils.hpp>
-
-#define REGISTER_NODE(NODE_NAME) \
-    private: inline static const NodeRegistration<NODE_NAME> nodeRegistration = NodeRegistration<NODE_NAME>(#NODE_NAME);
-
-typedef std::unordered_map<std::string, std::string> FieldValues;
+#include "typedefs.hpp"
 
 namespace prim
 {
@@ -29,27 +24,14 @@ namespace prim
         NodeBase();
         virtual ~NodeBase();
 
+        inline uint getId() const { return id; }
+
         virtual std::string serialize(bool withChildren = true) const = 0;
         virtual std::string serializeChildren() const = 0;
+        virtual void deserialize(FieldValues& fieldValues) = 0;
     };
 
 
-    // helper function. Serves as a generic node factory
-    template<class T>
-    inline static Node* constructNode(FieldValues fieldValues)
-    {
-        return new T(fieldValues);
-    }
-
-    // object of this class registers it's node on instantiation
-    template<class T>
-    struct NodeRegistration : public NodeFactory
-    {
-        NodeRegistration(const char* type)
-        {
-            node_map.insert(std::make_pair(type, &constructNode<T>));
-        }
-    };
 }
 
 #endif // __NODE_BASE_HPP__
