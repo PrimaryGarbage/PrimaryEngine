@@ -3,9 +3,12 @@
 
 #include <string>
 #include <unordered_map>
+#include <filesystem>
 
 namespace prim
 {
+    namespace fs = std::filesystem;
+
     typedef unsigned int uint;   
     typedef std::unordered_map<std::string, std::string> FieldValues;
 

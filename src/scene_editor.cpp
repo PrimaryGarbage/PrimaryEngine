@@ -144,7 +144,7 @@ namespace prim
     void SceneEditor::drawLoadSceneButton()
     {
         if (ImGui::Button("Load Scene"))
-            ImGuiFileDialog::Instance()->OpenDialog("LoadSceneKey", "Open Scene", ".psc", "./res/scenes/", 1, nullptr, ImGuiFileDialogFlags_Modal);
+            ImGuiFileDialog::Instance()->OpenDialog("LoadSceneKey", "Open Scene", ".psc", Globals::sceneManager->getSceneDirPath().string(), 1, nullptr, ImGuiFileDialogFlags_Modal);
 
         if (ImGuiFileDialog::Instance()->Display("LoadSceneKey", 32, fileExplorerMinSize))
         {

@@ -15,7 +15,7 @@
 namespace prim
 {
 
-	PrimaryApp::PrimaryApp() : deltaTime(0.0f), timeSinceStart(0.0f), sceneManager("./res/scenes/")
+	PrimaryApp::PrimaryApp() : deltaTime(0.0f), timeSinceStart(0.0f), sceneManager(Utils::getAppDirPath().string())
 	{
 	}
 
@@ -27,7 +27,7 @@ namespace prim
 
 	void PrimaryApp::init()
 	{
-		Logger::init("./");
+		Logger::init(Utils::getAppDirPath());
 		renderer.init(windowWidth, windowHeight, windowName);
 		Input::init(renderer.getWindow());
 		initEditor();

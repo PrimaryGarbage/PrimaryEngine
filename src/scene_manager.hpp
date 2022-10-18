@@ -3,6 +3,7 @@
 
 #include <string>
 #include <filesystem>
+#include "typedefs.hpp"
 
 namespace prim
 {
@@ -22,17 +23,19 @@ namespace prim
 
         const static inline char* sceneFileExtension = ".psc";
         const static inline char keyValueSeparator = '=';
-        const char* savePath;
+        const static inline char* sceneDirectory = "res/scenes/";
+        fs::path savePath;
 
         std::string serialize(Node* node);
         std::filesystem::path createPathToScene(std::string sceneName);
     public:
-        SceneManager(const char* savePath);
+        SceneManager(fs::path appDirPath);
 
         Node* loadScene(std::string name);
         void saveScene(Node* scene, std::string name, bool ovewrite = false);
         void freeScene(Node* scene);
         bool sceneExists(std::string name);
+        const fs::path& getSceneDirPath() const;
     };
 }
 

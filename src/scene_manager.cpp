@@ -10,23 +10,20 @@
 
 namespace prim
 {
-    namespace fs = std::filesystem;
+    SceneManager::SceneManager(fs::path appDirPath) : savePath((appDirPath / sceneDirectory))
+    {
+        if (!fs::exists(savePath))
+        {
+            fs::create_directories(savePath);
+        }
+    }
 
     fs::path SceneManager::createPathToScene(std::string sceneName)
     {
-        fs::path path(savePath + sceneName);
+        fs::path path(savePath / sceneName);
         if(!path.has_extension()) path += sceneFileExtension;
         else if(path.extension().string() != sceneFileExtension) throw PRIM_EXCEPTION("File '" + sceneName + "' has wrong extension");
         return path;
-    }
-
-    SceneManager::SceneManager(const char* savePath) : savePath(savePath)
-    {
-        fs::path path(savePath);
-        if (!fs::exists(path))
-        {
-            fs::create_directories(path);
-        }
     }
 
     Node* SceneManager::loadScene(std::string name)
@@ -122,5 +119,10 @@ namespace prim
     {
         fs::path path = createPathToScene(name);
         return fs::exists(path);
+    }
+    
+    const fs::path& SceneManager::getSceneDirPath() const
+    {
+        return savePath;
     }
 }

@@ -1,6 +1,10 @@
 #ifndef __UTILS_HPP__
 #define __UTILS_HPP__
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include "glm.hpp"
 #include "gtc/constants.hpp"
 #include "logger.hpp"
@@ -8,6 +12,9 @@
 #include <unordered_map>
 #include "imgui.h"
 #include <sstream>
+#include <filesystem>
+#include "typedefs.hpp"
+
 
 namespace prim
 {
@@ -149,6 +156,23 @@ namespace prim
         inline static std::string removeSceneFileExtension(const std::string& filename)
         {
             return filename.substr(0, filename.size() - 4);
+        }
+
+        inline static fs::path getAppDirPath()
+        {
+            static fs::path path;
+            if(path.empty())
+            {
+                #ifdef _WIN32
+                    char pathArr[400];
+                    path = fs::path(std::string(GetModuleFileName(NULL, pathArr, (sizeof(pathArr)))));
+                #else
+                    path = fs::canonical("/proc/self/exe");
+                #endif
+
+                path = path.parent_path();
+            }
+            return path;
         }
     };
 

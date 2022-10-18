@@ -20,9 +20,9 @@ void Logger::writeFile()
     fs.close();
 }
 
-void Logger::init(std::filesystem::path appPath)
+void Logger::init(std::filesystem::path appDirPath)
 {
-    fs::path logDirPath = appPath.parent_path() / logDirectoryName;
+    fs::path logDirPath = appDirPath / logDirectoryName;
     if(!fs::exists(logDirPath))
     {
         if(!fs::create_directory(logDirPath)) throw PRIM_EXCEPTION("Failed to create log directory. Path: " + logDirPath.string());
