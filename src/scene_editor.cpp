@@ -58,6 +58,9 @@ namespace prim
             {
                 if (ImGui::TreeNode(currentScene->getName().c_str()))
                 {
+                    // draw root node context menu
+                    drawNodeTreeContextMenu(currentScene, ImGui::IsItemHovered());
+
                     if (ImGui::BeginDragDropTarget())
                     {
                         const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(dragNodePayloadType);
@@ -226,12 +229,10 @@ namespace prim
 
     void SceneEditor::drawNodeTreeContextMenu(Node* node, bool hovered)
     {
-        std::string popupId = "Context Menu: " + node->getId();
-
         if(hovered && Input::isJustReleased(MouseButton::right))
-            ImGui::OpenPopup(popupId.c_str());
+            ImGui::OpenPopup("Context Menu: " + node->getId());
 
-        if (ImGui::BeginPopup(popupId.c_str()))
+        if (ImGui::BeginPopup("Context Menu: " + node->getId()))
         {
             if (ImGui::MenuItem("Add Node"))
             {
