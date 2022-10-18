@@ -59,7 +59,7 @@ namespace prim
                 if (ImGui::TreeNode(currentScene->getName().c_str()))
                 {
                     // draw root node context menu
-                    drawNodeTreeContextMenu(currentScene, ImGui::IsItemHovered());
+                    drawNodeTreeContextMenu(currentScene, ImGui::IsItemHovered(), false);
 
                     if (ImGui::BeginDragDropTarget())
                     {
@@ -227,7 +227,7 @@ namespace prim
         }
     }
 
-    void SceneEditor::drawNodeTreeContextMenu(Node* node, bool hovered)
+    void SceneEditor::drawNodeTreeContextMenu(Node* node, bool hovered, bool cloningAllowed)
     {
         if(hovered && Input::isJustReleased(MouseButton::right))
             ImGui::OpenPopup("Context Menu: " + node->getId());
@@ -237,6 +237,10 @@ namespace prim
             if (ImGui::MenuItem("Add Node"))
             {
                 nodeToAddTo = node;
+            }
+            if (cloningAllowed && ImGui::MenuItem("Clone Node"))
+            {
+                Logger::printLine("Cloning node: '" + node->getName() + "'");
             }
             if (ImGui::MenuItem("Delete Node"))
             {

@@ -41,7 +41,7 @@ namespace prim
         void drawSelectedNodeFraming();
         void drawLoadSceneButton();
         void drawSaveSceneButton();
-        void drawNodeTreeContextMenu(Node* node, bool hovered);
+        void drawNodeTreeContextMenu(Node* node, bool hovered, bool cloningAllowed = true);
         void drawCreateNodeMenu();
 
     public:
