@@ -164,8 +164,13 @@ namespace prim
             if(path.empty())
             {
                 #ifdef _WIN32
-                    char pathArr[400];
-                    path = fs::path(std::string(GetModuleFileName(NULL, pathArr, (sizeof(pathArr)))));
+                    #ifdef UNICODE
+                        WCHAR pathArr[400];
+                        path = fs::path(std::wstring(GetModuleFileName(NULL, pathArr, (sizeof(pathArr)))));
+                    #else
+                        CHAR pathArr[400];
+                        path = fs::path(std::string(GetModuleFileName(NULL, pathArr, (sizeof(pathArr)))));
+                    #endif
                 #else
                     path = fs::canonical("/proc/self/exe");
                 #endif
