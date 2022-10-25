@@ -14,7 +14,7 @@ namespace prim
 
     class Node : public NodeBase
     {
-        REGISTER_NODE(Node)
+        NODE_FIXTURE(Node)
 
     private:
         void updateNodePath();
@@ -42,10 +42,14 @@ namespace prim
         virtual void update(float deltaTime);
         virtual void draw(Renderer& renderer);
 
-        public: virtual inline const char* type() const { return "Node"; }
+        virtual inline const char* type() const { return "Node"; }
 
         virtual void addChild(Node* node);
+        virtual void insertBefore(Node* node);
+        virtual void insertAfter(Node* node);
+        virtual void addSibling(Node* node);
         virtual void removeChild(Node* node);
+        virtual bool hasChild(Node* node);
         virtual void orphanize();
         virtual void startChildren();
         virtual void drawChildren(Renderer& renderer);

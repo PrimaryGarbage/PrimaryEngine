@@ -240,7 +240,10 @@ namespace prim
             }
             if (cloningAllowed && ImGui::MenuItem("Clone Node"))
             {
-                Logger::printLine("Cloning node: '" + node->getName() + "'");
+                Node* newNode = node->clone();
+                newNode->setName(node->getName() + "c");
+                newNode->orphanize();
+                node->insertAfter(newNode);
             }
             if (ImGui::MenuItem("Delete Node"))
             {

@@ -22,6 +22,7 @@ namespace prim
 
     public:
         NodeBase();
+        NodeBase(const NodeBase& other);
         virtual ~NodeBase();
 
         inline uint getId() const { return id; }

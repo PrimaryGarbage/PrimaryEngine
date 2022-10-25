@@ -7,8 +7,13 @@
 #include "prim_exception.hpp"
 #include "typedefs.hpp"
 
-#define REGISTER_NODE(NODE_NAME) \
-    private: inline static const NodeRegistration<NODE_NAME> nodeRegistration = NodeRegistration<NODE_NAME>(#NODE_NAME);
+#define NODE_FIXTURE(NODE_NAME) \
+    private: inline static const NodeRegistration<NODE_NAME> nodeRegistration = NodeRegistration<NODE_NAME>(#NODE_NAME); \
+    public: inline virtual Node* clone() \
+    { \
+        Node* cloned = new NODE_NAME(*this); \
+        return cloned; \
+    }
 
 namespace prim
 {
@@ -24,13 +29,13 @@ namespace prim
     class NodeFactory
     {
     protected:
-        static inline std::unordered_map<std::string, Node* (*)()> node_map;
+        static inline std::unordered_map<std::string, Node* (*)()> construct_node_map;
 
     public:
         static inline Node* createNode(std::string type)
         {
-            auto iter = node_map.find(type);
-            if(iter == node_map.end()) throw PRIM_EXCEPTION("Couldn't find node type '" + type + "'");
+            auto iter = construct_node_map.find(type);
+            if(iter == construct_node_map.end()) throw PRIM_EXCEPTION("Couldn't find node type '" + type + "'");
             Node* newNode = iter->second();
             return newNode;
         }
@@ -38,8 +43,8 @@ namespace prim
         static inline std::vector<std::string> getAllNodeTypes()
         {
             std::vector<std::string> result;
-            result.reserve(node_map.size());
-            for(const auto& pair : node_map)
+            result.reserve(construct_node_map.size());
+            for(const auto& pair : construct_node_map)
                 result.push_back(pair.first);
             return result;
         }
@@ -51,7 +56,7 @@ namespace prim
     {
         NodeRegistration(const char* type)
         {
-            node_map.insert(std::make_pair(type, &constructNode<T>));
+            construct_node_map.insert(std::make_pair(type, &constructNode<T>));
         }
     };
 

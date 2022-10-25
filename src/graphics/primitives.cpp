@@ -37,14 +37,14 @@ namespace prim
         layout.push<float>(3);
         layout.push<float>(2);
 
-        VertexBuffer vb(vertices, 40 * sizeof(float), layout);
+        shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 40 * sizeof(float), layout);
 
-        Shader shader("res/shaders/default.shader");
-        shader.bind();
+        shptr<Shader> shader = std::make_shared<Shader>("res/shaders/default.shader");
+        shader->bind();
 
-        shader.setUniform1i("u_texture", 0);
+        shader->setUniform1i("u_texture", 0);
 
-        IndexBuffer ib(indices, 36);
+        shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 36);
 
         Mesh mesh(std::move(vb));
         MeshComposition meshComposition(std::move(ib), std::move(shader));
@@ -71,13 +71,13 @@ namespace prim
         layout.push<float>(2);
         layout.push<float>(2);
 
-        VertexBuffer vb(vertices, 16 * sizeof(float), layout);
+        shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 16 * sizeof(float), layout);
 
-        Shader shader("res/shaders/default.shader");
+        shptr<Shader> shader = std::make_shared<Shader>("res/shaders/default.shader");
 
-        shader.setUniform1i("u_texture", 0);
+        shader->setUniform1i("u_texture", 0);
 
-        IndexBuffer ib(indices, 6);
+        shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 6);
 
         Mesh mesh(std::move(vb));
         MeshComposition meshComposition(std::move(ib), std::move(shader));
@@ -105,13 +105,13 @@ namespace prim
         layout.push<float>(2);
         layout.push<float>(2, true);
 
-        VertexBuffer vb(vertices, 24 * sizeof(float), layout);
+        shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 24 * sizeof(float), layout);
 
-        Shader shader("res/shaders/default.shader");
+        shptr<Shader> shader = std::make_shared<Shader>("res/shaders/default.shader");
 
-        shader.setUniform1i("u_texture", 0);
+        shader->setUniform1i("u_texture", 0);
 
-        IndexBuffer ib(indices, 6);
+        shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 6);
 
         Mesh mesh(std::move(vb));
         MeshComposition meshComposition(std::move(ib), std::move(shader));
@@ -123,7 +123,7 @@ namespace prim
     Mesh Primitives::createSquareMesh(std::string imagePath, float size)
     {
         Mesh mesh(createSquareMesh());
-        mesh.compositions.front().texture.load(imagePath);
+        mesh.compositions.front().texture->load(imagePath);
         return mesh;
     }
 }

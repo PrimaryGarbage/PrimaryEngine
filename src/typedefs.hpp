@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <filesystem>
+#include <memory>
 
 namespace prim
 {
@@ -12,6 +13,8 @@ namespace prim
     typedef unsigned int uint;   
     typedef std::unordered_map<std::string, std::string> FieldValues;
 
+    template<class T>
+    using shptr = std::shared_ptr<T>;
 }
 
 

@@ -7,7 +7,7 @@ namespace prim
 {
     class ActorCamera2D : public Camera2D
     {
-        REGISTER_NODE(ActorCamera2D)
+        NODE_FIXTURE(ActorCamera2D)
     protected:
 
         struct StateFields: public Camera2D::StateFields

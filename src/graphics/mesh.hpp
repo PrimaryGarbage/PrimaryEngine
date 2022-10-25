@@ -12,13 +12,11 @@ namespace prim
 class Mesh
 {
 public:
-    VertexBuffer vb;
-    VertexArray va;
+    shptr<VertexBuffer> vb;
+    shptr<VertexArray> va = std::make_shared<VertexArray>();
     std::vector<MeshComposition> compositions;
 
-    Mesh(VertexBuffer&& vb);
-    Mesh(Mesh&& other);
-    Mesh& operator=(Mesh&& other);
+    Mesh(shptr<VertexBuffer> vb);
     void addComposition(MeshComposition&& composition);
 };
 

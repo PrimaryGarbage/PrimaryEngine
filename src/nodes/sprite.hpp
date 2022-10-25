@@ -12,7 +12,7 @@ namespace prim
 
     class Sprite : public Drawable
     {
-        REGISTER_NODE(Sprite)
+        NODE_FIXTURE(Sprite)
     protected:
         
         struct StateFields: public Node2D::StateFields
@@ -25,7 +25,7 @@ namespace prim
 
         inline static const float defaultSize = 100.0f;
         Mesh planeMesh;
-        Image image;
+        shptr<Image> image = std::make_shared<Image>();
         float width;
         float height;
         float relativeWidth;
@@ -35,6 +35,7 @@ namespace prim
         Sprite();
         Sprite(std::string name);
         Sprite(std::string name, std::string imagePath);
+        Sprite(const Sprite& other) = default;
         virtual ~Sprite();
 
         virtual void start() override;
@@ -55,7 +56,7 @@ namespace prim
         inline float getHeight() const { return height; }
         inline glm::vec2 getSize() const { return glm::vec2(width, height); }
         inline float getZIndex() const { return zIndex; }
-        inline const Image* getImage() const { return &image; }
+        inline const Image* getImage() const { return &*image; }
 
         virtual std::string serialize(bool withChildren = true) const override;
         virtual void deserialize(FieldValues& fieldValues) override;

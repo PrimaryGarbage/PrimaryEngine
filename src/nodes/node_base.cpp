@@ -7,7 +7,11 @@ namespace prim
     NodeBase::NodeBase() : id(getUniqueId())
     {
     }
-
+    
+    NodeBase::NodeBase(const NodeBase& other) : id(getUniqueId())
+    {
+    }
+    
     unsigned int NodeBase::getUniqueId()
     {
         if (!freeIds.empty())

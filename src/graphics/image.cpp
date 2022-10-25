@@ -115,6 +115,7 @@ namespace prim
             filePath = "";
             width = height = channelCount = 0;
             size = 0u;
+            data = nullptr;
         }
     }
 }

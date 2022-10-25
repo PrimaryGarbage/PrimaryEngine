@@ -3,6 +3,7 @@
 
 #include "node.hpp"
 #include "transform2d.hpp"
+#include <string>
 
 
 namespace prim
@@ -10,7 +11,7 @@ namespace prim
 
     class Node2D : public Node
     {
-        REGISTER_NODE(Node2D)
+        NODE_FIXTURE(Node2D)
     protected:
 
         struct StateFields: public Node::StateFields
@@ -23,8 +24,7 @@ namespace prim
 
         Transform2D transform;
     public:
-        Node2D();
-        Node2D(std::string name);
+        using Node::Node;
         virtual ~Node2D();
 
         virtual void start() override;

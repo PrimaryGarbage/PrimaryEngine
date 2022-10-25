@@ -80,7 +80,7 @@ namespace prim
 		Logger::log("OpenGL version: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))), true);
 		Logger::log("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
 
-		selectShader = new Shader("./res/shaders/select.shader");
+		selectShader = std::make_shared<Shader>("./res/shaders/select.shader");
 	}
 
 	void Renderer::drawLists()
@@ -89,15 +89,15 @@ namespace prim
 
 		for (const Mesh* mesh : drawList)
 		{
-			mesh->va.bind();
+			mesh->va->bind();
 			for (const MeshComposition& composition : mesh->compositions)
 			{
-				composition.ib.bind();
-				composition.texture.bind();
-				if (composition.shader.getId() != currentShaderId)
+				composition.ib->bind();
+				composition.texture->bind();
+				if (composition.shader->getId() != currentShaderId)
 				{
-					composition.shader.bind();
-					currentShaderId = composition.shader.getId();
+					composition.shader->bind();
+					currentShaderId = composition.shader->getId();
 				}
 
 				GL_CALL(glDrawElements(GL_TRIANGLES, composition.getCount(), GL_UNSIGNED_INT, nullptr));
@@ -144,19 +144,19 @@ namespace prim
 	{
 		prepareForDrawing();
 
-		mesh.va.bind();
+		mesh.va->bind();
 		const glm::mat4 mvp = projectMat * viewMat * modelMat;
 		for (const MeshComposition& composition : mesh.compositions)
 		{
-			composition.ib.bind();
-			composition.texture.bind();
-			if (composition.shader.getId() != currentShaderId)
+			composition.ib->bind();
+			composition.texture->bind();
+			if (composition.shader->getId() != currentShaderId)
 			{
-				composition.shader.bind();
-				currentShaderId = composition.shader.getId();
+				composition.shader->bind();
+				currentShaderId = composition.shader->getId();
 			}
 
-			composition.shader.setUniformMat4f("u_mvp", mvp);
+			composition.shader->setUniformMat4f("u_mvp", mvp);
 
 			GL_CALL(glDrawElements(GL_TRIANGLES, composition.getCount(), GL_UNSIGNED_INT, nullptr));
 		}
@@ -166,14 +166,14 @@ namespace prim
 	{
 		prepareForDrawing();
 
-		mesh.va.bind();
+		mesh.va->bind();
 		const glm::mat4 mvp = projectMat * viewMat * modelMat;
 		shader->bind();
 		shader->setUniformMat4f("u_mvp", mvp);
 		for (const MeshComposition& composition : mesh.compositions)
 		{
-			composition.ib.bind();
-			composition.texture.bind();
+			composition.ib->bind();
+			composition.texture->bind();
 
 			GL_CALL(glDrawElements(GL_TRIANGLES, composition.getCount(), GL_UNSIGNED_INT, nullptr));
 		}

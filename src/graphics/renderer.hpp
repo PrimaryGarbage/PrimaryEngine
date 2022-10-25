@@ -39,7 +39,7 @@ private:
 	glm::mat4 modelMat;
 	bool preparedForDrawing = false;
 	CameraBase* currentCamera = nullptr;
-	Shader* selectShader = nullptr;
+	shptr<Shader> selectShader = nullptr;
 
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	static void error_callback(int error, const char* description);

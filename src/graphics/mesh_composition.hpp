@@ -4,6 +4,7 @@
 #include "index_buffer.hpp"
 #include "shader.hpp"
 #include "texture.hpp"
+#include "typedefs.hpp"
 
 namespace prim
 {
@@ -11,31 +12,19 @@ namespace prim
     class MeshComposition
     {
     public:
-        IndexBuffer ib;
-        Shader shader;
-        Texture texture;
+        shptr<IndexBuffer> ib;
+        shptr<Shader> shader;
+        shptr<Texture> texture;
 
-        MeshComposition(IndexBuffer&& ib, Shader&& shader)
-            : ib(std::move(ib)), shader(std::move(shader)), texture() {}
+        MeshComposition(shptr<IndexBuffer> ib, shptr<Shader> shader)
+            : ib(ib), shader(shader), texture(std::make_unique<Texture>()) {}
 
-        MeshComposition(IndexBuffer&& ib, Shader&& shader, Texture&& texture)
-            : ib(std::move(ib)), shader(std::move(shader)), texture(std::move(texture)) {}
+        MeshComposition(shptr<IndexBuffer> ib, shptr<Shader> shader, shptr<Texture> texture)
+            : ib(ib), shader(shader), texture(texture) {}
 
-        MeshComposition(MeshComposition&& other)
-            : ib(std::move(other.ib)), shader(std::move(other.shader)), texture(std::move(other.texture)) {}
-
-        MeshComposition& operator=(MeshComposition&& other)
-        {
-            other.unbind();
-            ib = std::move(other.ib);
-            shader = std::move(other.shader);
-            texture = std::move(other.texture);
-            return *this;
-        }
-
-        inline void bind() const { ib.bind(); shader.bind(); texture.bind(); }
-        inline void unbind() const { ib.unbind(); shader.unbind(); texture.unbind(); }
-        inline unsigned int getCount() const { return ib.getCount(); }
+        inline void bind() const { ib->bind(); shader->bind(); texture->bind(); }
+        inline void unbind() const { ib->unbind(); shader->unbind(); texture->unbind(); }
+        inline unsigned int getCount() const { return ib->getCount(); }
     };
 
 }

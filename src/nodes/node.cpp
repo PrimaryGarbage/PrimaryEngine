@@ -45,23 +45,55 @@ namespace prim
     void Node::addChild(Node* node)
     {
         if (node->parent) throw PRIM_EXCEPTION("Can't add node '" + node->name + "' to children. Remove this node from it's parent first.");
+        if (std::find(children.begin(), children.end(), node) != children.end()) throw PRIM_EXCEPTION("Node '" + node->name + "was already added.");
         node->parent = this;
         children.push_back(node);
         node->updateNodePath();
     }
+    
+    void Node::insertAfter(Node* node) 
+    {
+        if (node->parent) throw PRIM_EXCEPTION("Can't insert node '" + node->name + "'. Remove this node from it's parent first.");
+        node->parent = this->parent;
+        node->parent->children.insert(std::find(parent->children.begin(), parent->children.end(), this) + 1, node);
+    }
+    
+    void Node::addSibling(Node* node) 
+    {
+        if(!parent) throw PRIM_EXCEPTION("Can't add sibling: Node has no parent");
+        parent->addChild(node);
+    }
+
+    void Node::insertBefore(Node* node) 
+    {
+        if (node->parent) throw PRIM_EXCEPTION("Can't insert node '" + node->name + "'. Remove this node from it's parent first.");
+        node->parent = this->parent;
+        node->parent->children.insert(std::find(parent->children.begin(), parent->children.end(), this), node);
+    }
 
     void Node::removeChild(Node* node)
     {
-        auto foundChild = std::find_if(children.begin(), children.end(), [node](const Node* child) -> bool { return child->id == node->id;});
+        auto foundChild = std::find(children.begin(), children.end(), node);
         if (foundChild == children.end()) throw PRIM_EXCEPTION("Couldn't find node '" + node->name + "' among the children.");
         (*foundChild)->parent = nullptr;
         children.erase(foundChild);
         node->updateNodePath();
     }
+    
+    bool Node::hasChild(Node* node) 
+    {
+        return std::find(children.begin(), children.end(), node) != children.end();
+    }
 
     void Node::orphanize()
     {
-        if (parent) parent->removeChild(this);
+        if (parent)
+        {
+            if(parent->hasChild(this))
+                parent->removeChild(this);
+            else
+                parent = nullptr;
+        }
     }
     
     void Node::startChildren() 

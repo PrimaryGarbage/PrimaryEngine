@@ -9,15 +9,6 @@
 
 namespace prim
 {
-    Node2D::Node2D() : Node(generateNodeName(this))
-    {
-
-    }
-
-    Node2D::Node2D(std::string name) : Node(name)
-    {
-    }
-    
     Node2D::~Node2D()
     {
     }

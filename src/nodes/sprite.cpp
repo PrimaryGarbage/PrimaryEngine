@@ -15,15 +15,17 @@ namespace prim
     }
 
     Sprite::Sprite(std::string name)
-        : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
+        : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), 
+        width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
     {
     }
 
     Sprite::Sprite(std::string name, std::string imagePath)
-        : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
+        : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), 
+        width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
     {
-        image.load(imagePath);
-        planeMesh.compositions[0].texture.load(image);
+        image->load(imagePath);
+        planeMesh.compositions[0].texture->load(*image);
     }
 
     Sprite::~Sprite()
@@ -55,7 +57,7 @@ namespace prim
         renderer.setModelMat(std::move(modelMat));
 
         if(customShader)
-            renderer.drawMesh(planeMesh, customShader);
+            renderer.drawMesh(planeMesh, customShader.get());
         else
             renderer.drawMesh(planeMesh);
     }
@@ -90,8 +92,8 @@ namespace prim
 
     void Sprite::setImage(std::string path)
     {
-        image.load(path);
-        planeMesh.compositions[0].texture.load(image);
+        image->load(path);
+        planeMesh.compositions[0].texture->load(*image);
     }
 
     void Sprite::setZIndex(float value)
@@ -108,7 +110,7 @@ namespace prim
         ss << Utils::createKeyValuePair(StateFields::width, std::to_string(width)) << std::endl;
         ss << Utils::createKeyValuePair(StateFields::height, std::to_string(height)) << std::endl;
         ss << Utils::createKeyValuePair(StateFields::zIndex, std::to_string(zIndex)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::imagePath, image.getFilePath()) << std::endl;
+        ss << Utils::createKeyValuePair(StateFields::imagePath, image->getFilePath()) << std::endl;
         
         if(withChildren) ss << serializeChildren();
         
@@ -121,8 +123,8 @@ namespace prim
 
         if (!fieldValues[StateFields::imagePath].empty())
         {
-            image.load(fieldValues[StateFields::imagePath]);
-            planeMesh.compositions[0].texture.load(image);
+            image->load(fieldValues[StateFields::imagePath]);
+            planeMesh.compositions[0].texture->load(*image);
         }
         setWidth(std::stof(fieldValues[StateFields::width]));
         setHeight(std::stof(fieldValues[StateFields::height]));
@@ -146,7 +148,7 @@ namespace prim
             setHeight(heightBuffer);
         }
         ImGui::DragFloat("Z-Index", &zIndex, 0.01f);
-        ImGui::LabelText("Image", image.getFilePath().c_str());
+        ImGui::LabelText("Image", image->getFilePath().c_str());
         ImGui::SameLine();
 
         if (ImGui::Button("...")) // change image button
@@ -157,8 +159,8 @@ namespace prim
             if (ImGuiFileDialog::Instance()->IsOk())
             {
                 std::string newFilePath = ImGuiFileDialog::Instance()->GetFilePathName();
-                image.load(newFilePath);
-                planeMesh.compositions.front().texture.load(image);
+                image->load(newFilePath);
+                planeMesh.compositions.front().texture->load(*image);
             }
             
             ImGuiFileDialog::Instance()->Close();
