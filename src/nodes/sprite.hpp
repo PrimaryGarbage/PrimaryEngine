@@ -25,7 +25,7 @@ namespace prim
 
         inline static const float defaultSize = 100.0f;
         Mesh planeMesh;
-        shptr<Image> image = std::make_shared<Image>();
+        shptr<Image> image;
         float width;
         float height;
         float relativeWidth;

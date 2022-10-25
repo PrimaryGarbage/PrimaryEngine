@@ -11,7 +11,14 @@
     private: inline static const NodeRegistration<NODE_NAME> nodeRegistration = NodeRegistration<NODE_NAME>(#NODE_NAME); \
     public: inline virtual Node* clone() \
     { \
-        Node* cloned = new NODE_NAME(*this); \
+        NODE_NAME* cloned = new NODE_NAME(*this); \
+        cloned->children.clear(); \
+        for(Node* child : children) \
+        {   \
+            Node* clonedChild = child->clone(); \
+            clonedChild->orphanize(); \
+            cloned->addChild(clonedChild); \
+        }   \
         return cloned; \
     }
 

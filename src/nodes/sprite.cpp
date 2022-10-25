@@ -16,13 +16,15 @@ namespace prim
 
     Sprite::Sprite(std::string name)
         : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), 
-        width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
+        width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f),
+        image(std::make_shared<Image>())
     {
     }
 
     Sprite::Sprite(std::string name, std::string imagePath)
         : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), 
-        width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f)
+        width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f),
+        image(std::make_shared<Image>())
     {
         image->load(imagePath);
         planeMesh.compositions[0].texture->load(*image);
