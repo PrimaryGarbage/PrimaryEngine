@@ -160,14 +160,31 @@ namespace prim
         {
             if (ImGuiFileDialog::Instance()->IsOk())
             {
-                std::string newFilePath = ImGuiFileDialog::Instance()->GetFilePathName();
-                image->load(newFilePath);
-                planeMesh.compositions.front().texture->load(*image);
+                setImage(ImGuiFileDialog::Instance()->GetFilePathName());
             }
             
             ImGuiFileDialog::Instance()->Close();
         }
 
+        if(bound)
+        {
+            if(ImGui::Button("Unbind"))
+            {
+                unbind();
+            }
+        }
+    }
+    
+    void Sprite::unbind() 
+    {
+        Node2D::unbind();
+
+        std::string oldImagePath = image->empty() ? "" : image->getFilePath();
+        image = std::make_shared<Image>();
+        planeMesh = Primitives::createSquareMesh(defaultSize);
+
+        if(!oldImagePath.empty())
+            setImage(oldImagePath);
     }
 
 }

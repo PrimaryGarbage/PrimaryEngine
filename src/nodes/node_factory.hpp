@@ -19,6 +19,7 @@
             clonedChild->orphanize(); \
             cloned->addChild(clonedChild); \
         }   \
+        cloned->bound = true; \
         return cloned; \
     }
 

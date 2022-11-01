@@ -186,5 +186,13 @@ namespace prim
         if (ImGui::InputText("Name", nameBuffer, maxBufferSize))
             setName(nameBuffer);
     }
+    
+    void Node::unbind() 
+    {
+        if(bound)
+        {
+            bound = false;
+        }
+    }
 
 }

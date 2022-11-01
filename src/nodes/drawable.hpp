@@ -17,7 +17,7 @@ namespace prim
         virtual ~Drawable();
 
         virtual void draw(Renderer& renderer) override;
-        void drawWithShader(Renderer& renderer, shptr<Shader> shader);
+        void drawWithShader(Renderer& renderer, shptr<Shader>& shader);
     };
 }
 

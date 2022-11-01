@@ -5,6 +5,7 @@
 #include "renderer.hpp"
 #include "logger.hpp"
 #include "prim_exception.hpp"
+#include "globals.hpp"
 
 namespace prim
 {
@@ -63,7 +64,7 @@ namespace prim
 
         GL_CALL(int location = glGetUniformLocation(gl_id, name.c_str()));
         if (location == -1)
-            Logger::log("Warning: uniform '" + name + "' doesn't exist!", true);
+            Globals::logger->log("Warning: uniform '" + name + "' doesn't exist!", true);
         uniformLocationCache[name] = location;
         return location;
     }
@@ -156,8 +157,8 @@ namespace prim
             glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
             char* message = (char*)alloca(length * sizeof(char));
             glGetShaderInfoLog(id, length, &length, message);
-            Logger::log("Failed to compile shader. Shader type: " + std::to_string(type), true);
-            Logger::log(message, true);
+            Globals::logger->log("Failed to compile shader. Shader type: " + std::to_string(type), true);
+            Globals::logger->log(message, true);
             glDeleteShader(id);
             throw PRIM_EXCEPTION("Failed to compile shader Shader type: " + std::to_string(type) + std::string(std::move(message)));
         }

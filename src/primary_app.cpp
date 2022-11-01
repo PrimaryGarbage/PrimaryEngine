@@ -21,17 +21,15 @@ namespace prim
 
 	PrimaryApp::~PrimaryApp()
 	{
-		Logger::terminate();
 		if (currentScene) sceneManager.freeScene(currentScene);
 	}
 
 	void PrimaryApp::init()
 	{
-		Logger::init(Utils::getAppDirPath());
+		initGlobals();
 		renderer.init(windowWidth, windowHeight, windowName);
 		Input::init(renderer.getWindow());
 		initEditor();
-		initGlobals();
 	}
 
 	int PrimaryApp::run()
@@ -49,19 +47,19 @@ namespace prim
 		catch (const prim::Exception& e)
 		{
 			std::cerr << e.what() << '\n';
-			Logger::log(e.what(), true);
+			logger.log(e.what(), true);
 			return 1;
 		}
 		catch (const std::exception& e)
 		{
 			std::cerr << e.what() << '\n';
-			Logger::log(e.what(), true);
+			logger.log(e.what(), true);
 			return 1;
 		}
 		catch (...)
 		{
 			std::cerr << "Unknown exception was caught!" << '\n';
-			Logger::log("Unknown exception was caught!");
+			logger.log("Unknown exception was caught!");
 			return 1;
 		}
 	}
@@ -189,6 +187,7 @@ namespace prim
 		Globals::mainRenderer = &renderer;
 		Globals::sceneEditor = &sceneEditor;
 		Globals::sceneManager = &sceneManager;
+		Globals::logger = &logger;
 	}
 
 }

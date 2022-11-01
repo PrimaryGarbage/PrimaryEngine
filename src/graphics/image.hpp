@@ -40,7 +40,7 @@ namespace prim
         inline unsigned int getSize() const { return size; }
         inline std::string getFilePath() const { return filePath; }
         inline ImageType getType() const { return type; }
-        inline bool empty() const { return data; }
+        inline bool empty() const { return !data; }
     };
 
 }

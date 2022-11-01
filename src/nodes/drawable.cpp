@@ -22,7 +22,7 @@ namespace prim
         drawChildren(renderer);
     }
     
-    void Drawable::drawWithShader(Renderer& renderer, shptr<Shader> shader)
+    void Drawable::drawWithShader(Renderer& renderer, shptr<Shader>& shader)
     {
         shptr<Shader> oldCustomShader(customShader);
         customShader = shader;

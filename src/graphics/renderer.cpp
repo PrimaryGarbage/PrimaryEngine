@@ -17,7 +17,7 @@ namespace prim
 	{
 		if (GLenum error = glGetError())
 		{
-			Logger::log("[OpenGL Error] (" + std::to_string(error) + "): " + function + " " + file + ":" + std::to_string(line), true);
+			Globals::logger->log("[OpenGL Error] (" + std::to_string(error) + "): " + function + " " + file + ":" + std::to_string(line), true);
 			return false;
 		}
 		return true;
@@ -29,8 +29,9 @@ namespace prim
 
 	Renderer::~Renderer()
 	{
+		selectShader.reset();
 		glfwTerminate();
-		Logger::log("GLFW successfully terminated", true);
+		Globals::logger->log("GLFW successfully terminated", true);
 	}
 
 	void Renderer::init(unsigned int windowWidth, unsigned int windowHeight, const char* windowName)
@@ -76,9 +77,9 @@ namespace prim
 		GL_CALL(glEnable(GL_DEPTH_TEST));
 		GL_CALL(glDepthFunc(GL_LEQUAL));
 
-		Logger::log("GLFW and GLEW initialized successfully", true);
-		Logger::log("OpenGL version: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))), true);
-		Logger::log("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
+		Globals::logger->log("GLFW and GLEW initialized successfully", true);
+		Globals::logger->log("OpenGL version: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))), true);
+		Globals::logger->log("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
 
 		selectShader = std::make_shared<Shader>("./res/shaders/select.shader");
 	}
@@ -199,8 +200,8 @@ namespace prim
 
 	void Renderer::error_callback(int error, const char* description)
 	{
-		Logger::log("GLFW error: " + std::to_string(error), true);
-		Logger::log(description);
+		Globals::logger->log("GLFW error: " + std::to_string(error), true);
+		Globals::logger->log(description);
 		// std::cerr << "GLFW error: " << error << std::endl;
 		// std::cerr << description;
 	}

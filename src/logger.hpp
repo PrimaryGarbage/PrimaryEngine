@@ -4,23 +4,30 @@
 #include <string>
 #include <filesystem>
 
+namespace prim
+{
+
 class Logger
 {
 private:
-    static const char* logfileName;
-    static const char* logDirectoryName;
-    static const uint16_t logfileMaxLineCount = 10;
-    static std::filesystem::path logfilePath;
-    static std::string buffer;
+    const char* logfileName = "primary_engine_log.txt";
+    const char* logDirectoryName = "logs";
+    const uint16_t logfileMaxLineCount = 1000;
+    std::string buffer = std::string();
 
-    static void writeFile();
+    void writeFile();
 
 public:
-    static void init(std::filesystem::path appPath);
-    static void log(std::string msg, bool printAlso = false);
-    static void terminate();
-	static void print(std::string msg);
-	static void printLine(std::string msg);
+    ~Logger();
+
+    void init(std::filesystem::path appPath);
+    void log(std::string msg, bool printAlso = false);
+    void terminate();
+	void print(std::string msg);
+	void printLine(std::string msg);
 };
+
+} // namespace prim
+
 
 #endif // __LOGGER_HPP__

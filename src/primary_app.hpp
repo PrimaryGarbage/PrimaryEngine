@@ -21,6 +21,7 @@ private:
 	const char* windowName = "PrimaryEngine";
 	float deltaTime;
 	float timeSinceStart;
+	Logger logger;
 	Timer timer;
 	Renderer renderer;
 	SceneEditor sceneEditor;

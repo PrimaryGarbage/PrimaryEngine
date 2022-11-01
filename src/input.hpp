@@ -6,6 +6,9 @@
 #include "input_utils.hpp"
 #include <vector>
 
+namespace prim
+{
+
 class Input final
 {
 private:
@@ -57,5 +60,7 @@ public:
 
 	static std::string getChars();
 };
+
+} // namespace prim
 
 #endif // __INPUT_HPP__

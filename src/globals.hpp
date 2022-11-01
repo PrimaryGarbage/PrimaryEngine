@@ -11,6 +11,7 @@ namespace prim
         static inline Renderer* mainRenderer = nullptr;
         static inline SceneEditor* sceneEditor = nullptr;
         static inline SceneManager* sceneManager = nullptr;
+        static inline Logger* logger = nullptr;
     };
 }
 

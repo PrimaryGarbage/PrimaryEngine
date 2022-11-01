@@ -166,11 +166,13 @@ namespace prim
                 #ifdef _WIN32
                     #ifdef UNICODE
                         WCHAR pathArr[400];
-                        path = fs::path(std::wstring(GetModuleFileName(NULL, pathArr, (sizeof(pathArr)))));
+                        GetModuleFileName(NULL, pathArr, (sizeof(pathArr)));
+                        path = fs::path(std::wstring(pathArr));
                     #else
                         CHAR pathArr[400];
-                        path = fs::path(std::string(GetModuleFileName(NULL, pathArr, (sizeof(pathArr)))));
-                    #endif
+                        GetModuleFileName(NULL, pathArr, (sizeof(pathArr)));
+                        path = fs::path(std::string(pathArr));
+                    #endif // ifdef UNICODE
                 #else
                     path = fs::canonical("/proc/self/exe");
                 #endif

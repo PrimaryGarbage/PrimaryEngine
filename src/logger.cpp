@@ -1,18 +1,18 @@
 #include "logger.hpp"
 #include "prim_exception.hpp"
+#include "utils.hpp"
 #include <fstream>
 #include <iostream>
 
 
 namespace fs = std::filesystem;
 
-const char* Logger::logfileName = "primary_engine_log.txt";
-const char* Logger::logDirectoryName = "logs";
-std::filesystem::path Logger::logfilePath;
-std::string Logger::buffer;
+namespace prim
+{
 
 void Logger::writeFile()
 {
+    std::filesystem::path logfilePath = Utils::getAppDirPath() / logDirectoryName / logfileName;
     std::ofstream fs(logfilePath.string());
     if(!fs.good()) throw PRIM_EXCEPTION("Failed to open log file for writing. Path: " + logfilePath.string());
     fs << buffer;
@@ -20,14 +20,9 @@ void Logger::writeFile()
     fs.close();
 }
 
-void Logger::init(std::filesystem::path appDirPath)
+Logger::~Logger() 
 {
-    fs::path logDirPath = appDirPath / logDirectoryName;
-    if(!fs::exists(logDirPath))
-    {
-        if(!fs::create_directory(logDirPath)) throw PRIM_EXCEPTION("Failed to create log directory. Path: " + logDirPath.string());
-    }
-    logfilePath = logDirPath / logfileName;
+    terminate();
 }
 
 void Logger::log(std::string msg, bool printAlso)
@@ -52,3 +47,6 @@ void Logger::printLine(std::string msg)
 {
 	std::cout << msg << std::endl;
 }
+
+} // namespace prim
+

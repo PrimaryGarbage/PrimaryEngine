@@ -32,6 +32,7 @@ namespace prim
         Node* parent = nullptr;
         std::vector<Node*> children;
         NodePath nodePath;
+        bool bound = false;
 
     public:
         Node();
@@ -64,6 +65,8 @@ namespace prim
         void setName(std::string name);
         Node* findChild(std::string name) const;
         virtual void renderFields();
+        inline bool isBound() const noexcept { return bound; };
+        virtual void unbind();
 
         template<class T>
         T* findChild(std::string name = "") const
