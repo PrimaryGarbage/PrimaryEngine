@@ -9,7 +9,8 @@ namespace prim
 class VertexBuffer
 {
 private:
-	unsigned int gl_id;
+	unsigned int gl_id_vbo;
+	unsigned int gl_id_vao;
 	VertexBufferLayout layout;
 
 	void unload();

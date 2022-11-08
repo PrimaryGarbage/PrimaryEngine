@@ -90,7 +90,7 @@ namespace prim
 
 		for (const Mesh* mesh : drawList)
 		{
-			mesh->va->bind();
+			mesh->vb->bind();
 			for (const MeshComposition& composition : mesh->compositions)
 			{
 				composition.ib->bind();
@@ -145,7 +145,7 @@ namespace prim
 	{
 		prepareForDrawing();
 
-		mesh.va->bind();
+		mesh.vb->bind();
 		const glm::mat4 mvp = projectMat * viewMat * modelMat;
 		for (const MeshComposition& composition : mesh.compositions)
 		{
@@ -167,7 +167,7 @@ namespace prim
 	{
 		prepareForDrawing();
 
-		mesh.va->bind();
+		mesh.vb->bind();
 		const glm::mat4 mvp = projectMat * viewMat * modelMat;
 		shader->bind();
 		shader->setUniformMat4f("u_mvp", mvp);

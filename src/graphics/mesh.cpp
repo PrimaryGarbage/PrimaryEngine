@@ -6,7 +6,6 @@ namespace prim
 {
     Mesh::Mesh(shptr<VertexBuffer> vb) : vb(vb)
     {
-        va->addBuffer(*vb);
     }
     
     void Mesh::addComposition(MeshComposition&& composition)

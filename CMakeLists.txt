@@ -46,7 +46,7 @@ set(GRAPHICS_SRC
 	vertex_buffer.hpp vertex_buffer.cpp
 	index_buffer.hpp index_buffer.cpp
 	vertex_buffer_layout.hpp vertex_buffer_layout.cpp
-	vertex_array.hpp vertex_array.cpp
+	#vertex_array.hpp vertex_array.cpp
 	shader.hpp shader.cpp
 	stb_image.h stb_image.cpp
 	texture.hpp texture.cpp

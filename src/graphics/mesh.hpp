@@ -2,7 +2,6 @@
 #define __MESH_HPP__
 
 #include "vertex_buffer.hpp"
-#include "vertex_array.hpp"
 #include "mesh_composition.hpp"
 #include <vector>
 
@@ -13,7 +12,6 @@ class Mesh
 {
 public:
     shptr<VertexBuffer> vb;
-    shptr<VertexArray> va = std::make_shared<VertexArray>();
     std::vector<MeshComposition> compositions;
 
     Mesh(shptr<VertexBuffer> vb);

@@ -56,7 +56,7 @@ namespace prim
 
 	void VertexArray::unbind() const
 	{
-		GL_CALL(glBindVertexArray(0));
+		GL_CALL(glBindVertexArray(0u));
 	}
 
 }
