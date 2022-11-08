@@ -14,6 +14,8 @@ namespace prim
     class Shader
     {
     private:
+        inline static unsigned int currentShader = 0u;
+
         unsigned int gl_id;
         std::string filePath;
         mutable std::unordered_map<std::string, int> uniformLocationCache;
