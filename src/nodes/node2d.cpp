@@ -248,7 +248,6 @@ namespace prim
         static float posBuffer[2];
         static float rotBuffer;
         static float scaleBuffer[2];
-        static float pivotBuffer[2];
 
         posBuffer[0] = transform.position.x;
         posBuffer[1] = transform.position.y;
@@ -257,9 +256,6 @@ namespace prim
 
         scaleBuffer[0] = transform.scale.x;
         scaleBuffer[1] = transform.scale.y;
-
-        pivotBuffer[0] = transform.pivot.x;
-        pivotBuffer[1] = transform.pivot.y;
 
         if (ImGui::DragFloat2("Position", posBuffer))
         {
@@ -272,10 +268,6 @@ namespace prim
         if (ImGui::DragFloat2("Scale", scaleBuffer, 0.01f))
         {
             setScale(glm::vec2(scaleBuffer[0], scaleBuffer[1]));
-        }
-        if (ImGui::DragFloat2("Pivot", pivotBuffer, 0.01f))
-        {
-            setPivot(glm::vec2(pivotBuffer[0], pivotBuffer[1]));
         }
     }
 }
