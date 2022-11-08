@@ -12,6 +12,10 @@ enum class ImageType;
 class Texture
 {
 private:
+    inline static const unsigned int maxTextureSlots = 48u;
+    inline static unsigned int textureMap[maxTextureSlots] {0u};
+    inline static unsigned int currentTextureSlot = maxTextureSlots + 1;
+
     unsigned int gl_id = 0u;
     int width;
     int height;

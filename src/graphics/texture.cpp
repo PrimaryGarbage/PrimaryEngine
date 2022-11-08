@@ -79,13 +79,22 @@ namespace prim
     
     void Texture::bind(unsigned int slot) const
     {
-        GL_CALL(glActiveTexture(GL_TEXTURE0 + slot));
-        GL_CALL(glBindTexture(GL_TEXTURE_2D, gl_id));
+        if(currentTextureSlot != slot)
+        {
+            GL_CALL(glActiveTexture(GL_TEXTURE0 + slot));
+            currentTextureSlot = slot;
+        }
+        if(textureMap[slot] != gl_id)
+        {
+            GL_CALL(glBindTexture(GL_TEXTURE_2D, gl_id));
+            textureMap[slot] = gl_id;
+        }
     }
     
     void Texture::unbind() const
     {
-        GL_CALL(glBindTexture(GL_TEXTURE_2D, 0));
+        GL_CALL(glBindTexture(GL_TEXTURE_2D, 0u));
+        textureMap[currentTextureSlot] = 0u;
     }
     
     void Texture::unload()
