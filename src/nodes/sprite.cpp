@@ -137,8 +137,17 @@ namespace prim
     {
         Node2D::renderFields();
 
+        static float pivotBuffer[2];
         static float widthBuffer;
+
+        pivotBuffer[0] = transform.pivot.x;
+        pivotBuffer[1] = transform.pivot.y;
         widthBuffer = width;
+
+        if(ImGui::DragFloat2("Pivot", pivotBuffer))
+        {
+            setPivot(glm::vec2(pivotBuffer[0], pivotBuffer[1]));
+        }
         if (ImGui::DragFloat("Width", &widthBuffer))
         {
             setWidth(widthBuffer);

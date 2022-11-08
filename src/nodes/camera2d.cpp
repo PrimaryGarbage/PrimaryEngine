@@ -93,9 +93,17 @@ namespace prim
     {
         Node2D::renderFields();
 
+        static bool current;
+
+        current = isCurrent();
+
         ImGui::DragFloat("Z-Near", &zNear, 0.01f);
         ImGui::DragFloat("Z-Far", &zFar, 0.01f);
         ImGui::DragFloat("Zoom", &zoom, 0.01f);
+        if(ImGui::Checkbox("Current", &current))
+        {
+            renderer->setCurrentCamera(current ? this : nullptr);
+        }
     }
 
 }

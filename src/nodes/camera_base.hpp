@@ -10,21 +10,19 @@ namespace prim
     {
     protected:
         Renderer* renderer;
-        bool current = false;
     public:
         CameraBase(std::string name);
         virtual ~CameraBase();
 
-        virtual inline const char* type() const override { return "Camera2D"; }
+        virtual inline const char* type() const override { return "CameraBase"; }
 
         virtual glm::mat4 calculateViewMatrix() const = 0;
         virtual glm::mat4 calculateProjectMatrix() const = 0;
         virtual void start() override = 0;
         virtual void update(float deltaTime) override = 0;
         virtual void draw(Renderer& renderer) override = 0;
-        virtual void setAsCurrent();
-        inline virtual bool isCurrent() const { return current; }
-
+        void setAsCurrent();
+        bool isCurrent() const;
     };
 }
 
