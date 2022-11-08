@@ -180,11 +180,16 @@ namespace prim
 
     void Node::renderFields()
     {
-        static const unsigned int maxBufferSize = 200u;
+        static const unsigned int maxBufferSize = 100u;
+        static const ImVec4 typeTextColor = { 0.1f, 0.9f, 0.1f, 1.0f };
         static char nameBuffer[maxBufferSize];
         std::copy(name.begin(), name.end(), nameBuffer);
+        std::fill(&nameBuffer[name.length()], &nameBuffer[maxBufferSize - 1], 0);
+        ImGui::TextColored(typeTextColor, type());
         if (ImGui::InputText("Name", nameBuffer, maxBufferSize))
+        {
             setName(nameBuffer);
+        }
     }
     
     void Node::unbind() 
