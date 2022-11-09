@@ -200,4 +200,64 @@ namespace prim
         }
     }
 
+    glm::vec2 Node::getPosition() const
+    { return glm::vec2(); }
+    
+    float Node::getRotation() const
+    { return 0.0f; }
+    
+    glm::vec2 Node::getScale() const
+    { return glm::vec2(1.0f, 1.0f); }
+    
+    glm::vec2 Node::getPivot() const
+    { return glm::vec2(); }
+    
+    glm::vec2 Node::getGlobalPosition() const
+    { return glm::vec2(); }
+    
+    float Node::getGlobalRotation() const
+    { return 0.0f; }
+    
+    glm::vec2 Node::getGlobalScale() const
+    { return glm::vec2(1.0f, 1.0f); }
+    
+    glm::vec2 Node::forward() const
+    { return glm::vec2(0.0f, 1.0f); }
+    
+    glm::vec2 Node::backward() const
+    { return glm::vec2(0.0f, -1.0f); }
+    
+    glm::vec2 Node::left() const
+    { return glm::vec2(-1.0f, 0.0f); }
+    
+    glm::vec2 Node::right() const
+    { return glm::vec2(1.0f, 0.0f); }
+    
+    void Node::setPosition(glm::vec2 v) 
+    {}
+    
+    void Node::setRotation(float angle) 
+    {}
+    
+    void Node::setScale(float s) 
+    {}
+    
+    void Node::setScale(glm::vec2 s) 
+    {}
+    
+    void Node::setPivot(glm::vec2 pivot) 
+    {}
+    
+    void Node::setGlobalPosition(glm::vec2 v) 
+    {}
+    
+    void Node::setGlobalRotation(float angle) 
+    {}
+    
+    void Node::setGlobalScale(float s) 
+    {}
+    
+    void Node::setGlobalScale(glm::vec2 s) 
+    {}
+
 }

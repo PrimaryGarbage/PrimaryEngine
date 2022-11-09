@@ -89,43 +89,19 @@ namespace prim
     glm::vec2 Node2D::getGlobalPosition() const
     {
         if (!parent) return getPosition();
-        Node2D* parent2d = dynamic_cast<Node2D*>(parent);
-        if (parent2d)
-        {
-            return parent2d->getGlobalPosition() + glm::rotate(transform.position, parent2d->getGlobalRotation());
-        }
-        else
-        {
-            return transform.position;
-        }
+        return parent->getGlobalPosition() + glm::rotate(transform.position, parent->getGlobalRotation());
     }
 
     float Node2D::getGlobalRotation() const
     {
         if (!parent) return transform.rotation;
-        Node2D* parent2d = dynamic_cast<Node2D*>(parent);
-        if (parent2d)
-        {
-            return parent2d->getGlobalRotation() + transform.rotation;
-        }
-        else
-        {
-            return transform.rotation;
-        }
+        return parent->getGlobalRotation() + transform.rotation;
     }
 
     glm::vec2 Node2D::getGlobalScale() const
     {
         if (!parent) return transform.scale;
-        Node2D* parent2d = dynamic_cast<Node2D*>(parent);
-        if (parent2d)
-        {
-            return parent2d->getGlobalScale() * transform.scale;
-        }
-        else
-        {
-            return transform.scale;
-        }
+        return parent->getGlobalScale() * transform.scale;
     }
 
     glm::vec2 Node2D::forward() const
@@ -176,43 +152,25 @@ namespace prim
     void Node2D::setGlobalPosition(glm::vec2 v)
     {
         if (!parent) transform.position = v;
-        Node2D* parent2d = dynamic_cast<Node2D*>(parent);
-        if (parent2d)
-        {
-            transform.position = v - parent2d->getGlobalPosition();
-        }
-        else
-        {
-            transform.position = v;
-        }
+        transform.position = v - parent->getGlobalPosition();
     }
 
     void Node2D::setGlobalRotation(float angle)
     {
         if (!parent) transform.rotation = Utils::normalizeAngle(angle);
-        Node2D* parent2d = dynamic_cast<Node2D*>(parent);
-        if (parent2d)
-        {
-            transform.rotation = Utils::normalizeAngle(angle - parent2d->getGlobalRotation());
-        }
-        else
-        {
-            transform.rotation = Utils::normalizeAngle(angle);
-        }
+        transform.rotation = Utils::normalizeAngle(angle - parent->getGlobalRotation());
+    }
+    
+    void Node2D::setGlobalScale(float s) 
+    {
+        if (!parent) transform.scale = glm::vec2(s, s);
+        transform.scale = glm::vec2(s, s) / parent->getGlobalScale();
     }
 
     void Node2D::setGlobalScale(glm::vec2 s)
     {
         if (!parent) transform.scale = s;
-        Node2D* parent2d = dynamic_cast<Node2D*>(parent);
-        if (parent2d)
-        {
-            transform.scale = s / parent2d->getGlobalScale();
-        }
-        else
-        {
-            transform.scale = s;
-        }
+        transform.scale = s / parent->getGlobalScale();
     }
 
     std::string Node2D::serialize(bool withChildren) const

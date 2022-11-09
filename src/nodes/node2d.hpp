@@ -14,7 +14,7 @@ namespace prim
         NODE_FIXTURE(Node2D)
     protected:
 
-        struct StateFields: public Node::StateFields
+        struct StateFields : public Node::StateFields
         {
             inline static const char* position = "position";
             inline static const char* rotation = "rotation";
@@ -32,7 +32,7 @@ namespace prim
         virtual void draw(Renderer& renderer) override;
 
         virtual inline const char* type() const override { return "Node2D"; }
-        
+
         void move(glm::vec2 v);
         void move(float x, float y);
         void rotate(float angle);
@@ -41,30 +41,30 @@ namespace prim
         void lookAt(glm::vec2 v);
         void lookAtSmooth(glm::vec2 v, float stiffness);
 
-        glm::vec2 getPosition() const;
-        float getRotation() const;
-        glm::vec2 getScale() const;
-        glm::vec2 getPivot() const;
+        virtual glm::vec2 getPosition() const override final;
+        virtual float getRotation() const override final;
+        virtual glm::vec2 getScale() const override final;
+        virtual glm::vec2 getPivot() const override final;
 
-        glm::vec2 getGlobalPosition() const;
-        float getGlobalRotation() const;
-        glm::vec2 getGlobalScale() const;
+        virtual glm::vec2 getGlobalPosition() const override final;
+        virtual float getGlobalRotation() const override final;
+        virtual glm::vec2 getGlobalScale() const override final;
 
-        glm::vec2 forward() const;
-        glm::vec2 backward() const;
-        glm::vec2 left() const;
-        glm::vec2 right() const;
+        virtual glm::vec2 forward() const override final;
+        virtual glm::vec2 backward() const override final;
+        virtual glm::vec2 left() const override final;
+        virtual glm::vec2 right() const override final;
 
-        void setPosition(glm::vec2 v);
-        void setRotation(float angle);
-        void setScale(float s);
-        void setScale(glm::vec2 s);
-        void setPivot(glm::vec2 pivot);
+        virtual void setPosition(glm::vec2 v) override final;
+        virtual void setRotation(float angle) override final;
+        virtual void setScale(float s) override final;
+        virtual void setScale(glm::vec2 s) override final;
+        virtual void setPivot(glm::vec2 pivot) override final;
 
-        void setGlobalPosition(glm::vec2 v);
-        void setGlobalRotation(float angle);
-        void setGlobalScale(float s);
-        void setGlobalScale(glm::vec2 s);
+        virtual void setGlobalPosition(glm::vec2 v) override final;
+        virtual void setGlobalRotation(float angle) override final;
+        virtual void setGlobalScale(float s) override final;
+        virtual void setGlobalScale(glm::vec2 s) override final;
 
         virtual std::string serialize(bool withChildren = true) const override;
         virtual void deserialize(FieldValues& fieldValues) override;

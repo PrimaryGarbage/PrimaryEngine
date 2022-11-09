@@ -45,6 +45,27 @@ namespace prim
 
         virtual inline const char* type() const { return "Node"; }
 
+        virtual glm::vec2 getPosition() const;
+        virtual float getRotation() const;
+        virtual glm::vec2 getScale() const;
+        virtual glm::vec2 getPivot() const;
+        virtual glm::vec2 getGlobalPosition() const;
+        virtual float getGlobalRotation() const;
+        virtual glm::vec2 getGlobalScale() const;
+        virtual glm::vec2 forward() const;
+        virtual glm::vec2 backward() const;
+        virtual glm::vec2 left() const;
+        virtual glm::vec2 right() const;
+        virtual void setPosition(glm::vec2 v);
+        virtual void setRotation(float angle);
+        virtual void setScale(float s);
+        virtual void setScale(glm::vec2 s);
+        virtual void setPivot(glm::vec2 pivot);
+        virtual void setGlobalPosition(glm::vec2 v);
+        virtual void setGlobalRotation(float angle);
+        virtual void setGlobalScale(float s);
+        virtual void setGlobalScale(glm::vec2 s);
+
         virtual void addChild(Node* node);
         virtual void insertBefore(Node* node);
         virtual void insertAfter(Node* node);
