@@ -36,8 +36,6 @@ namespace prim
         virtual void update(float deltaTime) override;
         virtual void draw(Renderer& renderer) override;
 
-        virtual inline const char* type() const override { return "ActorCamera2D"; }
-
         void setTarget(const NodePath& target);
         inline NodePath getTarget() const { return targetPath; }
         void setStiffness(float value);

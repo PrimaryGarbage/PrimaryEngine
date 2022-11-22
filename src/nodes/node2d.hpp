@@ -31,8 +31,6 @@ namespace prim
         virtual void update(float deltaTime) override;
         virtual void draw(Renderer& renderer) override;
 
-        virtual inline const char* type() const override { return "Node2D"; }
-
         void move(glm::vec2 v);
         void move(float x, float y);
         void rotate(float angle);

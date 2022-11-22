@@ -32,7 +32,7 @@ namespace prim
         Node* parent = nullptr;
         std::vector<Node*> children;
         NodePath nodePath;
-        bool bound = false;
+        bool cloneBound = false;
 
     public:
         Node();
@@ -42,8 +42,6 @@ namespace prim
         virtual void start();
         virtual void update(float deltaTime);
         virtual void draw(Renderer& renderer);
-
-        virtual inline const char* type() const { return "Node"; }
 
         virtual glm::vec2 getPosition() const;
         virtual float getRotation() const;
@@ -86,7 +84,7 @@ namespace prim
         void setName(std::string name);
         Node* findChild(std::string name) const;
         virtual void renderFields();
-        inline bool isBound() const noexcept { return bound; };
+        inline bool isBound() const noexcept { return cloneBound; };
         virtual void unbind();
 
         template<class T>

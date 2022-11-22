@@ -42,8 +42,6 @@ namespace prim
         virtual void update(float deltaTime) override;
         virtual void draw(Renderer& renderer) override;
 
-        virtual inline const char* type() const override { return "Sprite"; }
-
         void setCenterPivot();
         void setCornerPivot();
 

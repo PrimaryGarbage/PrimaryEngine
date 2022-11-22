@@ -19,9 +19,10 @@
             clonedChild->orphanize(); \
             cloned->addChild(clonedChild); \
         }   \
-        cloned->bound = true; \
+        cloned->cloneBound = true; \
         return cloned; \
-    }
+    } \
+    public: virtual inline const char* type() const { return #NODE_NAME; }
 
 namespace prim
 {

@@ -194,9 +194,9 @@ namespace prim
     
     void Node::unbind() 
     {
-        if(bound)
+        if(cloneBound)
         {
-            bound = false;
+            cloneBound = false;
         }
     }
 

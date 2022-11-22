@@ -175,7 +175,7 @@ namespace prim
             ImGuiFileDialog::Instance()->Close();
         }
 
-        if(bound)
+        if(cloneBound)
         {
             if(ImGui::Button("Unbind"))
             {

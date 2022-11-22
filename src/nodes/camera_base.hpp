@@ -14,8 +14,6 @@ namespace prim
         CameraBase(std::string name);
         virtual ~CameraBase();
 
-        virtual inline const char* type() const override { return "CameraBase"; }
-
         virtual glm::mat4 calculateViewMatrix() const = 0;
         virtual glm::mat4 calculateProjectMatrix() const = 0;
         virtual void start() override = 0;

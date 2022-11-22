@@ -36,8 +36,6 @@ namespace prim
         virtual void update(float deltaTime) override;
         virtual void draw(Renderer& renderer) override;
 
-        virtual inline const char* type() const override { return "Camera2D"; }
-
         virtual std::string serialize(bool withChildren = true) const override;
         virtual void deserialize(FieldValues& fieldValues) override;
         virtual void renderFields() override;

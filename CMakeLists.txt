@@ -39,6 +39,8 @@ set(NODES_SRC
 	node_path.hpp node_path.cpp
 	drawable.hpp drawable.cpp
 	node_factory.hpp
+	control.hpp control.cpp
+	label.hpp label.cpp
 )
 
 set(GRAPHICS_SRC
@@ -82,13 +84,16 @@ target_compile_options(${PROJECT_NAME} PRIVATE -static)
 
 add_subdirectory(external/glfw)
 add_subdirectory(external/glew)
+add_subdirectory(external/freetype2)
 
 # link statically after generating glfw and glew
 set(CMAKE_LINK_SEARCH_START_STATIC ON)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
 
-target_include_directories(${PROJECT_NAME} PRIVATE external/glfw/include external/glew/include external/glm src/graphics src/nodes src external/imgui external)
+target_include_directories(${PROJECT_NAME} PRIVATE
+		external/glfw/include external/glew/include external/glm src/graphics src/nodes src external/imgui 
+	)
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/external/glfw/src ${CMAKE_BINARY_DIR}/external/glew/lib)
 
@@ -98,4 +103,4 @@ elseif(UNIX)
 	target_link_libraries(${PROJECT_NAME} PRIVATE GL)
 endif()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw libglew_static)
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw libglew_static freetype)
