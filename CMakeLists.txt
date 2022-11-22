@@ -39,6 +39,7 @@ set(NODES_SRC
 	node_path.hpp node_path.cpp
 	drawable.hpp drawable.cpp
 	node_factory.hpp
+	signal.hpp
 )
 
 set(GRAPHICS_SRC
