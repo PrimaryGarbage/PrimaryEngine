@@ -57,6 +57,7 @@ set(GRAPHICS_SRC
 	mesh_composition.hpp
 	primitives.hpp primitives.cpp
 	image.hpp image.cpp image_utils.hpp
+	font.hpp font.cpp
 )
 
 set(IMGUI_SRC

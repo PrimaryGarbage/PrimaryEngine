@@ -11,10 +11,13 @@ namespace prim
     namespace fs = std::filesystem;
 
     typedef unsigned int uint;   
+    typedef unsigned char uchar;   
+
     typedef std::unordered_map<std::string, std::string> FieldValues;
 
     template<class T>
     using shptr = std::shared_ptr<T>;
+
 }
 
 
