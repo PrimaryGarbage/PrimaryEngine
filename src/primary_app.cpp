@@ -10,6 +10,7 @@
 #include "globals.hpp"
 #include "test_scenes_creator.hpp"
 #include "utils.hpp"
+#include "shader_factory.hpp"
 #include <iostream>
 
 namespace prim
@@ -188,6 +189,7 @@ namespace prim
 		Globals::sceneEditor = &sceneEditor;
 		Globals::sceneManager = &sceneManager;
 		Globals::logger = &logger;
+		Globals::shaderFactory = &renderer.shaderFactory;
 	}
 
 }

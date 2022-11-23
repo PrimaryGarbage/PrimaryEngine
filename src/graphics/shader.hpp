@@ -14,7 +14,7 @@ namespace prim
     class Shader
     {
     private:
-        inline static unsigned int currentShader = 0u;
+        inline static unsigned int currentBoundShader = 0u;
 
         unsigned int gl_id;
         std::string filePath;
@@ -22,6 +22,8 @@ namespace prim
 
         int getUniformLocation(const std::string name) const;
         unsigned int compileShader(unsigned int type, const std::string source);
+        ShaderProgramSource parseShader(std::string filePath);
+        unsigned int createShaderProgram(const std::string vertexShader, const std::string fragmentShader);
 
         void unload();
     public:
@@ -37,8 +39,6 @@ namespace prim
         void setUniform4f(const std::string name, float v0, float v1, float v2, float v3) const;
         void setUniform1f(const std::string name, float value) const;
         void setUniform1i(const std::string name, int value) const;
-        ShaderProgramSource parseShader(std::string filePath);
-        unsigned int createShaderProgram(const std::string vertexShader, const std::string fragmentShader);
         inline unsigned int getId() const { return gl_id; }
     };
 

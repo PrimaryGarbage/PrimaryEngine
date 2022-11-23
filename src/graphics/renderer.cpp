@@ -29,7 +29,6 @@ namespace prim
 
 	Renderer::~Renderer()
 	{
-		selectShader.reset();
 		glfwTerminate();
 		Globals::logger->log("GLFW successfully terminated", true);
 	}
@@ -81,7 +80,7 @@ namespace prim
 		Globals::logger->log("OpenGL version: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))), true);
 		Globals::logger->log("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
 
-		selectShader = std::make_shared<Shader>("./res/shaders/select.shader");
+		selectShader = shaderFactory.createShader("select.shader");
 	}
 
 	void Renderer::drawLists()

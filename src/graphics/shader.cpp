@@ -49,17 +49,17 @@ namespace prim
 
     void Shader::bind() const
     {
-        if(currentShader != gl_id)
+        if(currentBoundShader != gl_id)
         {
             GL_CALL(glUseProgram(gl_id));
-            currentShader = gl_id;
+            currentBoundShader = gl_id;
         }
     }
 
     void Shader::unbind() const
     {
         GL_CALL(glUseProgram(0u));
-        currentShader = 0u;
+        currentBoundShader = 0u;
     }
 
     int Shader::getUniformLocation(const std::string name) const

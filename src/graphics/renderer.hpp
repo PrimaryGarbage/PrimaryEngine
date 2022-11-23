@@ -7,6 +7,7 @@
 #include "mesh.hpp"
 #include <unordered_map>
 #include "camera_base.hpp"
+#include "shader_factory.hpp"
 
 namespace prim
 {
@@ -39,7 +40,7 @@ private:
 	glm::mat4 modelMat;
 	bool preparedForDrawing = false;
 	CameraBase* currentCamera = nullptr;
-	shptr<Shader> selectShader = nullptr;
+	Shader* selectShader = nullptr;
 
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	static void error_callback(int error, const char* description);
@@ -49,6 +50,8 @@ private:
 public:
 	Renderer();
 	~Renderer();
+
+	ShaderFactory shaderFactory;
 
 	void init(unsigned int windowWidth, unsigned int windowHeight, const char* windowName);
 	void drawLists();

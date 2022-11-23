@@ -13,13 +13,13 @@ namespace prim
     {
     public:
         shptr<IndexBuffer> ib;
-        shptr<Shader> shader;
+        Shader* shader;
         shptr<Texture> texture;
 
-        MeshComposition(shptr<IndexBuffer> ib, shptr<Shader> shader)
+        MeshComposition(shptr<IndexBuffer> ib, Shader* shader)
             : ib(ib), shader(shader), texture(std::make_unique<Texture>()) {}
 
-        MeshComposition(shptr<IndexBuffer> ib, shptr<Shader> shader, shptr<Texture> texture)
+        MeshComposition(shptr<IndexBuffer> ib, Shader* shader, shptr<Texture> texture)
             : ib(ib), shader(shader), texture(texture) {}
 
         inline void bind() const { ib->bind(); shader->bind(); texture->bind(); }

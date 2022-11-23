@@ -10,14 +10,14 @@ namespace prim
     class Drawable : public Node2D
     {
     public:
-        shptr<Shader> customShader;
+        Shader* customShader;
 
         Drawable();
         Drawable(std::string name);
         virtual ~Drawable();
 
         virtual void draw(Renderer& renderer) override;
-        void drawWithShader(Renderer& renderer, shptr<Shader>& shader);
+        void drawWithShader(Renderer& renderer, Shader* shader);
     };
 }
 
