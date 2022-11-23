@@ -24,6 +24,7 @@ set(PRIMARY_SRC
 	test_scenes_creator.hpp
 	ImGuiFileDialog.h ImGuiFileDialog.cpp ImGuiFileDialogConfig.h
 	typedefs.hpp
+	resource_manager.hpp resource_manager.cpp
 	)
 
 set(NODES_SRC
