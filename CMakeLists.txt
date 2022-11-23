@@ -88,6 +88,7 @@ add_compile_definitions(USE_STD_FILESYSTEM)
 
 add_subdirectory(external/glfw)
 add_subdirectory(external/glew)
+add_subdirectory(external/freetype2)
 
 # link statically after generating glfw and glew
 set(CMAKE_LINK_SEARCH_START_STATIC ON)
@@ -98,14 +99,12 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 		external/glfw/include external/glew/include external/glm src/graphics src/nodes src external/imgui 
 	)
 
-target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/external/glfw/src ${CMAKE_BINARY_DIR}/external/glew/lib, ${CMAKE_BINARY_DIR}/external/freetype2)
+target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/external/glfw/src ${CMAKE_BINARY_DIR}/external/glew/lib ${CMAKE_BINARY_DIR}/external/freetype2)
 
 if(WIN32)
 	target_link_libraries(${PROJECT_NAME} PRIVATE opengl32)
-	file(COPY external/freetype2/builds/freetype.lib DESTINATION ${CMAKE_BINARY_DIR}/external/freetype2)
 elseif(UNIX)
 	target_link_libraries(${PROJECT_NAME} PRIVATE GL)
-	add_subdirectory(external/freetype2)
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw libglew_static freetype)
