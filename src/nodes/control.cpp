@@ -34,17 +34,6 @@ namespace prim
         transform.rotation = Utils::normalizeAngle(transform.rotation);
     }
     
-    void Control::scale(float s) 
-    {
-        transform.scale *= glm::vec2(s);
-    }
-    
-    void Control::scale(glm::vec2 s) 
-    {
-        
-        transform.scale *= s;
-    }
-    
     glm::vec2 Control::getPosition() const 
     {
         return transform.position;
@@ -55,9 +44,9 @@ namespace prim
         return transform.rotation;
     }
     
-    glm::vec2 Control::getScale() const 
+    glm::vec2 Control::getSize() const 
     {
-        return transform.scale;
+        return transform.size;
     }
     
     glm::vec2 Control::getPivot() const 
@@ -77,12 +66,6 @@ namespace prim
         return parent->getGlobalRotation() + transform.rotation;
     }
     
-    glm::vec2 Control::getGlobalScale() const 
-    {
-        if (!parent) return transform.scale;
-        return parent->getGlobalScale() * transform.scale;
-    }
-    
     void Control::setPosition(glm::vec2 v) 
     {
         transform.position = v;
@@ -93,14 +76,24 @@ namespace prim
         transform.rotation = Utils::normalizeAngle(angle);
     }
     
-    void Control::setScale(float s) 
+    void Control::setSize(float width, float height) 
     {
-        transform.scale = glm::vec2(s);
+        setSize(glm::vec2(width, height));
     }
     
-    void Control::setScale(glm::vec2 s) 
+    void Control::setSize(glm::vec2 s) 
     {
-        transform.scale = s;
+        transform.size = s;
+    }
+    
+    void Control::setWidth(float width) 
+    {
+        transform.size.x = width;
+    }
+    
+    void Control::setHeight(float height) 
+    {
+        transform.size.y = height;
     }
     
     void Control::setPivot(glm::vec2 pivot) 
@@ -120,18 +113,6 @@ namespace prim
         transform.rotation = Utils::normalizeAngle(angle - parent->getGlobalRotation());
     }
     
-    void Control::setGlobalScale(float s) 
-    {
-        if (!parent) transform.scale = glm::vec2(s, s);
-        transform.scale = glm::vec2(s, s) / parent->getGlobalScale();
-    }
-    
-    void Control::setGlobalScale(glm::vec2 s) 
-    {
-        if (!parent) transform.scale = s;
-        transform.scale = s / parent->getGlobalScale();
-    }
-    
     std::string Control::serialize(bool withChildren) const 
     {
         std::stringstream ss;
@@ -140,7 +121,7 @@ namespace prim
 
         ss << Utils::createKeyValuePair(StateFields::position, Utils::serializeVec2(getPosition())) << std::endl;
         ss << Utils::createKeyValuePair(StateFields::rotation, std::to_string(getRotation())) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::scale, Utils::serializeVec2(getScale())) << std::endl;
+        ss << Utils::createKeyValuePair(StateFields::size, Utils::serializeVec2(getSize())) << std::endl;
         ss << Utils::createKeyValuePair(StateFields::pivot, Utils::serializeVec2(getPivot())) << std::endl;
 
         if(withChildren) ss << serializeChildren();
@@ -154,7 +135,7 @@ namespace prim
 
         transform.position = Utils::deserializeVec2(fieldValues[StateFields::position]);
         transform.rotation = std::stof(fieldValues[StateFields::rotation]);
-        transform.scale = Utils::deserializeVec2(fieldValues[StateFields::scale]);
+        transform.size = Utils::deserializeVec2(fieldValues[StateFields::size]);
         transform.pivot = Utils::deserializeVec2(fieldValues[StateFields::pivot]);
     }
     
@@ -164,15 +145,15 @@ namespace prim
 
         static float posBuffer[2];
         static float rotBuffer;
-        static float scaleBuffer[2];
+        static float sizeBuffer[2];
 
         posBuffer[0] = transform.position.x;
         posBuffer[1] = transform.position.y;
 
         rotBuffer = transform.rotation;
 
-        scaleBuffer[0] = transform.scale.x;
-        scaleBuffer[1] = transform.scale.y;
+        sizeBuffer[0] = transform.size.x;
+        sizeBuffer[1] = transform.size.y;
 
         if (ImGui::DragFloat2("Position", posBuffer))
         {
@@ -182,9 +163,9 @@ namespace prim
         {
             setRotation(rotBuffer);
         }
-        if (ImGui::DragFloat2("Scale", scaleBuffer, 0.01f))
+        if (ImGui::DragFloat2("Size", sizeBuffer, 0.01f))
         {
-            setScale(glm::vec2(scaleBuffer[0], scaleBuffer[1]));
+            setScale(glm::vec2(sizeBuffer[0], sizeBuffer[1]));
         }
     }
 

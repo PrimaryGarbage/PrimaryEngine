@@ -2,7 +2,7 @@
 #define __CONTROL_HPP__
 
 #include "node.hpp"
-#include "transform2d.hpp"
+#include "control_transform.hpp"
 
 namespace prim
 {
@@ -16,14 +16,15 @@ namespace prim
         {
             inline static const char* position = "position";
             inline static const char* rotation = "rotation";
-            inline static const char* scale = "scale";
+            inline static const char* size = "size";
             inline static const char* pivot = "pivot";
         };
 
-        Transform2D transform;
+        ControlTransform transform;
         const char* defaultFontName = "Roboto-Regular.ttf";
 
         static std::string getPathToFontFile(std::string filename);
+
     public:
         Control();
         Control(std::string name);
@@ -32,12 +33,10 @@ namespace prim
         void move(glm::vec2 v);
         void move(float x, float y);
         void rotate(float angle);
-        void scale(float s);
-        void scale(glm::vec2 s);
 
         virtual glm::vec2 getPosition() const override final;
         virtual float getRotation() const override final;
-        virtual glm::vec2 getScale() const override final;
+        virtual glm::vec2 getSize() const;
         virtual glm::vec2 getPivot() const override final;
 
         virtual glm::vec2 getGlobalPosition() const override final;
@@ -46,14 +45,14 @@ namespace prim
 
         virtual void setPosition(glm::vec2 v) override final;
         virtual void setRotation(float angle) override final;
-        virtual void setScale(float s) override final;
-        virtual void setScale(glm::vec2 s) override final;
+        virtual void setSize(glm::vec2 s);
+        virtual void setSize(float width, float height);
+        virtual void setWidth(float width);
+        virtual void setHeight(float height);
         virtual void setPivot(glm::vec2 pivot) override final;
 
         virtual void setGlobalPosition(glm::vec2 v) override final;
         virtual void setGlobalRotation(float angle) override final;
-        virtual void setGlobalScale(float s) override final;
-        virtual void setGlobalScale(glm::vec2 s) override final;
 
         virtual std::string serialize(bool withChildren = true) const override;
         virtual void deserialize(FieldValues& fieldValues) override;
