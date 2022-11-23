@@ -41,7 +41,6 @@ namespace prim
 
         virtual glm::vec2 getGlobalPosition() const override final;
         virtual float getGlobalRotation() const override final;
-        virtual glm::vec2 getGlobalScale() const override final;
 
         virtual void setPosition(glm::vec2 v) override final;
         virtual void setRotation(float angle) override final;
