@@ -13,11 +13,6 @@ namespace prim
     {
     }
 
-    std::string Control::getPathToFontFile(std::string filename) 
-    {
-        return "./res/fonts/" + filename;      
-    }
-
     void Control::move(glm::vec2 v) 
     {
         transform.position += v;

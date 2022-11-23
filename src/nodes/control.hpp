@@ -21,10 +21,6 @@ namespace prim
         };
 
         ControlTransform transform;
-        const char* defaultFontName = "Roboto-Regular.ttf";
-
-        static std::string getPathToFontFile(std::string filename);
-
     public:
         Control();
         Control(std::string name);

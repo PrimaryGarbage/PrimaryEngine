@@ -21,6 +21,21 @@ namespace prim
     {
         return resDirPath + shadersDirPath + filename;
     }
+    
+    std::string ResourceManager::getDefaultFontFilePath() 
+    {
+        return (getFontFilePath(defaultFontFilename));
+    }
+    
+    std::string ResourceManager::getDefaultShaderFilePath() 
+    {
+        return (getShaderFilePath(defaultShaderFilename));
+    }
+    
+    std::string ResourceManager::getDefaultTextShaderFilePath() 
+    {
+        return (getShaderFilePath(defaultTextShaderFilename));
+    }
 
     
 } // namespace prim

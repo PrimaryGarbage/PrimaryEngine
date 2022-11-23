@@ -13,11 +13,19 @@ namespace prim
         static inline const char* scenesDirPath = "scenes/";
         static inline const char* shadersDirPath = "shaders/";
         static inline const char* texturesDirPath = "textures/";
+
+        static inline const char* defaultFontFilename = "Roboto-Regular.ttf";
+        static inline const char* defaultShaderFilename = "default.shader";
+        static inline const char* defaultTextShaderFilename = "text_default.shader";
     public:
         static std::string getFontFilePath(std::string filename);
         static std::string getTextureFilePath(std::string filename);
         static std::string getScenePath(std::string filename);
         static std::string getShaderFilePath(std::string filename);
+
+        static std::string getDefaultFontFilePath();
+        static std::string getDefaultShaderFilePath();
+        static std::string getDefaultTextShaderFilePath();
     };
 } // namespace prim
 
