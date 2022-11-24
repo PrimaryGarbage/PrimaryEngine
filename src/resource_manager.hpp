@@ -18,6 +18,8 @@ namespace prim
         static inline const char* defaultShaderFilename = "default.shader";
         static inline const char* defaultTextShaderFilename = "text_default.shader";
     public:
+        static std::string createResourcePath(std::string resPath);
+
         static std::string getFontFilePath(std::string filename);
         static std::string getTextureFilePath(std::string filename);
         static std::string getScenePath(std::string filename);

@@ -1,7 +1,13 @@
 #include "resource_manager.hpp"
+#include "typedefs.hpp"
 
 namespace prim
 {
+    std::string ResourceManager::createResourcePath(std::string resPath) 
+    {
+        return (fs::path(resDirPath) / resPath).string();
+    }
+
     std::string ResourceManager::getFontFilePath(std::string filename) 
     {
         return resDirPath + fontsDirPath + filename;

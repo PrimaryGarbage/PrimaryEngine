@@ -15,10 +15,9 @@ namespace prim
     {
     private:
         inline static unsigned int currentBoundShader = 0u;
+        inline static std::unordered_map<std::string, Shader*> shaderCache;
 
         unsigned int gl_id;
-        std::string filePath;
-        mutable std::unordered_map<std::string, int> uniformLocationCache;
 
         int getUniformLocation(const std::string name) const;
         unsigned int compileShader(unsigned int type, const std::string source);
@@ -26,19 +25,22 @@ namespace prim
         unsigned int createShaderProgram(const std::string vertexShader, const std::string fragmentShader);
 
         void unload();
-    public:
+
         Shader(const std::string &filePath);
-        Shader(const Shader& other) = delete;
-        Shader(Shader&& other);
-        Shader& operator=(Shader&& other);
+    public:
         ~Shader();
+
+        static Shader* createShader(std::string resPath);
+        static void terminate();
 
         void bind() const;
         void unbind() const;
+
         void setUniformMat4f(const std::string name, const glm::mat4 matrix) const;
         void setUniform4f(const std::string name, float v0, float v1, float v2, float v3) const;
         void setUniform1f(const std::string name, float value) const;
         void setUniform1i(const std::string name, int value) const;
+
         inline unsigned int getId() const { return gl_id; }
     };
 

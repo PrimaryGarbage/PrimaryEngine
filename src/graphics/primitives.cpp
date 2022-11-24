@@ -39,7 +39,7 @@ namespace prim
 
         shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 40 * sizeof(float), layout);
 
-        shptr<Shader> shader = std::make_shared<Shader>("res/shaders/default.shader");
+        Shader* shader = Shader::createShader("shaders/default.shader");
         shader->bind();
 
         shader->setUniform1i("u_texture", 0);
@@ -47,7 +47,7 @@ namespace prim
         shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 36);
 
         Mesh mesh(std::move(vb));
-        MeshComposition meshComposition(std::move(ib), std::move(shader));
+        MeshComposition meshComposition(std::move(ib), shader);
         mesh.addComposition(std::move(meshComposition));
 
         return mesh;
@@ -73,14 +73,14 @@ namespace prim
 
         shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 16 * sizeof(float), layout);
 
-        shptr<Shader> shader = std::make_shared<Shader>("res/shaders/default.shader");
+        Shader* shader = Shader::createShader("shaders/default.shader");
 
         shader->setUniform1i("u_texture", 0);
 
         shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 6);
 
         Mesh mesh(std::move(vb));
-        MeshComposition meshComposition(std::move(ib), std::move(shader));
+        MeshComposition meshComposition(std::move(ib), shader);
         mesh.addComposition(std::move(meshComposition));
 
         return mesh;
@@ -107,14 +107,14 @@ namespace prim
 
         shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 24 * sizeof(float), layout);
 
-        shptr<Shader> shader = std::make_shared<Shader>("res/shaders/default.shader");
+        Shader* shader = Shader::createShader("shaders/default.shader");
 
         shader->setUniform1i("u_texture", 0);
 
         shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 6);
 
         Mesh mesh(std::move(vb));
-        MeshComposition meshComposition(std::move(ib), std::move(shader));
+        MeshComposition meshComposition(std::move(ib), shader);
         mesh.addComposition(std::move(meshComposition));
 
         return mesh;

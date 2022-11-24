@@ -7,7 +7,6 @@
 #include "mesh.hpp"
 #include <unordered_map>
 #include "camera_base.hpp"
-#include "shader_factory.hpp"
 
 namespace prim
 {
@@ -50,8 +49,6 @@ private:
 public:
 	Renderer();
 	~Renderer();
-
-	ShaderFactory shaderFactory;
 
 	void init(unsigned int windowWidth, unsigned int windowHeight, const char* windowName);
 	void drawLists();

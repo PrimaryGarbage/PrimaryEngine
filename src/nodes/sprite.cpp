@@ -59,7 +59,7 @@ namespace prim
         renderer.setModelMat(std::move(modelMat));
 
         if(customShader)
-            renderer.drawMesh(planeMesh, customShader.get());
+            renderer.drawMesh(planeMesh, customShader);
         else
             renderer.drawMesh(planeMesh);
     }

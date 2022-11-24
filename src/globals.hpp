@@ -12,7 +12,6 @@ namespace prim
         static inline SceneEditor* sceneEditor = nullptr;
         static inline SceneManager* sceneManager = nullptr;
         static inline Logger* logger = nullptr;
-        static inline ShaderFactory* shaderFactory = nullptr;
     };
 }
 

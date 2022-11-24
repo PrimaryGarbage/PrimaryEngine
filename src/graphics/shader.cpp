@@ -6,6 +6,7 @@
 #include "logger.hpp"
 #include "prim_exception.hpp"
 #include "globals.hpp"
+#include "resource_manager.hpp"
 
 namespace prim
 {
@@ -16,35 +17,35 @@ namespace prim
         std::string fragmentSource;
     };
 
-    Shader::Shader(const std::string& filePath) : filePath(filePath), gl_id(0)
+    Shader::Shader(const std::string& filePath) : gl_id(0)
     {
         ShaderProgramSource source = parseShader(filePath);
         gl_id = createShaderProgram(source.vertexSource, source.fragmentSource);
     }
 
-    Shader::Shader(Shader&& other)
-        : filePath(other.filePath), gl_id(other.gl_id), uniformLocationCache(std::move(other.uniformLocationCache))
-    {
-        other.filePath = "";
-        other.gl_id = 0;
-    }
-
-    Shader& Shader::operator=(Shader&& other)
-    {
-        unload();
-
-        filePath = other.filePath;
-        gl_id = other.gl_id;
-        uniformLocationCache = std::move(other.uniformLocationCache);
-
-        other.filePath = "";
-        other.gl_id = 0;
-        return *this;
-    }
-
     Shader::~Shader()
     {
         unload();
+    }
+    
+    Shader* Shader::createShader(std::string resPath) 
+    {
+        auto it = shaderCache.find(resPath);
+        if(it == shaderCache.end())
+        {
+            Shader* shader = new Shader(ResourceManager::createResourcePath(resPath));
+            shaderCache[resPath] = shader;
+            return shader;
+        }
+
+        return it->second;
+    }
+    
+    void Shader::terminate() 
+    {
+        for(auto& pair : shaderCache)
+            delete pair.second;
+        shaderCache.clear();
     }
 
     void Shader::bind() const
@@ -64,13 +65,18 @@ namespace prim
 
     int Shader::getUniformLocation(const std::string name) const
     {
-        if (uniformLocationCache.find(name) != uniformLocationCache.end())
-            return uniformLocationCache[name];
+        static std::unordered_map<std::string, int> uniformLocationCache;
+
+        auto it = uniformLocationCache.find(name);
+        if (it != uniformLocationCache.end())
+            return it->second;
 
         GL_CALL(int location = glGetUniformLocation(gl_id, name.c_str()));
         if (location == -1)
             Globals::logger->log("Warning: uniform '" + name + "' doesn't exist!", true);
+
         uniformLocationCache[name] = location;
+
         return location;
     }
 

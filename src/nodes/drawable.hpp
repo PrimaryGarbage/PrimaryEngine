@@ -10,7 +10,7 @@ namespace prim
     class Drawable : public Node2D
     {
     public:
-        Shader* customShader;
+        Shader* customShader = nullptr;
 
         Drawable();
         Drawable(std::string name);
