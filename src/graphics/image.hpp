@@ -17,6 +17,7 @@ namespace prim
         int channelCount;
         unsigned int size;
         ImageType type;
+        bool modified = false;  // set this variable after any image modification (e.g. setPixel())
 
         static int getChannelCountOfType(ImageType type);
         static ImageType parseType(std::string path);
@@ -41,6 +42,7 @@ namespace prim
         inline std::string getFilePath() const { return filePath; }
         inline ImageType getType() const { return type; }
         inline bool empty() const { return !data; }
+        inline bool modified() const { return modified; }
     };
 
 }
