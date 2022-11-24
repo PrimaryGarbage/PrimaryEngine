@@ -45,9 +45,9 @@ public:
 	int run();
 
 	void setCurrentScene(Node* scene);
-	void loadCurrentScene(std::string name);
-	void saveCurrentScene(std::string name, bool overwrite = false);
-	Node* loadScene(std::string name);
+	void loadCurrentScene(std::string resPath);
+	void saveCurrentScene(std::string resPath, bool overwrite = false);
+	Node* loadScene(std::string resPath);
 	Node* getCurrentScene() const;
 	Node* getNode(NodePath nodePath);
 

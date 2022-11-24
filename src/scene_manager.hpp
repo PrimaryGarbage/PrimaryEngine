@@ -21,21 +21,15 @@ namespace prim
             inline static const char* childrenEnd = "children_end";
         };
 
-        const static inline char* sceneFileExtension = ".psc";
         const static inline char keyValueSeparator = '=';
-        const static inline char* sceneDirectory = "res/scenes/";
-        fs::path savePath;
 
         std::string serialize(Node* node);
-        std::filesystem::path createPathToScene(std::string sceneName);
     public:
-        SceneManager(fs::path appDirPath);
+        const static inline char* sceneFileExtension = ".psc";
 
-        Node* loadScene(std::string name);
-        void saveScene(Node* scene, std::string name, bool ovewrite = false);
+        Node* loadScene(std::string resPath);
+        void saveScene(Node* scene, std::string resPath, bool ovewrite = false);
         void freeScene(Node* scene);
-        bool sceneExists(std::string name);
-        const fs::path& getSceneDirPath() const;
     };
 }
 

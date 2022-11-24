@@ -7,6 +7,7 @@
 #include "ImGuiFileDialog.h"
 #include "globals.hpp"
 #include "node_utils.hpp"
+#include "resource_manager.hpp"
 
 namespace prim
 {
@@ -27,7 +28,7 @@ namespace prim
         image(std::make_shared<Image>())
     {
         image->load(imagePath);
-        planeMesh.compositions[0].texture->load(*image);
+        planeMesh.compositions[0].texture = Texture::create(*image);
     }
 
     Sprite::~Sprite()
@@ -95,7 +96,7 @@ namespace prim
     void Sprite::setImage(std::string path)
     {
         image->load(path);
-        planeMesh.compositions[0].texture->load(*image);
+        planeMesh.compositions[0].texture = Texture::create(path);
     }
 
     void Sprite::setZIndex(float value)
@@ -126,7 +127,7 @@ namespace prim
         if (!fieldValues[StateFields::imagePath].empty())
         {
             image->load(fieldValues[StateFields::imagePath]);
-            planeMesh.compositions[0].texture->load(*image);
+            planeMesh.compositions[0].texture = Texture::create(fieldValues[StateFields::imagePath]);
         }
         setWidth(std::stof(fieldValues[StateFields::width]));
         setHeight(std::stof(fieldValues[StateFields::height]));
@@ -163,7 +164,11 @@ namespace prim
         ImGui::SameLine();
 
         if (ImGui::Button("...")) // change image button
-            ImGuiFileDialog::Instance()->OpenDialog("ChooseImageKey", "Open Image", "Image files (*.png *.jpg *.jpeg){.png,.jpg,.jpeg}", ".", 1, nullptr, ImGuiFileDialogFlags_Modal);
+        {
+            ImGuiFileDialog::Instance()->OpenDialog("ChooseImageKey", "Open Image", 
+                "Image files (*.png *.jpg *.jpeg){.png,.jpg,.jpeg}", ResourceManager::getResourceDirPathAbsolute(),
+                1, nullptr, ImGuiFileDialogFlags_Modal);
+        }
 
         if(ImGuiFileDialog::Instance()->Display("ChooseImageKey"))
         {

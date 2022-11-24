@@ -10,7 +10,7 @@ pivot=0.000000,0.000000
 width=1920.000000
 height=1080.000000
 zIndex=0.000000
-imagePath=./res/textures/abstract_stairs.png
+imagePath=textures/abstract_stairs.png
 children_start
 children_end
 
@@ -23,7 +23,7 @@ pivot=0.500000,0.500000
 width=100.000000
 height=100.000000
 zIndex=0.000000
-imagePath=./res/textures/TestTexture.png
+imagePath=textures/TestTexture.png
 children_start
 children_end
 
@@ -36,7 +36,7 @@ pivot=0.500000,0.500000
 width=100.000000
 height=100.000000
 zIndex=0.000000
-imagePath=./res/textures/TestTexture.png
+imagePath=textures/TestTexture.png
 children_start
 children_end
 

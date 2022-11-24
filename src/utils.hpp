@@ -97,12 +97,12 @@ namespace prim
         {
             std::vector<std::string> strings;
             size_t pos = 0, prevPos = 0;
-            while ((pos = str.find(delimiter)) != std::string::npos)
+            while ((pos = str.find(delimiter, pos + 1)) != std::string::npos)
             {
                 strings.emplace_back(std::move(str.substr(prevPos, pos)));
                 prevPos = pos;
             }
-            strings.push_back(std::move(str.substr(pos)));
+            strings.push_back(std::move(str.substr(prevPos + delimiter.length())));
 
             return strings;
         }
@@ -120,6 +120,17 @@ namespace prim
             strings.push_back(std::move(str.substr(++prevPos)));
 
             return strings;
+        }
+
+        static inline bool startsWith(const std::string& source, const std::string& str)
+        {
+            if(source.length() < str.length()) return false;
+
+            for(int i = 0; i < str.length(); ++i)
+            {
+                if(source[i] != str[i]) return false;
+            }
+            return true;
         }
 
         inline static std::string createKeyValuePair(std::string key, std::string value)
@@ -151,11 +162,6 @@ namespace prim
             lowerStr.reserve(str.size());
             for (const char& c : str) lowerStr.push_back(std::tolower(c));
             return lowerStr;
-        }
-
-        inline static std::string removeSceneFileExtension(const std::string& filename)
-        {
-            return filename.substr(0, filename.size() - 4);
         }
 
         inline static fs::path getAppDirPath()

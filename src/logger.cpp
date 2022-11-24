@@ -1,6 +1,7 @@
 #include "logger.hpp"
 #include "prim_exception.hpp"
 #include "utils.hpp"
+#include "typedefs.hpp"
 #include <fstream>
 #include <iostream>
 
@@ -12,7 +13,9 @@ namespace prim
 
 void Logger::writeFile()
 {
-    std::filesystem::path logfilePath = Utils::getAppDirPath() / logDirectoryName / logfileName;
+    fs::path logfileDir = Utils::getAppDirPath() / logDirectoryName;
+    fs::create_directories(logfileDir);
+    fs::path logfilePath = logfileDir / logfileName;
     std::ofstream fs(logfilePath.string());
     if(!fs.good()) throw PRIM_EXCEPTION("Failed to open log file for writing. Path: " + logfilePath.string());
     fs << buffer;

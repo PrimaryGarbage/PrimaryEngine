@@ -3,7 +3,9 @@
 #include <cassert>
 #include <unordered_map>
 #include "stb_image.h"
-#include "../prim_exception.hpp"
+#include "prim_exception.hpp"
+#include "typedefs.hpp"
+#include "resource_manager.hpp"
 
 namespace prim
 {
@@ -95,10 +97,10 @@ namespace prim
         unload();
     }
     
-    void Image::load(std::string filePath)
+    void Image::load(std::string resPath)
     {
         unload();
-        if(!std::filesystem::exists(filePath)) throw PRIM_EXCEPTION("File not found. Path: '" + filePath + "'.");
+        std::string filePath = ResourceManager::createResourcePath(resPath);
         stbi_set_flip_vertically_on_load(1);
         type = parseType(filePath);
         data = stbi_load(filePath.c_str(), &width, &height, &channelCount, getChannelCountOfType(type));

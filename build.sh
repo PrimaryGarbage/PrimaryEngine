@@ -6,12 +6,20 @@ CMAKE_BUILD_DIR='../out'
 PROJECT_NAME='PrimaryEngine'
 BUILD_TYPE=Debug
 POSTFIX='-d'
+INTERNAL_RES_DIR_TARGET="$CMAKE_BUILD_DIR/bin/"
+INTERNAL_RES_DIR_SOURCE="./internal_res"
+RES_DIR_TARGET="$CMAKE_BUILD_DIR/bin/"
+RES_DIR_SOURCE="./resources"
 
 copy_res_dir() {
-	if [[ -d $CMAKE_BUILD_DIR/bin/res ]]; then
-		rm -rf $CMAKE_BUILD_DIR/bin/res
+	if [[ -d INTERNAL_RES_DIR_TARGET ]]; then
+		rm -rf $INTERNAL_RES_DIR_TARGET
 	fi
-	cp ./res $CMAKE_BUILD_DIR/bin/res -r
+	if [[ -d RES_DIR_TARGET ]]; then
+		rm -rf $RES_DIR_TARGET
+	fi
+	cp $INTERNAL_RES_DIR_SOURCE $INTERNAL_RES_DIR_TARGET -r
+	cp $RES_DIR_SOURCE $RES_DIR_TARGET -r
 }
 
 configure() {

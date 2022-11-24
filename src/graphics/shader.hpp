@@ -30,7 +30,7 @@ namespace prim
     public:
         ~Shader();
 
-        static Shader* createShader(std::string resPath);
+        static Shader* create(std::string resPath);
         static void terminate();
 
         void bind() const;

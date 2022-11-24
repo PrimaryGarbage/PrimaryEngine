@@ -28,7 +28,7 @@ namespace prim
         unload();
     }
     
-    Shader* Shader::createShader(std::string resPath) 
+    Shader* Shader::create(std::string resPath) 
     {
         auto it = shaderCache.find(resPath);
         if(it == shaderCache.end())

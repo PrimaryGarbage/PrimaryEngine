@@ -31,7 +31,7 @@ namespace prim
         Image& operator=(Image&& other);
         ~Image();
 
-        void load(std::string filePath);
+        void load(std::string resPath);
         void unload();
 
         inline unsigned char* getData() const { return data; }
@@ -42,7 +42,7 @@ namespace prim
         inline std::string getFilePath() const { return filePath; }
         inline ImageType getType() const { return type; }
         inline bool empty() const { return !data; }
-        inline bool modified() const { return modified; }
+        inline bool wasModified() const { return modified; }
     };
 
 }

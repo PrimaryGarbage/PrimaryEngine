@@ -8,14 +8,21 @@ namespace prim
 
     Texture::Texture(const std::string path)
     {
-        load(path);
+        unload();
+        Image image(path);
+        loadIntoGpu(image.getData(), image.getWidth(), image.getHeight(), image.getType());
+        width = image.getWidth();
+        height = image.getHeight();
+        channelCount = image.getChannelCount();
     }
-    
-    Texture::Texture(Texture&& other):
-        gl_id(other.gl_id), width(other.width), height(other.height), channelCount(other.channelCount) 
+
+    Texture::Texture(const Image& image)
     {
-        other.gl_id = 0;
-        other.width = other.height = other.channelCount = 0;
+        unload();
+        loadIntoGpu(image.getData(), image.getWidth(), image.getHeight(), image.getType());
+        width = image.getWidth();
+        height = image.getHeight();
+        channelCount = image.getChannelCount();
     }
     
     void Texture::loadIntoGpu(unsigned char* data, int width, int height, ImageType type)
@@ -32,57 +39,65 @@ namespace prim
         GL_CALL(glBindTexture(GL_TEXTURE_2D, 0));       
     }
 
-    Texture::Texture(const Image& image)
-    {
-        load(image);
-    }
-    
-    Texture& Texture::operator=(Texture&& other)
-    {
-        unload();
-
-        gl_id = other.gl_id;
-        width = other.width;
-        height = other.height;
-        channelCount = other.channelCount;
-
-        other.gl_id = 0;
-        other.width = other.height = 0;
-        other.channelCount = 0;
-
-        return *this;
-    }
     
     Texture::~Texture()
     {
         unload();
     }
     
-    void Texture::load(std::string filePath)
+    Texture* Texture::create(std::string resPath) 
     {
-        unload();
-        Image image(filePath);
-        loadIntoGpu(image.getData(), image.getWidth(), image.getHeight(), image.getType());
-        width = image.getWidth();
-        height = image.getHeight();
-        channelCount = image.getChannelCount();
+        auto it = textureCache.find(resPath);    
+        if(it == textureCache.end())
+        {
+            Texture* texture = new Texture(resPath);
+            textureCache[resPath] = texture;
+            return texture;
+        }
+        
+        return it->second;
     }
     
-    void Texture::load(const Image& image)
+    Texture* Texture::create(const Image& image) 
     {
-        unload();
-        loadIntoGpu(image.getData(), image.getWidth(), image.getHeight(), image.getType());
-        width = image.getWidth();
-        height = image.getHeight();
-        channelCount = image.getChannelCount();
+        if(image.wasModified())
+        {
+            Texture* texture = new Texture(image);
+            modifiedImageTextureCache.push_back(texture);
+            return texture;
+        }
+        else
+        {
+            auto it = textureCache.find(image.getFilePath());    
+            if(it == textureCache.end())
+            {
+                std::string imageFilePath = image.getFilePath();
+                Texture* texture = new Texture(imageFilePath);
+                textureCache[imageFilePath] = texture;
+                return texture;
+            }
+
+            return it->second;
+        }
+    }
+    
+    void Texture::terminate() 
+    {
+        for(auto& pair : textureCache)
+            delete pair.second;
+
+        for(auto& texture : modifiedImageTextureCache)
+            delete texture;
+
+        textureCache.clear();
     }
     
     void Texture::bind(unsigned int slot) const
     {
-        if(currentTextureSlot != slot)
+        if(boundTextureSlot != slot)
         {
             GL_CALL(glActiveTexture(GL_TEXTURE0 + slot));
-            currentTextureSlot = slot;
+            boundTextureSlot = slot;
         }
         if(textureMap[slot] != gl_id)
         {
@@ -94,7 +109,7 @@ namespace prim
     void Texture::unbind() const
     {
         GL_CALL(glBindTexture(GL_TEXTURE_2D, 0u));
-        textureMap[currentTextureSlot] = 0u;
+        textureMap[boundTextureSlot] = 0u;
     }
     
     void Texture::unload()

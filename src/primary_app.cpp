@@ -15,7 +15,7 @@
 namespace prim
 {
 
-	PrimaryApp::PrimaryApp() : deltaTime(0.0f), timeSinceStart(0.0f), sceneManager(Utils::getAppDirPath().string())
+	PrimaryApp::PrimaryApp() : deltaTime(0.0f), timeSinceStart(0.0f)
 	{
 	}
 
@@ -71,20 +71,20 @@ namespace prim
 		currentScene->start();
 	}
 
-	void PrimaryApp::loadCurrentScene(std::string name)
+	void PrimaryApp::loadCurrentScene(std::string resPath)
 	{
-		setCurrentScene(sceneManager.loadScene(name));
+		setCurrentScene(sceneManager.loadScene(resPath));
 	}
 	
-	void PrimaryApp::saveCurrentScene(std::string name, bool overwrite)
+	void PrimaryApp::saveCurrentScene(std::string resPath, bool overwrite)
 	{
 		if(!currentScene) return;
-		sceneManager.saveScene(currentScene, name, overwrite);
+		sceneManager.saveScene(currentScene, resPath, overwrite);
 	}
 	
-	Node* PrimaryApp::loadScene(std::string name)
+	Node* PrimaryApp::loadScene(std::string resPath)
 	{
-		return sceneManager.loadScene(name);
+		return sceneManager.loadScene(resPath);
 	}
 
 	Node* PrimaryApp::getCurrentScene() const
@@ -124,7 +124,7 @@ namespace prim
 
 	void PrimaryApp::mainLoop()
 	{
-		Node* scene1 = sceneManager.loadScene("TestScene1");
+		Node* scene1 = sceneManager.loadScene("scenes/TestScene1.psc");
 		//Node* scene1 = TestScenesCreator::createScene1();
 		setCurrentScene(scene1);
 

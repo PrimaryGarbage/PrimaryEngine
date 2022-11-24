@@ -1,4 +1,3 @@
-#include "scene_editor.hpp"
 #include "renderer.hpp"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -7,6 +6,7 @@
 #include "ImGuiFileDialog.h"
 #include "drawable.hpp"
 #include "node_utils.hpp"
+#include "resource_manager.hpp"
 
 namespace prim
 {
@@ -147,15 +147,14 @@ namespace prim
     void SceneEditor::drawLoadSceneButton()
     {
         if (ImGui::Button("Load Scene"))
-            ImGuiFileDialog::Instance()->OpenDialog("LoadSceneKey", "Open Scene", ".psc", Globals::sceneManager->getSceneDirPath().string(), 1, nullptr, ImGuiFileDialogFlags_Modal);
+            ImGuiFileDialog::Instance()->OpenDialog("LoadSceneKey", "Open Scene", ".psc", ResourceManager::getResourceDirPathAbsolute(), 1, nullptr, ImGuiFileDialogFlags_Modal);
 
         if (ImGuiFileDialog::Instance()->Display("LoadSceneKey", 32, fileExplorerMinSize))
         {
             if (ImGuiFileDialog::Instance()->IsOk())
             {
-                std::string name = ImGuiFileDialog::Instance()->GetCurrentFileName();
-                name = Utils::removeSceneFileExtension(name);
-                Globals::app->loadCurrentScene(name);
+                std::string resPath = Utils::splitString(ImGuiFileDialog::Instance()->GetFilePathName(), ResourceManager::resDirName + "/").back();
+                Globals::app->loadCurrentScene(ResourceManager::createResourcePath(resPath));
             }
             ImGuiFileDialog::Instance()->Close();
         }
@@ -163,31 +162,31 @@ namespace prim
 
     void SceneEditor::drawSaveSceneButton()
     {
-        static char sceneNameBuf[INPUT_STRING_MAX_LENGTH];
+        static char scenePathBuf[INPUT_STRING_MAX_LENGTH];
         static bool openOverwritePopup = false;
 
         if (ImGui::Button("Save Scene"))
         {
             ImGui::OpenPopup("Save Scene");
-            strncpy(sceneNameBuf, Globals::app->getCurrentScene()->getName().c_str(), INPUT_STRING_MAX_LENGTH - 1);
+            strncpy(scenePathBuf, Globals::app->getCurrentScene()->getName().c_str(), INPUT_STRING_MAX_LENGTH - 1);
         }
 
         if (ImGui::BeginPopupModal("Save Scene", nullptr, ImGuiWindowFlags_NoResize))
         {
             ImGui::SetWindowSize(popupMinSize);
 
-            ImGui::Text("Scene name:");
-            ImGui::InputText("##SceneNameInput", sceneNameBuf, INPUT_STRING_MAX_LENGTH, ImGuiInputTextFlags_AutoSelectAll);
+            ImGui::Text("Path to save:");
+            ImGui::InputText("##SceneNameInput", scenePathBuf, INPUT_STRING_MAX_LENGTH, ImGuiInputTextFlags_AutoSelectAll);
 
             if (ImGui::Button("Ok"))
             {
-                if (Globals::sceneManager->sceneExists(sceneNameBuf))
+                if (ResourceManager::resourceExists(scenePathBuf))
                 {
                     openOverwritePopup = true;
                 }
                 else
                 {
-                    Globals::app->saveCurrentScene(sceneNameBuf, false);
+                    Globals::app->saveCurrentScene(scenePathBuf, false);
                     ImGui::CloseCurrentPopup();
                 }
             }
@@ -210,11 +209,11 @@ namespace prim
         {
             ImGui::SetWindowSize(popupMinSize);
 
-            ImGui::TextWrapped(std::string("Scene with the name '" + std::string(sceneNameBuf) + "' already exists. Overwrite?").c_str());
+            ImGui::TextWrapped(std::string("File with the path '" + std::string(scenePathBuf) + "' already exists. Overwrite?").c_str());
 
             if (ImGui::Button("Yes"))
             {
-                Globals::app->saveCurrentScene(sceneNameBuf, true);
+                Globals::app->saveCurrentScene(scenePathBuf, true);
                 ImGui::CloseCurrentPopup();
             }
             ImGui::SameLine();
