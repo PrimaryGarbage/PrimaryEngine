@@ -33,7 +33,7 @@ namespace prim
         auto it = shaderCache.find(resPath);
         if(it == shaderCache.end())
         {
-            Shader* shader = new Shader(ResourceManager::createResourcePath(resPath));
+            Shader* shader = new Shader(ResourceManager::createInternalResourcePath(resPath));
             shaderCache[resPath] = shader;
             return shader;
         }

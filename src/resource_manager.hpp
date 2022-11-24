@@ -8,7 +8,8 @@ namespace prim
     class ResourceManager
     {
     private:
-        static inline const std::string resDirPath = "./res/";
+        static inline const std::string resDirPath = "./resources/";
+        static inline const std::string internalResDirPath = "./internal_res/";
         static inline const char* fontsDirPath = "fonts/";
         static inline const char* scenesDirPath = "scenes/";
         static inline const char* shadersDirPath = "shaders/";
@@ -19,6 +20,7 @@ namespace prim
         static inline const char* defaultTextShaderFilename = "text_default.shader";
     public:
         static std::string createResourcePath(std::string resPath);
+        static std::string createInternalResourcePath(std::string resPath);
 
         static std::string getFontFilePath(std::string filename);
         static std::string getTextureFilePath(std::string filename);

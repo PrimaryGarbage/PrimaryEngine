@@ -7,6 +7,11 @@ namespace prim
     {
         return (fs::path(resDirPath) / resPath).string();
     }
+    
+    std::string ResourceManager::createInternalResourcePath(std::string resPath) 
+    {
+        return (fs::path(internalResDirPath) / resPath).string();
+    }
 
     std::string ResourceManager::getFontFilePath(std::string filename) 
     {
