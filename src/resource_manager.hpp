@@ -28,6 +28,7 @@ namespace prim
         static std::string createInternalResourcePath(std::string resPath);
         static std::string getResourceDirPathAbsolute();
         static bool resourceExists(std::string resPath);
+        static char separator();
 
         static std::string getFontFilePath(std::string filename);
         static std::string getTextureFilePath(std::string filename);

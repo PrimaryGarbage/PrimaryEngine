@@ -19,6 +19,7 @@ namespace prim
     {
         if(validResourcePath(resPath)) return resPath;
         fs::path path = Utils::getAppDirPath() / resDirPath / resPath;
+        path = path.make_preferred();
         if(!fs::exists(path) && exists)
             throw PRIM_EXCEPTION("Resource with the given path doesn't exists. Path: " + path.string());
         return path.string();
@@ -28,6 +29,7 @@ namespace prim
     {
         if(validInternalResourcePath(resPath)) return resPath;
         fs::path path = Utils::getAppDirPath() / internalResDirPath / resPath;
+        path = path.make_preferred();
         if(!fs::exists(path))
             throw PRIM_EXCEPTION("Resource with the given path doesn't exists. Path: " + path.string());
         return path.string();
@@ -41,6 +43,15 @@ namespace prim
     bool ResourceManager::resourceExists(std::string resPath) 
     {
         return fs::exists(fs::path(createResourcePath(resPath)));
+    }
+    
+    char ResourceManager::separator() 
+    {
+        #ifdef _WIN32
+            return '\\';
+        #else
+            return '/';
+        #endif
     }
 
     std::string ResourceManager::getFontFilePath(std::string filename) 

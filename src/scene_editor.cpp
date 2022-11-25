@@ -153,7 +153,7 @@ namespace prim
         {
             if (ImGuiFileDialog::Instance()->IsOk())
             {
-                std::string resPath = Utils::splitString(ImGuiFileDialog::Instance()->GetFilePathName(), ResourceManager::resDirName + "/").back();
+                std::string resPath = Utils::splitString(ImGuiFileDialog::Instance()->GetFilePathName(), ResourceManager::resDirName + ResourceManager::separator()).back();
                 Globals::app->loadCurrentScene(ResourceManager::createResourcePath(resPath));
             }
             ImGuiFileDialog::Instance()->Close();

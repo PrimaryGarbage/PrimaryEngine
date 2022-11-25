@@ -89,7 +89,7 @@ namespace prim
         std::ofstream stream(path.string(), std::ios::out | std::ios::trunc);
         if (!stream.good()) throw PRIM_EXCEPTION("Unable to open file stream.");
 
-        scene->setName(path.stem());
+        scene->setName(path.stem().string());
 
         stream << scene->serialize();
 
