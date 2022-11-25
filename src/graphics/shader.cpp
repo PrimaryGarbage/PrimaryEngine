@@ -35,6 +35,7 @@ namespace prim
         {
             Shader* shader = new Shader(ResourceManager::createInternalResourcePath(resPath));
             shaderCache[resPath] = shader;
+            Globals::logger->logInfo("Shader loaded. Path: " + resPath);
             return shader;
         }
 
@@ -44,7 +45,10 @@ namespace prim
     void Shader::terminate() 
     {
         for(auto& pair : shaderCache)
+        {
             delete pair.second;
+            Globals::logger->logInfo("Shader terminated. Path: " + pair.first);
+        }
         shaderCache.clear();
     }
 
@@ -73,7 +77,7 @@ namespace prim
 
         GL_CALL(int location = glGetUniformLocation(gl_id, name.c_str()));
         if (location == -1)
-            Globals::logger->log("Warning: uniform '" + name + "' doesn't exist!", true);
+            Globals::logger->logWarning("Warning: uniform '" + name + "' doesn't exist!", true);
 
         uniformLocationCache[name] = location;
 
@@ -168,8 +172,8 @@ namespace prim
             glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
             char* message = (char*)alloca(length * sizeof(char));
             glGetShaderInfoLog(id, length, &length, message);
-            Globals::logger->log("Failed to compile shader. Shader type: " + std::to_string(type), true);
-            Globals::logger->log(message, true);
+            Globals::logger->logError("Failed to compile shader. Shader type: " + std::to_string(type), true);
+            Globals::logger->logError(message, true);
             glDeleteShader(id);
             throw PRIM_EXCEPTION("Failed to compile shader Shader type: " + std::to_string(type) + std::string(std::move(message)));
         }

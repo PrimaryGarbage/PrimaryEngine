@@ -18,13 +18,20 @@ private:
     void writeFile();
 
 public:
+    enum LogLevel { NoLog, Error, Warning, Info };
+
+    LogLevel logLevel = LogLevel::Info;
+
     ~Logger();
 
     void init(std::filesystem::path appPath);
-    void log(std::string msg, bool printAlso = false);
+    void logInfo(std::string msg, bool printAlso = true);
+    void logWarning(std::string msg, bool printAlso = true);
+    void logError(std::string msg, bool printAlso = true);
     void terminate();
 	void print(std::string msg);
 	void printLine(std::string msg);
+
 };
 
 } // namespace prim

@@ -47,19 +47,19 @@ namespace prim
 		catch (const prim::Exception& e)
 		{
 			std::cerr << e.what() << '\n';
-			logger.log(e.what(), true);
+			logger.logError(e.what(), true);
 			return 1;
 		}
 		catch (const std::exception& e)
 		{
 			std::cerr << e.what() << '\n';
-			logger.log(e.what(), true);
+			logger.logError(e.what(), true);
 			return 1;
 		}
 		catch (...)
 		{
 			std::cerr << "Unknown exception was caught!" << '\n';
-			logger.log("Unknown exception was caught!");
+			logger.logError("Unknown exception was caught!");
 			return 1;
 		}
 	}

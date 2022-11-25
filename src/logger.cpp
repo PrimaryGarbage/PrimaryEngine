@@ -28,11 +28,37 @@ Logger::~Logger()
     terminate();
 }
 
-void Logger::log(std::string msg, bool printAlso)
+void Logger::logInfo(std::string msg, bool printAlso)
 {
-    buffer.append(msg);
+    if(logLevel < LogLevel::Info) return;
+
+    static const char* prefix = "<INFO>: ";
+
+    buffer.append(prefix + msg);
     buffer.push_back('\n');
-	if(printAlso) printLine(msg);
+	if(printAlso) printLine(prefix + msg);
+}
+
+void Logger::logWarning(std::string msg, bool printAlso) 
+{
+    if(logLevel < LogLevel::Warning) return;
+
+    static const char* prefix = "<WARNING>: ";
+
+    buffer.append(prefix + msg);
+    buffer.push_back('\n');
+	if(printAlso) printLine(prefix + msg);
+}
+
+void Logger::logError(std::string msg, bool printAlso) 
+{
+    if(logLevel < LogLevel::Error) return;
+
+    static const char* prefix = "<ERROR>: ";
+
+    buffer.append(prefix + msg);
+    buffer.push_back('\n');
+	if(printAlso) printLine(prefix + msg);
 }
 
 void Logger::terminate()

@@ -1,6 +1,7 @@
 #include "texture.hpp"
 #include "renderer.hpp"
 #include "image.hpp"
+#include "globals.hpp"
 
 
 namespace prim
@@ -52,6 +53,7 @@ namespace prim
         {
             Texture* texture = new Texture(resPath);
             textureCache[resPath] = texture;
+            Globals::logger->logInfo("Texture loaded. Path: " + resPath);
             return texture;
         }
         
@@ -64,6 +66,7 @@ namespace prim
         {
             Texture* texture = new Texture(image);
             modifiedImageTextureCache.push_back(texture);
+            Globals::logger->logInfo("Texture loaded from modified image");
             return texture;
         }
         else
@@ -73,6 +76,7 @@ namespace prim
             {
                 std::string imageFilePath = image.getFilePath();
                 Texture* texture = new Texture(imageFilePath);
+                Globals::logger->logInfo("Texture loaded. Path: " + imageFilePath);
                 textureCache[imageFilePath] = texture;
                 return texture;
             }
