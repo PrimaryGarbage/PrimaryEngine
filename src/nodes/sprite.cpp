@@ -96,7 +96,7 @@ namespace prim
     void Sprite::setImage(std::string path)
     {
         image->load(path);
-        planeMesh.compositions[0].texture = Texture::create(path);
+        planeMesh.compositions[0].texture = Texture::create(*image);
     }
 
     void Sprite::setZIndex(float value)
@@ -174,7 +174,8 @@ namespace prim
         {
             if (ImGuiFileDialog::Instance()->IsOk())
             {
-                setImage(ImGuiFileDialog::Instance()->GetFilePathName());
+                std::string path = Utils::splitString(ImGuiFileDialog::Instance()->GetFilePathName(), ResourceManager::resDirName + "/").back();
+                setImage(ResourceManager::createResourcePath(path));
             }
             
             ImGuiFileDialog::Instance()->Close();
