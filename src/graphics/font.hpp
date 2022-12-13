@@ -18,6 +18,7 @@ namespace prim
     public:
         Font();
         Font(std::string filename);
+        ~Font();
 
         void load(std::string filename);
         void load(uchar* data, uint size);

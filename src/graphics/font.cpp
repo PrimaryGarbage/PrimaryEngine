@@ -20,6 +20,12 @@ namespace prim
         load(std::move(filePath));
     }
     
+    Font::~Font() 
+    {
+        FT_CHECK_ERROR(FT_Done_Face(ftFace));
+        FT_CHECK_ERROR(FT_Done_FreeType(ftLibrary));
+    }
+    
     void Font::load(std::string filePath) 
     {
         FT_CHECK_ERROR(FT_New_Face(ftLibrary, ResourceManager::createResourcePath(filePath).c_str(), 0, &ftFace));
