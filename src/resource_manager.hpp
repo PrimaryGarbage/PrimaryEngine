@@ -8,36 +8,15 @@ namespace prim
     class ResourceManager
     {
     private:
-        static inline const std::string internalResDirPath = "./internal_res/";
-        static inline const char* fontsDirPath = "fonts/";
-        static inline const char* scenesDirPath = "scenes/";
-        static inline const char* shadersDirPath = "shaders/";
-        static inline const char* texturesDirPath = "textures/";
-
-        static inline const char* defaultFontFilename = "Roboto-Regular.ttf";
-        static inline const char* defaultShaderFilename = "default.shader";
-        static inline const char* defaultTextShaderFilename = "text_default.shader";
-
         static bool validResourcePath(std::string path);
-        static bool validInternalResourcePath(std::string path);
     public:
         static inline const std::string resDirName = "resources";
         static inline const std::string resDirPath = "./" + resDirName + "/";
 
         static std::string createResourcePath(std::string resPath, bool exists = false);
-        static std::string createInternalResourcePath(std::string resPath);
         static std::string getResourceDirPathAbsolute();
         static bool resourceExists(std::string resPath);
         static char separator();
-
-        static std::string getFontFilePath(std::string filename);
-        static std::string getTextureFilePath(std::string filename);
-        static std::string getScenePath(std::string filename);
-        static std::string getShaderFilePath(std::string filename);
-
-        static std::string getDefaultFontFilePath();
-        static std::string getDefaultShaderFilePath();
-        static std::string getDefaultTextShaderFilePath();
     };
 } // namespace prim
 

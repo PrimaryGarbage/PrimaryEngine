@@ -4,23 +4,25 @@
 
 #define FT_CHECK_ERROR(error) if(error) throw PRIM_EXCEPTION("Freetype raised an exception: error code " + std::to_string(error))
 
+#include "default_font_data.hpp"
+
 namespace prim
 {
     Font::Font() 
     {
         FT_CHECK_ERROR(FT_Init_FreeType(&ftLibrary));
-        FT_CHECK_ERROR(FT_New_Face(ftLibrary, ResourceManager::getDefaultFontFilePath().c_str(), 0, &ftFace));
+        FT_CHECK_ERROR(FT_New_Memory_Face(ftLibrary, defaultFontData, defaultFontDataLength, 0, &ftFace));
     }
     
-    Font::Font(std::string filename) 
+    Font::Font(std::string filePath) 
     {
         FT_CHECK_ERROR(FT_Init_FreeType(&ftLibrary));
-        load(std::move(filename));
+        load(std::move(filePath));
     }
     
-    void Font::load(std::string filename) 
+    void Font::load(std::string filePath) 
     {
-        FT_CHECK_ERROR(FT_New_Face(ftLibrary, ResourceManager::getFontFilePath(filename).c_str(), 0, &ftFace));
+        FT_CHECK_ERROR(FT_New_Face(ftLibrary, ResourceManager::createResourcePath(filePath).c_str(), 0, &ftFace));
     }
     
     void Font::load(uchar* data, uint size) 

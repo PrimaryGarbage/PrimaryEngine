@@ -39,7 +39,7 @@ namespace prim
 
         shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 40 * sizeof(float), layout);
 
-        Shader* shader = Shader::create("shaders/default.shader");
+        Shader* shader = Shader::getDefaultShader();
         shader->bind();
 
         shader->setUniform1i("u_texture", 0);
@@ -73,7 +73,7 @@ namespace prim
 
         shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 16 * sizeof(float), layout);
 
-        Shader* shader = Shader::create("shaders/default.shader");
+        Shader* shader = Shader::getDefaultShader();
 
         shader->setUniform1i("u_texture", 0);
 
@@ -107,7 +107,7 @@ namespace prim
 
         shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 24 * sizeof(float), layout);
 
-        Shader* shader = Shader::create("shaders/default.shader");
+        Shader* shader = Shader::getDefaultShader();
 
         shader->setUniform1i("u_texture", 0);
 

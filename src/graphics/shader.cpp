@@ -7,6 +7,7 @@
 #include "prim_exception.hpp"
 #include "globals.hpp"
 #include "resource_manager.hpp"
+#include "default_shader_data.hpp"
 
 namespace prim
 {
@@ -22,6 +23,12 @@ namespace prim
         ShaderProgramSource source = parseShader(filePath);
         gl_id = createShaderProgram(source.vertexSource, source.fragmentSource);
     }
+    
+    Shader::Shader(const char* fileText) 
+    {
+        ShaderProgramSource source = parseShader(fileText);
+        gl_id = createShaderProgram(source.vertexSource, source.fragmentSource);
+    }
 
     Shader::~Shader()
     {
@@ -33,13 +40,43 @@ namespace prim
         auto it = shaderCache.find(resPath);
         if(it == shaderCache.end())
         {
-            Shader* shader = new Shader(ResourceManager::createInternalResourcePath(resPath));
+            Shader* shader = new Shader(ResourceManager::createResourcePath(resPath));
             shaderCache[resPath] = shader;
             Globals::logger->logInfo("Shader loaded. Path: " + resPath);
             return shader;
         }
 
         return it->second;
+    }
+    
+    Shader* Shader::getDefaultShader() 
+    {
+        if(!defaultShader) 
+        {
+            defaultShader = new Shader(defaultShaderData);
+            Globals::logger->logInfo("Loaded default shader");
+        }
+        return defaultShader;
+    }
+    
+    Shader* Shader::getSelectShader() 
+    {
+        if(!selectShader) 
+        {
+            selectShader = new Shader(selectShaderData);
+            Globals::logger->logInfo("Loaded select shader");
+        }
+        return selectShader;
+    }
+    
+    Shader* Shader::getTextDefaultShader() 
+    {
+        if(!textDefaultShader) 
+        {
+            textDefaultShader = new Shader(textDefaultShaderData);
+            Globals::logger->logInfo("Loaded text default shader shader");
+        }
+        return textDefaultShader;
     }
     
     void Shader::terminate() 
@@ -50,6 +87,10 @@ namespace prim
             Globals::logger->logInfo("Shader terminated. Path: " + pair.first);
         }
         shaderCache.clear();
+
+        delete defaultShader;
+        delete selectShader;
+        delete textDefaultShader;
     }
 
     void Shader::bind() const
@@ -128,6 +169,38 @@ namespace prim
     ShaderProgramSource Shader::parseShader(const std::string filePath)
     {
         std::ifstream stream(filePath);
+
+        enum class ShaderType
+        {
+            none = -1,
+            vertex = 0,
+            fragment = 1
+        };
+
+        std::string line;
+        std::stringstream ss[2];
+        ShaderType type = ShaderType::none;
+        while (std::getline(stream, line))
+        {
+            if (line.find("#shader") != std::string::npos)
+            {
+                if (line.find("vertex") != std::string::npos)
+                    type = ShaderType::vertex;
+                else if (line.find("fragment") != std::string::npos)
+                    type = ShaderType::fragment;
+            }
+            else if (type != ShaderType::none)
+            {
+                ss[(int)type] << line << '\n';
+            }
+        }
+
+        return { ss[0].str(), ss[1].str() };
+    }
+    
+    ShaderProgramSource Shader::parseShader(const char* fileText) 
+    {
+        std::stringstream stream(fileText);
 
         enum class ShaderType
         {

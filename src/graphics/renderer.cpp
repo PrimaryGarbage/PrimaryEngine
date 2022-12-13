@@ -80,8 +80,6 @@ namespace prim
 		Globals::logger->logInfo("GLFW and GLEW initialized successfully", true);
 		Globals::logger->logInfo("OpenGL version: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))), true);
 		Globals::logger->logInfo("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
-
-		selectShader = Shader::create("shaders/select.shader");
 	}
 
 	void Renderer::drawLists()
@@ -136,7 +134,7 @@ namespace prim
 		GL_CALL(glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE));
 		GL_CALL(glStencilFunc(GL_NOTEQUAL, 1, 0xFF));
 		GL_CALL(glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP));
-		node->drawWithShader(*this, selectShader);
+		node->drawWithShader(*this, Shader::getSelectShader());
 		
 		GL_CALL(glDisable(GL_STENCIL_TEST));
 	}

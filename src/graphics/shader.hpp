@@ -16,21 +16,29 @@ namespace prim
     private:
         inline static unsigned int currentBoundShader = 0u;
         inline static std::unordered_map<std::string, Shader*> shaderCache;
+        inline static Shader* defaultShader = nullptr;
+        inline static Shader* selectShader = nullptr;
+        inline static Shader* textDefaultShader = nullptr;
 
         unsigned int gl_id;
 
         int getUniformLocation(const std::string name) const;
         unsigned int compileShader(unsigned int type, const std::string source);
         ShaderProgramSource parseShader(std::string filePath);
+        ShaderProgramSource parseShader(const char* fileText);
         unsigned int createShaderProgram(const std::string vertexShader, const std::string fragmentShader);
 
         void unload();
 
         Shader(const std::string &filePath);
+        Shader(const char* fileText);
     public:
         ~Shader();
 
         static Shader* create(std::string resPath);
+        static Shader* getDefaultShader();
+        static Shader* getSelectShader();
+        static Shader* getTextDefaultShader();
         static void terminate();
 
         void bind() const;
