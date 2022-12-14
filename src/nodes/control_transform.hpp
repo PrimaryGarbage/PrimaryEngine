@@ -11,6 +11,7 @@ namespace prim
         float rotation{ 0.0f };
         glm::vec2 size{ 1.0f, 1.0f };
         glm::vec2 pivot{ 0.0f, 0.0f };
+        float zIndex = 0.0f;
     };
 } // namespace prim
 

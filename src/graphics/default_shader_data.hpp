@@ -112,7 +112,7 @@ uniform float u_time;
 
 void main()
 {
-	vec4 texColor = texture(u_texture, uv);
+	vec4 texColor = vec4(1.0, 1.0, 1.0, texture(u_texture, uv).r);
 	color = texColor;
 })rawstring";
 

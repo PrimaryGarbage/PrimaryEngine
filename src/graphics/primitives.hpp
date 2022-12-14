@@ -15,6 +15,7 @@ namespace prim
         static Mesh createRectangleMesh(float width, float height);
         static Mesh createSquareMesh(float size = 100.0f);
         static Mesh createSquareMesh(std::string imagePath, float size = 100.0f);
+        static Mesh createGlyphMesh();
     };
 
 

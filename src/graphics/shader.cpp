@@ -74,7 +74,7 @@ namespace prim
         if(!textDefaultShader) 
         {
             textDefaultShader = new Shader(textDefaultShaderData);
-            Globals::logger->logInfo("Loaded text default shader shader");
+            Globals::logger->logInfo("Loaded text default shader");
         }
         return textDefaultShader;
     }

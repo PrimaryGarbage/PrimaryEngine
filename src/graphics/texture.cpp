@@ -26,7 +26,16 @@ namespace prim
         channelCount = image.getChannelCount();
     }
     
-    void Texture::loadIntoGpu(unsigned char* data, int width, int height, ImageType type)
+    Texture::Texture(const unsigned char* data, unsigned int width, unsigned int height, ImageType type) 
+    {
+        unload();
+        loadIntoGpu(data, width, height, type);
+        this->width = width;
+        this->height = height;
+        channelCount = type == ImageType::png ? 4 : 3;
+    }
+    
+    void Texture::loadIntoGpu(const unsigned char* data, int width, int height, ImageType type)
     {
         GL_CALL(glGenTextures(1, &gl_id));
         GL_CALL(glBindTexture(GL_TEXTURE_2D, gl_id));
@@ -35,7 +44,7 @@ namespace prim
         GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
         GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
         GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-
+        GL_CALL(glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
         GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, static_cast<unsigned int>(type), width, height, 0, static_cast<unsigned int>(type), GL_UNSIGNED_BYTE, data));
         GL_CALL(glBindTexture(GL_TEXTURE_2D, 0));       
     }
@@ -83,6 +92,13 @@ namespace prim
 
             return it->second;
         }
+    }
+    
+    Texture* Texture::create(const unsigned char* data, unsigned int width, unsigned int height, ImageType type) 
+    {
+        Texture* texture = new Texture(data, width, height, type);
+        modifiedImageTextureCache.push_back(texture);
+        return texture;
     }
     
     void Texture::terminate() 

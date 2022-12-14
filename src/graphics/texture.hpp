@@ -25,16 +25,18 @@ private:
     int height;
     int channelCount;
 
-    void loadIntoGpu(unsigned char* data, int widht, int height, ImageType type);
+    void loadIntoGpu(const unsigned char* data, int widht, int height, ImageType type);
     void unload();
 
     Texture(const std::string path);
     Texture(const Image& image);
+    Texture(const unsigned char* data, unsigned int width, unsigned int height, ImageType type);
 public:
     ~Texture();
 
     static Texture* create(std::string resPath);
     static Texture* create(const Image& image);
+    static Texture* create(const unsigned char* data, unsigned int width, unsigned int height, ImageType type);
     static void terminate();
 
     void bind(unsigned int slot = 0) const;

@@ -160,7 +160,7 @@ namespace prim
         }
         if (ImGui::DragFloat2("Size", sizeBuffer, 0.01f))
         {
-            setScale(glm::vec2(sizeBuffer[0], sizeBuffer[1]));
+            setSize(glm::vec2(sizeBuffer[0], sizeBuffer[1]));
         }
     }
 

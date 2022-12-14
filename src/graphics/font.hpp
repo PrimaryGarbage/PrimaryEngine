@@ -4,17 +4,32 @@
 #include <string>
 #include "ft2build.h"
 #include "typedefs.hpp"
+#include "texture.hpp"
 #include FT_FREETYPE_H
-
-typedef FT_GlyphSlot Glyph;
 
 namespace prim
 {
+
+    struct Glyph
+    {
+        long width;
+        long height;
+        Texture* texture;
+
+        ~Glyph() { delete texture; }
+    };
+
     class Font
     {
     private:
+        static const unsigned int defaultSize = 50u;
+
         FT_Library ftLibrary = NULL;
         FT_Face ftFace = NULL;
+        std::unordered_map<unsigned char, Glyph> textureMap;
+
+        void generateTextures();
+        FT_GlyphSlot renderGlyph(char ch);
     public:
         Font();
         Font(std::string filename);
@@ -24,7 +39,7 @@ namespace prim
         void load(uchar* data, uint size);
         void setSize(float size);
         float getSize() const;
-        Glyph renderGlyph(char ch);
+        const Glyph* getGlyph(unsigned char ch) const;
     };
 } // namespace prim
 

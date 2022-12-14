@@ -51,6 +51,16 @@ namespace prim
 
             return scene;
         }
+
+        static inline Node* createLabelScene()
+        {
+            Node* scene = new Node("TestScene3");
+            Label* label = new Label("TestLabel");
+            label->setText("Test text");
+            scene->addChild(label);
+
+            return scene;
+        }
     };
 }
 

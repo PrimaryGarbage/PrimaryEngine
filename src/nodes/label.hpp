@@ -2,6 +2,8 @@
 #define __LABEL_HPP__
 
 #include "control.hpp"
+#include "font.hpp"
+#include "mesh.hpp"
 
 namespace prim
 {
@@ -20,6 +22,8 @@ namespace prim
         const static unsigned int textBufferSize = 1000u;
 
         std::string text;
+        Font font;
+        Mesh glyphMesh;
     public:
         using Control::Control;
         Label();

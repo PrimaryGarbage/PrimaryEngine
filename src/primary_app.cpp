@@ -124,7 +124,7 @@ namespace prim
 
 	void PrimaryApp::mainLoop()
 	{
-		Node* scene1 = sceneManager.loadScene("scenes/TestScene1.psc");
+		Node* scene1 = TestScenesCreator::createLabelScene();
 		//Node* scene1 = TestScenesCreator::createScene1();
 		setCurrentScene(scene1);
 

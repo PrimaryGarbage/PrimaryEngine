@@ -126,4 +126,38 @@ namespace prim
         mesh.compositions.front().texture = Texture::create(imagePath);
         return mesh;
     }
+    
+    Mesh Primitives::createGlyphMesh() 
+    {
+        const static float vertices[] = {
+        0.0f, 0.0f, 0.0f, 1.0f, -sinPiOver4, -sinPiOver4,
+        1.0f, 0.0f, 1.0f, 1.0f, sinPiOver4, -sinPiOver4,
+        1.0f, 1.0f, 1.0f, 0.0f, sinPiOver4, sinPiOver4,
+        0.0f, 1.0f, 0.0f, 0.0f, -sinPiOver4, sinPiOver4
+        };
+
+        const static unsigned int indices[] = {
+            0, 1, 2,
+            0, 2, 3
+        };
+
+        VertexBufferLayout layout;
+        layout.push<float>(2);
+        layout.push<float>(2);
+        layout.push<float>(2, true);
+
+        shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 24 * sizeof(float), layout);
+
+        Shader* shader = Shader::getTextDefaultShader();
+
+        shader->setUniform1i("u_texture", 0);
+
+        shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 6);
+
+        Mesh mesh(std::move(vb));
+        MeshComposition meshComposition(std::move(ib), shader);
+        mesh.addComposition(std::move(meshComposition));
+
+        return mesh;
+    }
 }

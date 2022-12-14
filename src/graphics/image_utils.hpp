@@ -6,7 +6,7 @@
 namespace prim
 {
 
-    enum class ImageType { jpeg = GL_RGB, png = GL_RGBA, unknown = 0 };
+    enum class ImageType { jpeg = GL_RGB, png = GL_RGBA, bitmap = GL_RED,unknown = 0 };
 
 }
 
