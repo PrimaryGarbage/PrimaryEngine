@@ -39,11 +39,11 @@ namespace prim
         {
             glm::mat4 modelMat(1.0f);
             const Glyph* glyph = font.getGlyph(ch);
-            modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x + offset, globalPosition.y, transform.zIndex));
+            modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x + offset, globalPosition.y + glyph->offsetY, transform.zIndex));
             modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
-            modelMat = glm::scale(modelMat, glm::vec3(globalSize.x * glyph->width, globalSize.y * glyph->height, 1.0f));
+            modelMat = glm::scale(modelMat, glm::vec3(globalSize.x * glyph->size.x, globalSize.y * glyph->size.y, 1.0f));
             //modelMat = glm::translate(modelMat, -Utils::toVec3(getPivot()));
-            offset += glyph->width + globalSize.x;
+            offset += glyph->advanceX + globalSize.x;
             renderer.setModelMat(std::move(modelMat));
             glyphMesh.compositions.front().texture = glyph->texture;
             renderer.drawMesh(glyphMesh);

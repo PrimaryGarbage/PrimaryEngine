@@ -5,6 +5,7 @@
 #include "ft2build.h"
 #include "typedefs.hpp"
 #include "texture.hpp"
+#include "glm.hpp"
 #include FT_FREETYPE_H
 
 namespace prim
@@ -12,8 +13,9 @@ namespace prim
 
     struct Glyph
     {
-        long width;
-        long height;
+        glm::vec2 size;
+        long offsetY;
+        long advanceX;
         Texture* texture;
 
         ~Glyph() { delete texture; }

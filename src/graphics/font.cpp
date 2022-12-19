@@ -38,7 +38,10 @@ namespace prim
         {
             FT_GlyphSlot glyph = renderGlyph(ch);   
             Texture* texture = Texture::create(glyph->bitmap.buffer, glyph->bitmap.width, glyph->bitmap.rows, ImageType::bitmap);
-            textureMap[ch] = { glyph->advance.x >> 6, glyph->metrics.height >> 6, glyph->metrics.,texture };
+            textureMap[ch] = Glyph{ glm::vec2(glyph->metrics.width >> 6, glyph->metrics.height >> 6), 
+                (glyph->metrics.horiBearingY - glyph->metrics.height) >> 6, 
+                glyph->advance.x >> 6, 
+                texture };
         }
     }
     
