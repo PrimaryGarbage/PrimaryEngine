@@ -13,7 +13,7 @@ namespace prim
     {
         FT_CHECK_ERROR(FT_Init_FreeType(&ftLibrary));
         FT_CHECK_ERROR(FT_New_Memory_Face(ftLibrary, defaultFontData, defaultFontDataLength, 0, &ftFace));
-        setSize(defaultSize);
+        setEmSize(defaultEmSize);
         generateTextures();
         Globals::logger->logInfo("Loaded default font");
     }
@@ -21,26 +21,28 @@ namespace prim
     Font::Font(std::string filePath) 
     {
         FT_CHECK_ERROR(FT_Init_FreeType(&ftLibrary));
+        setEmSize(defaultEmSize);
         load(std::move(filePath));
     }
     
     Font::~Font() 
     {
-        FT_CHECK_ERROR(FT_Done_Face(ftFace));
-        FT_CHECK_ERROR(FT_Done_FreeType(ftLibrary));
+        FT_Done_Face(ftFace);
+        FT_Done_FreeType(ftLibrary);
     }
 
     void Font::generateTextures() 
     {
         textureMap.clear();
+        float emSizeFloat = static_cast<float>(getEmSize());
 
-        for(unsigned char ch = 0; ch < 128; ++ch)
+        for(unsigned char ch = 32; ch < 126; ++ch)
         {
             FT_GlyphSlot glyph = renderGlyph(ch);   
             Texture* texture = Texture::create(glyph->bitmap.buffer, glyph->bitmap.width, glyph->bitmap.rows, ImageType::bitmap);
-            textureMap[ch] = Glyph{ glm::vec2(glyph->metrics.width >> 6, glyph->metrics.height >> 6), 
-                (glyph->metrics.horiBearingY - glyph->metrics.height) >> 6, 
-                glyph->advance.x >> 6, 
+            textureMap[ch] = Glyph{ glm::vec2(glyph->metrics.width, glyph->metrics.height) / emSizeFloat, 
+                glm::vec2(glyph->metrics.horiBearingX, glyph->metrics.horiBearingY - glyph->metrics.height) / emSizeFloat, 
+                glyph->advance.x / emSizeFloat, 
                 texture };
         }
     }
@@ -57,12 +59,13 @@ namespace prim
         generateTextures();
     }
     
-    void Font::setSize(float size) 
+    void Font::setEmSize(int size) 
     {
-        FT_CHECK_ERROR(FT_Set_Pixel_Sizes(ftFace, size, size));
+        FT_CHECK_ERROR(FT_Set_Char_Size(ftFace, 0, size, 0, 0));
+        generateTextures();
     }
     
-    float Font::getSize() const
+    int Font::getEmSize() const
     {
         return ftFace->size->metrics.height;
     }

@@ -32,18 +32,18 @@ namespace prim
         glm::vec2 globalSize = getSize();
         float offset = 0.0f;
 
-        // delete later
-        const static float size = 15.0f;
-
         for(const char& ch : text)
         {
             glm::mat4 modelMat(1.0f);
             const Glyph* glyph = font.getGlyph(ch);
-            modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x + offset, globalPosition.y + glyph->offsetY, transform.zIndex));
+            const glm::vec3 pivotTranslation = glm::vec3(offset, 0.0f, 0.0f);
+            const glm::vec2 glyphOffset = glyph->offset * globalSize;
+            modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x + offset + glyphOffset.x, globalPosition.y + glyphOffset.y, transform.zIndex));
+            modelMat = glm::translate(modelMat, -pivotTranslation);
             modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
+            modelMat = glm::translate(modelMat, pivotTranslation);
             modelMat = glm::scale(modelMat, glm::vec3(globalSize.x * glyph->size.x, globalSize.y * glyph->size.y, 1.0f));
-            //modelMat = glm::translate(modelMat, -Utils::toVec3(getPivot()));
-            offset += glyph->advanceX + globalSize.x;
+            offset += globalSize.x * glyph->advanceX;
             renderer.setModelMat(std::move(modelMat));
             glyphMesh.compositions.front().texture = glyph->texture;
             renderer.drawMesh(glyphMesh);

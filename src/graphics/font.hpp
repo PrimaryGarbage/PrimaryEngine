@@ -11,20 +11,19 @@
 namespace prim
 {
 
+    // all numeric values here are relative (0.0 <= x <= 1.0)
     struct Glyph
     {
         glm::vec2 size;
-        long offsetY;
-        long advanceX;
+        glm::vec2 offset;
+        float advanceX;
         Texture* texture;
-
-        ~Glyph() { delete texture; }
     };
 
     class Font
     {
     private:
-        static const unsigned int defaultSize = 50u;
+        static const unsigned int defaultEmSize = 3000u;
 
         FT_Library ftLibrary = NULL;
         FT_Face ftFace = NULL;
@@ -39,8 +38,8 @@ namespace prim
 
         void load(std::string filename);
         void load(uchar* data, uint size);
-        void setSize(float size);
-        float getSize() const;
+        void setEmSize(int size);
+        int getEmSize() const;
         const Glyph* getGlyph(unsigned char ch) const;
     };
 } // namespace prim
