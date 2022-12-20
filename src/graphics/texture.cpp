@@ -2,6 +2,7 @@
 #include "renderer.hpp"
 #include "image.hpp"
 #include "globals.hpp"
+#include "default_texture_data.hpp"
 
 
 namespace prim
@@ -99,6 +100,13 @@ namespace prim
         Texture* texture = new Texture(data, width, height, type);
         modifiedImageTextureCache.push_back(texture);
         return texture;
+    }
+    
+    Texture* Texture::getDefaultTexture() 
+    {
+        if(!defaultTexture)
+            defaultTexture = Texture::create(defaultTextureData, defaultTextureDataWidth, defaultTextureDataHeight, ImageType::png);
+        return defaultTexture;
     }
     
     void Texture::terminate() 

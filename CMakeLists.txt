@@ -58,7 +58,7 @@ set(GRAPHICS_SRC
 	primitives.hpp primitives.cpp
 	image.hpp image.cpp image_utils.hpp
 	font.hpp font.cpp
-	default_font_data.hpp default_shader_data.hpp
+	default_font_data.hpp default_shader_data.hpp default_texture_data.hpp
 )
 
 set(IMGUI_SRC

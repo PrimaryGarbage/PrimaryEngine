@@ -21,6 +21,7 @@ namespace prim
         inline static Shader* textDefaultShader = nullptr;
 
         unsigned int gl_id;
+        mutable std::unordered_map<std::string, int> uniformLocationCache;
 
         int getUniformLocation(const std::string name) const;
         unsigned int compileShader(unsigned int type, const std::string source);

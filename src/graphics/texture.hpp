@@ -19,6 +19,7 @@ private:
     inline static unsigned int boundTextureSlot = maxTextureSlots + 1;
     inline static std::unordered_map<std::string, Texture*> textureCache;
     inline static std::vector<Texture*> modifiedImageTextureCache;
+    inline static Texture* defaultTexture = nullptr;
 
     unsigned int gl_id = 0u;
     int width;
@@ -37,6 +38,7 @@ public:
     static Texture* create(std::string resPath);
     static Texture* create(const Image& image);
     static Texture* create(const unsigned char* data, unsigned int width, unsigned int height, ImageType type);
+    static Texture* getDefaultTexture();
     static void terminate();
 
     void bind(unsigned int slot = 0) const;

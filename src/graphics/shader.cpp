@@ -110,8 +110,6 @@ namespace prim
 
     int Shader::getUniformLocation(const std::string name) const
     {
-        static std::unordered_map<std::string, int> uniformLocationCache;
-
         auto it = uniformLocationCache.find(name);
         if (it != uniformLocationCache.end())
             return it->second;

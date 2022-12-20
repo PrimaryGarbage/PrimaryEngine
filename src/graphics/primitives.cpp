@@ -47,7 +47,7 @@ namespace prim
         shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 36);
 
         Mesh mesh(std::move(vb));
-        MeshComposition meshComposition(std::move(ib), shader);
+        MeshComposition meshComposition(std::move(ib), shader, Texture::getDefaultTexture());
         mesh.addComposition(std::move(meshComposition));
 
         return mesh;
@@ -80,7 +80,7 @@ namespace prim
         shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 6);
 
         Mesh mesh(std::move(vb));
-        MeshComposition meshComposition(std::move(ib), shader);
+        MeshComposition meshComposition(std::move(ib), shader, Texture::getDefaultTexture());
         mesh.addComposition(std::move(meshComposition));
 
         return mesh;
@@ -114,7 +114,7 @@ namespace prim
         shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 6);
 
         Mesh mesh(std::move(vb));
-        MeshComposition meshComposition(std::move(ib), shader);
+        MeshComposition meshComposition(std::move(ib), shader, Texture::getDefaultTexture());
         mesh.addComposition(std::move(meshComposition));
 
         return mesh;

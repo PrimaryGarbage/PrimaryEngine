@@ -162,6 +162,7 @@ namespace prim
         {
             setSize(glm::vec2(sizeBuffer[0], sizeBuffer[1]));
         }
+        ImGui::DragFloat("zIndex", &transform.zIndex, 0.01f);
     }
 
     
