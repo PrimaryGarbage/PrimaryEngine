@@ -106,14 +106,14 @@ layout(location = 0)out vec4 color;
 
 in vec2 uv;
 
-uniform vec4 u_color;
+uniform vec4 u_color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform sampler2D u_texture;
 uniform float u_time;
 
 void main()
 {
 	vec4 texColor = vec4(1.0, 1.0, 1.0, texture(u_texture, uv).r);
-	color = texColor;
+	color = texColor * u_color;
 })rawstring";
 
 #endif // __DEFAULT_SHADER_DATA_HPP__

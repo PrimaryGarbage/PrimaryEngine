@@ -13,7 +13,7 @@ namespace prim
     Label::Label(std::string name): Control(name), glyphMesh(Primitives::createGlyphMesh())
     {
     }
-
+    
     void Label::start() 
     {
         startChildren();
@@ -32,6 +32,8 @@ namespace prim
         glm::vec2 globalSize = getSize();
         float offset = 0.0f;
 
+        glyphMesh.compositions.front().shader->setUniform4f("u_color", textColor.r, textColor.g, textColor.b, textColor.a);
+
         for(const char& ch : text)
         {
             glm::mat4 modelMat(1.0f);
@@ -49,7 +51,7 @@ namespace prim
             renderer.drawMesh(glyphMesh);
         }
     }
-    
+
     std::string Label::serialize(bool withChildren) const 
     {
         std::stringstream ss;
@@ -57,6 +59,8 @@ namespace prim
         ss << Control::serialize(false);
 
         ss << Utils::createKeyValuePair(StateFields::text, text) << std::endl;
+
+        ss << Utils::createKeyValuePair(StateFields::textColor, Utils::serializeVec4(textColor));
 
         if(withChildren) ss << serializeChildren();
 
@@ -68,6 +72,7 @@ namespace prim
         Control::deserialize(fieldValues);   
 
         text = fieldValues[StateFields::text];
+        textColor = Utils::deserializeVec4(fieldValues[StateFields::textColor]);
     }
     
     void Label::renderFields() 
@@ -75,11 +80,16 @@ namespace prim
         Control::renderFields();
         
         static char textBuf[textBufferSize];
+        std::copy(text.begin(), text.end(), textBuf);
+
         if(ImGui::InputTextMultiline("Text", textBuf, textBufferSize))
         {
             setText(textBuf);
         }
+        if(ImGui::ColorEdit4("Text Color", &textColor.x))
+        {
+            setTextColor(textColor);
+        }
     }
-
     
 } // namespace prim

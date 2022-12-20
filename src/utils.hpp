@@ -150,10 +150,32 @@ namespace prim
             return std::to_string(vec.x) + vecSeparator + std::to_string(vec.y);
         }
 
+        inline static std::string serializeVec3(const glm::vec3& vec)
+        {
+            return std::to_string(vec.x) + vecSeparator + std::to_string(vec.y) + vecSeparator + std::to_string(vec.z);
+        }
+
+        inline static std::string serializeVec4(const glm::vec4& vec)
+        {
+            return std::to_string(vec.x) + vecSeparator + std::to_string(vec.y) + vecSeparator + std::to_string(vec.z) + vecSeparator + std::to_string(vec.a);
+        }
+
         inline static glm::vec2 deserializeVec2(const std::string& line)
         {
             std::vector<std::string> values = Utils::splitString(line, vecSeparator);
             return glm::vec2(std::stof(values[0]), std::stof(values[1]));
+        }
+
+        inline static glm::vec3 deserializeVec3(const std::string& line)
+        {
+            std::vector<std::string> values = Utils::splitString(line, vecSeparator);
+            return glm::vec3(std::stof(values[0]), std::stof(values[1]), std::stof(values[2]));
+        }
+
+        inline static glm::vec4 deserializeVec4(const std::string& line)
+        {
+            std::vector<std::string> values = Utils::splitString(line, vecSeparator);
+            return glm::vec4(std::stof(values[0]), std::stof(values[1]), std::stof(values[2]), std::stof(values[3]));
         }
 
         inline static std::string toLower(const std::string& str)
