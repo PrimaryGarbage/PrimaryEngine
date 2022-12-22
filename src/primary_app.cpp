@@ -124,8 +124,8 @@ namespace prim
 
 	void PrimaryApp::mainLoop()
 	{
-		Node* scene1 = TestScenesCreator::createLabelScene();
-		//Node* scene1 = TestScenesCreator::createScene1();
+		//Node* scene1 = TestScenesCreator::createLabelScene();
+		Node* scene1 = TestScenesCreator::createScene1();
 		setCurrentScene(scene1);
 
 		float speed = 10.0f;

@@ -31,12 +31,14 @@ private:
 
     Texture(const std::string path);
     Texture(const Image& image);
+    Texture(const unsigned char* imageData, unsigned int length, ImageType type);
     Texture(const unsigned char* data, unsigned int width, unsigned int height, ImageType type);
 public:
     ~Texture();
 
     static Texture* create(std::string resPath);
     static Texture* create(const Image& image);
+    static Texture* create(const unsigned char* imageData, unsigned int length, ImageType type);
     static Texture* create(const unsigned char* data, unsigned int width, unsigned int height, ImageType type);
     static Texture* getDefaultTexture();
     static void terminate();

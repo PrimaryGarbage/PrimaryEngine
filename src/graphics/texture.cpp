@@ -27,13 +27,21 @@ namespace prim
         channelCount = image.getChannelCount();
     }
     
+    Texture::Texture(const unsigned char* imageData, unsigned int length, ImageType type)
+    {
+        unload();
+        Image image(imageData, length, type);
+        loadIntoGpu(image.getData(), image.getWidth(), image.getHeight(), image.getType());
+        width = image.getWidth();
+        height = image.getHeight();
+        channelCount = image.getChannelCount();
+    }
+    
     Texture::Texture(const unsigned char* data, unsigned int width, unsigned int height, ImageType type) 
+        : width(width), height(height), channelCount(Image::getChannelCountOfType(type))
     {
         unload();
         loadIntoGpu(data, width, height, type);
-        this->width = width;
-        this->height = height;
-        channelCount = type == ImageType::png ? 4 : 3;
     }
     
     void Texture::loadIntoGpu(const unsigned char* data, int width, int height, ImageType type)
@@ -95,6 +103,13 @@ namespace prim
         }
     }
     
+    Texture* Texture::create(const unsigned char* imageData, unsigned int length, ImageType type) 
+    {
+        Texture* texture = new Texture(imageData, length, type);
+        modifiedImageTextureCache.push_back(texture);
+        return texture;
+    }
+    
     Texture* Texture::create(const unsigned char* data, unsigned int width, unsigned int height, ImageType type) 
     {
         Texture* texture = new Texture(data, width, height, type);
@@ -105,7 +120,10 @@ namespace prim
     Texture* Texture::getDefaultTexture() 
     {
         if(!defaultTexture)
-            defaultTexture = Texture::create(defaultTextureData, defaultTextureDataWidth, defaultTextureDataHeight, ImageType::png);
+        {
+            defaultTexture = Texture::create(defaultTextureData, defaultTextureDataLength, ImageType::jpeg);
+            Globals::logger->logInfo("Default texture loaded.");
+        }
         return defaultTexture;
     }
     

@@ -13,11 +13,11 @@ namespace prim
         static inline Node* createScene1()
         {
             Node* scene = new Node("TestScene1");
-            Sprite* background = new Sprite("TestBackground", "./res/textures/abstract_stairs.png");
+            Sprite* background = new Sprite("TestBackground", "textures/abstract_stairs.png");
             background->setSize(1920.0f, 1080.0f);
-            Sprite* sprite1 = new Sprite("TestSprite1", "./res/textures/TestTexture.png");
+            Sprite* sprite1 = new Sprite("TestSprite1", "textures/TestTexture.png");
             sprite1->setCenterPivot();
-            Sprite* sprite2 = new Sprite("TestSprite2", "./res/textures/TestTexture.png");
+            Sprite* sprite2 = new Sprite("TestSprite2", "textures/TestTexture.png");
             sprite2->setCenterPivot();
             sprite2->move(200.0f, 200.0f);
             ActorCamera2D* actorCamera = new ActorCamera2D("TestActorCamera", sprite1->getNodePath());
@@ -34,11 +34,11 @@ namespace prim
         static inline Node* createScene2()
         {
             Node* scene = new Node("TestScene2");
-            Sprite* background = new Sprite("TestBackground", "./res/textures/abstract_stairs.png");
+            Sprite* background = new Sprite("TestBackground", "textures/abstract_stairs.png");
             background->setSize(1920.0f, 1080.0f);
-            Sprite* sprite1 = new Sprite("TestSprite1", "./res/textures/TestTexture.png");
+            Sprite* sprite1 = new Sprite("TestSprite1", "textures/TestTexture.png");
             sprite1->setCenterPivot();
-            Sprite* sprite2 = new Sprite("TestSprite2", "./res/textures/TestTexture.png");
+            Sprite* sprite2 = new Sprite("TestSprite2", "textures/TestTexture.png");
             sprite2->setCenterPivot();
             sprite2->move(200.0f, 200.0f);
             ActorCamera2D* actorCamera = new ActorCamera2D("TestActorCamera", sprite1->getNodePath());

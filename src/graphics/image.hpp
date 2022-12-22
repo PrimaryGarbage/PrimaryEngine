@@ -19,12 +19,12 @@ namespace prim
         ImageType type;
         bool modified = false;  // set this variable after any image modification (e.g. setPixel())
 
-        static int getChannelCountOfType(ImageType type);
         static ImageType parseType(std::string path);
 
     public:
         Image() = default;
         Image(std::string filePath);
+        Image(const unsigned char* data, unsigned int dataLength, ImageType type);
         Image(const Image& other);
         Image(Image&& other);
         Image& operator=(const Image& other);
@@ -32,6 +32,7 @@ namespace prim
         ~Image();
 
         void load(std::string resPath);
+        void load(const unsigned char* data, unsigned int dataLength, ImageType type);
         void unload();
 
         inline unsigned char* getData() const { return data; }
@@ -43,6 +44,8 @@ namespace prim
         inline ImageType getType() const { return type; }
         inline bool empty() const { return !data; }
         inline bool wasModified() const { return modified; }
+
+        static int getChannelCountOfType(ImageType type);
     };
 
 }
