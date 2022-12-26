@@ -60,7 +60,7 @@ namespace prim
 
         ss << Utils::createKeyValuePair(StateFields::text, text) << std::endl;
 
-        ss << Utils::createKeyValuePair(StateFields::textColor, Utils::serializeVec4(textColor));
+        ss << Utils::createKeyValuePair(StateFields::textColor, Utils::serializeVec4(textColor)) << std::endl;
 
         if(withChildren) ss << serializeChildren();
 
