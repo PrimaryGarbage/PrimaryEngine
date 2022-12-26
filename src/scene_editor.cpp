@@ -7,6 +7,8 @@
 #include "drawable.hpp"
 #include "node_utils.hpp"
 #include "resource_manager.hpp"
+#include "primitives.hpp"
+#include "gtc/matrix_transform.hpp"
 
 namespace prim
 {
@@ -144,6 +146,28 @@ namespace prim
         if (node) renderer->drawSelectedNodeFraming(node);
     }
 
+    void SceneEditor::drawSelectedNodePositionPoint()
+    {
+        static constexpr glm::vec4 color { 1.0f, 0.0f, 1.0f, 1.0f };
+        static Mesh positionPointMesh = createPositionPointMesh();
+        static Shader* shader = positionPointMesh.compositions.front().shader;
+        static const glm::vec2 halfSizeVec = glm::vec2(positionPointSize) / 2.0f;
+        static constexpr float rotationSpeed = 0.05f;
+        static float rotation = 0.0f;
+
+        if (!selectedNode) return;
+        shader->setUniform4f("u_color", color);
+        shader->setUniform1f("u_time", Globals::app->getElapsedTime());
+        glm::mat4 modelMat(1.0f);
+        modelMat = glm::translate(modelMat, Utils::toVec3(selectedNode->getGlobalPosition(), 1.0f));
+        rotation += rotationSpeed;
+        if(rotation > Utils::twoPi) rotation -= Utils::twoPi;
+        modelMat = glm::rotate(modelMat, rotation, glm::vec3(0.0f, 0.0f, 1.0f));
+        modelMat = glm::translate(modelMat, Utils::toVec3(-halfSizeVec));
+        renderer->setModelMat(modelMat);
+        renderer->drawMesh(positionPointMesh);
+    }
+
     void SceneEditor::drawLoadSceneButton()
     {
         if (ImGui::Button("Load Scene"))
@@ -228,7 +252,7 @@ namespace prim
 
     void SceneEditor::drawNodeTreeContextMenu(Node* node, bool hovered, bool cloningAllowed)
     {
-        if(hovered && Input::isJustReleased(MouseButton::right))
+        if (hovered && Input::isJustReleased(MouseButton::right))
             ImGui::OpenPopup("Context Menu: " + node->getId());
 
         if (ImGui::BeginPopup("Context Menu: " + node->getId()))
@@ -263,7 +287,7 @@ namespace prim
         ImGui::InputText("Name", nodeNameBuf, INPUT_STRING_MAX_LENGTH, ImGuiInputTextFlags_AutoSelectAll);
         for (const auto& type : nodeTypes)
         {
-            if(ImGui::Selectable(type.c_str(), selectedNodeType == type))
+            if (ImGui::Selectable(type.c_str(), selectedNodeType == type))
                 selectedNodeType = type;
         }
         if (ImGui::Button("Create") && !selectedNodeType.empty())
@@ -276,6 +300,13 @@ namespace prim
         }
         ImGui::End();
 
+    }
+    
+    Mesh SceneEditor::createPositionPointMesh() 
+    {
+        Mesh mesh = Primitives::createSquareMesh(positionPointSize);
+        mesh.compositions.front().shader = Shader::getDefaultShader(DefaultShader::plainColor);
+        return mesh;
     }
 
     SceneEditor::~SceneEditor()
@@ -313,6 +344,7 @@ namespace prim
         /////////////////////////////
 
         drawSelectedNodeFraming();
+        drawSelectedNodePositionPoint();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -49,34 +49,51 @@ namespace prim
         return it->second;
     }
     
-    Shader* Shader::getDefaultShader() 
+    Shader* Shader::getDefaultShader(DefaultShader shaderType) 
     {
-        if(!defaultShader) 
+        switch(shaderType)
         {
-            defaultShader = new Shader(defaultShaderData);
-            Globals::logger->logInfo("Loaded default shader");
+            case DefaultShader::simple:
+            {
+                if(!defaultShader) 
+                {
+                    defaultShader = new Shader(defaultShaderData);
+                    Globals::logger->logInfo("Loaded default shader");
+                }
+                return defaultShader;
+            }
+            case DefaultShader::select:
+            {
+                if(!selectShader) 
+                {
+                    selectShader = new Shader(selectShaderData);
+                    Globals::logger->logInfo("Loaded select shader");
+                }
+                return selectShader;
+            }
+            case DefaultShader::text:
+            {
+                if(!textDefaultShader) 
+                {
+                    textDefaultShader = new Shader(textDefaultShaderData);
+                    Globals::logger->logInfo("Loaded text default shader");
+                }
+                return textDefaultShader;
+            }
+            case DefaultShader::plainColor:
+            {
+                if(!defaultPlainColorShader)
+                {
+                    defaultPlainColorShader = new Shader(defaultPlainColorShaderData);
+                    Globals::logger->logInfo("Loaded default plain color shader");
+                }
+                return defaultPlainColorShader;
+            }
+            default:
+            {
+                throw PRIM_EXCEPTION("Trying to get unknown type of default shader");
+            }
         }
-        return defaultShader;
-    }
-    
-    Shader* Shader::getSelectShader() 
-    {
-        if(!selectShader) 
-        {
-            selectShader = new Shader(selectShaderData);
-            Globals::logger->logInfo("Loaded select shader");
-        }
-        return selectShader;
-    }
-    
-    Shader* Shader::getTextDefaultShader() 
-    {
-        if(!textDefaultShader) 
-        {
-            textDefaultShader = new Shader(textDefaultShaderData);
-            Globals::logger->logInfo("Loaded text default shader");
-        }
-        return textDefaultShader;
     }
     
     void Shader::terminate() 
@@ -91,6 +108,8 @@ namespace prim
         delete defaultShader;
         delete selectShader;
         delete textDefaultShader;
+        delete defaultPlainColorShaderData;
+        Globals::logger->logInfo("Default shaders terminated.");
     }
 
     void Shader::bind() const
@@ -133,6 +152,11 @@ namespace prim
     {
         bind();
         GL_CALL(glUniform4f(getUniformLocation(name), v0, v1, v2, v3));
+    }
+    
+    void Shader::setUniform4f(const std::string name, glm::vec4 vec) const
+    {
+        setUniform4f(name, vec.x, vec.y, vec.z, vec.a);
     }
 
     void Shader::setUniform1f(const std::string name, float value) const

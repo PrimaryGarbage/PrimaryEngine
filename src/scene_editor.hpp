@@ -23,9 +23,10 @@ namespace prim
     class SceneEditor
     {
     private:
-        const float rightPanelWidth = 200.0f;
-        const ImVec2 fileExplorerMinSize = { 640.0f, 480.0f };
-        const ImVec2 popupMinSize = { 250.0f, 170.0f };
+        inline const static float rightPanelWidth = 200.0f;
+        inline const static ImVec2 fileExplorerMinSize = { 640.0f, 480.0f };
+        inline const static ImVec2 popupMinSize = { 250.0f, 170.0f };
+        inline const static float positionPointSize = 10.0f;
 
         Renderer* renderer;
         ImGuiIO* io;
@@ -39,10 +40,12 @@ namespace prim
         void drawLeftPanel();
         void drawNodeInTree(Node* node);
         void drawSelectedNodeFraming();
+        void drawSelectedNodePositionPoint();
         void drawLoadSceneButton();
         void drawSaveSceneButton();
         void drawNodeTreeContextMenu(Node* node, bool hovered, bool cloningAllowed = true);
         void drawCreateNodeMenu();
+        Mesh createPositionPointMesh();
 
     public:
         static inline const char* dragNodePayloadType = "NODE";

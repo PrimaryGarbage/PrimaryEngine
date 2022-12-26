@@ -15,7 +15,7 @@
 namespace prim
 {
 
-	PrimaryApp::PrimaryApp() : deltaTime(0.0f), timeSinceStart(0.0f)
+	PrimaryApp::PrimaryApp() : deltaTime(0.0f), elapsedTime(0.0f)
 	{
 	}
 
@@ -116,6 +116,16 @@ namespace prim
 		}
 		return currentNode;
 	}
+	
+	float PrimaryApp::getDeltaTime() const
+	{
+		return deltaTime;
+	}
+	
+	float PrimaryApp::getElapsedTime() const
+	{
+		return elapsedTime;
+	}
 
 	void PrimaryApp::deferFunctionExecution(deferred_func_type function, short order)
 	{
@@ -134,7 +144,7 @@ namespace prim
 		while (!renderer.windowShouldClose())
 		{
 			deltaTime = timer.peekSinceLastPeek() * 0.001f;
-			timeSinceStart = timer.peek() * 0.001f;
+			elapsedTime = timer.peek() * 0.001f;
 
 			renderer.clear();
 

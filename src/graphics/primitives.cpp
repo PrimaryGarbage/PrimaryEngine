@@ -7,7 +7,7 @@ namespace prim
 
     Mesh Primitives::createCubeMesh(float size)
     {
-        const static float vertices[] = {
+        const float vertices[] = {
         0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
         size, 0.0f, 0.0f, 1.0f, 0.0f,
         size, size, 0.0f, 1.0f, 1.0f,
@@ -18,7 +18,7 @@ namespace prim
         0.0f, size, size, 0.0f, 1.0f
         };
 
-        const static unsigned int indices[] = {
+        const unsigned int indices[] = {
             0, 1, 2,
             0, 2, 3,
             4, 0, 3,
@@ -55,14 +55,14 @@ namespace prim
 
     Mesh Primitives::createRectangleMesh(float width, float height)
     {
-        const static float vertices[] = {
+        const float vertices[] = {
         0.0f, 0.0f, 0.0f, 0.0f,
         width, 0.0f, 1.0f, 0.0f,
         width, height, 1.0f, 1.0f,
         0.0f, height, 0.0f, 1.0f
         };
 
-        const static unsigned int indices[] = {
+        const unsigned int indices[] = {
             0, 1, 2,
             0, 2, 3
         };
@@ -88,14 +88,14 @@ namespace prim
 
     Mesh Primitives::createSquareMesh(float size)
     {
-        const static float vertices[] = {
+        const float vertices[] = {
         0.0f, 0.0f, 0.0f, 0.0f, -sinPiOver4, -sinPiOver4,
         size, 0.0f, 1.0f, 0.0f, sinPiOver4, -sinPiOver4,
         size, size, 1.0f, 1.0f, sinPiOver4, sinPiOver4,
         0.0f, size, 0.0f, 1.0f, -sinPiOver4, sinPiOver4
         };
 
-        const static unsigned int indices[] = {
+        const unsigned int indices[] = {
             0, 1, 2,
             0, 2, 3
         };
@@ -129,14 +129,14 @@ namespace prim
     
     Mesh Primitives::createGlyphMesh() 
     {
-        const static float vertices[] = {
+        const float vertices[] = {
         0.0f, 0.0f, 0.0f, 1.0f, -sinPiOver4, -sinPiOver4,
         1.0f, 0.0f, 1.0f, 1.0f, sinPiOver4, -sinPiOver4,
         1.0f, 1.0f, 1.0f, 0.0f, sinPiOver4, sinPiOver4,
         0.0f, 1.0f, 0.0f, 0.0f, -sinPiOver4, sinPiOver4
         };
 
-        const static unsigned int indices[] = {
+        const unsigned int indices[] = {
             0, 1, 2,
             0, 2, 3
         };
@@ -148,7 +148,7 @@ namespace prim
 
         shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 24 * sizeof(float), layout);
 
-        Shader* shader = Shader::getTextDefaultShader();
+        Shader* shader = Shader::getDefaultShader(DefaultShader::text);
 
         shader->setUniform1i("u_texture", 0);
 

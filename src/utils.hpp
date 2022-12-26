@@ -21,15 +21,13 @@ namespace prim
 
     class Utils
     {
-    private:
+    public:
         constexpr static inline float radiansInDegree = glm::pi<float>() / 180.0f;
         constexpr static inline float degreesInRadian = 180.0f * glm::one_over_pi<float>();
         constexpr static inline float pi = glm::pi<float>();
         constexpr static inline float twoPi = glm::two_pi<float>();
         constexpr static inline char keyValueSeparator = '=';
         constexpr static inline char vecSeparator = ',';
-
-    public:
 
         class Color
         {

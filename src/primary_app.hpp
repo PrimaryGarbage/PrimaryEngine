@@ -20,7 +20,7 @@ private:
 	const uint32_t windowHeight = 800;
 	const char* windowName = "PrimaryEngine";
 	float deltaTime;
-	float timeSinceStart;
+	float elapsedTime;
 	Logger logger;
 	Timer timer;
 	Renderer renderer;
@@ -50,6 +50,8 @@ public:
 	Node* loadScene(std::string resPath);
 	Node* getCurrentScene() const;
 	Node* getNode(NodePath nodePath);
+	float getDeltaTime() const;
+	float getElapsedTime() const;
 
 	void deferFunctionExecution(deferred_func_type function, short order = 1);
 };
