@@ -209,35 +209,11 @@ namespace prim
     {
         Node::renderFields();
 
-        static float posBuffer[2];
-        static float rotBuffer;
-        static float sizeBuffer[2];
-        static float pivotBuffer[2];
-        static float anchorBuffer[2];
-
-        posBuffer[0] = transform.position.x;
-        posBuffer[1] = transform.position.y;
-
-        rotBuffer = transform.rotation;
-
-        sizeBuffer[0] = transform.size.x;
-        sizeBuffer[1] = transform.size.y;
-
-
-        if (ImGui::DragFloat2("Position", posBuffer))
-        {
-            setPosition(glm::vec2(posBuffer[0], posBuffer[1]));
-        }
-        if (ImGui::DragFloat("Rotation", &rotBuffer, 0.01f))
-        {
-            setRotation(rotBuffer);
-        }
-        if (ImGui::DragFloat2("Size", sizeBuffer, 0.01f))
-        {
-            setSize(glm::vec2(sizeBuffer[0], sizeBuffer[1]));
-        }
+        ImGui::DragFloat2("Position", &transform.position.x);
+        ImGui::DragFloat("Rotation", &transform.rotation, 0.01f);
+        ImGui::DragFloat2("Size", &transform.size.x, 0.01f);
         ImGui::DragFloat("zIndex", &transform.zIndex, 0.01f);
-        ImGui::DragFloat2("Pivot", &transform.pivot.x, 0.01f);
+        //ImGui::DragFloat2("Pivot", &transform.pivot.x, 0.01f);
         ImGui::DragFloat2("Anchor", &transform.anchor.x, 0.01f);
     }
 
