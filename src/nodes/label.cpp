@@ -38,7 +38,7 @@ namespace prim
         {
             glm::mat4 modelMat(1.0f);
             const Glyph* glyph = font.getGlyph(ch);
-            const glm::vec3 pivotTranslation = glm::vec3(offset, 0.0f, 0.0f);
+            const glm::vec3 pivotTranslation = glm::vec3(offset, 0.0f, transform.zIndex);
             const glm::vec2 glyphOffset = glyph->offset * globalSize;
             modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x + offset + glyphOffset.x, globalPosition.y + glyphOffset.y, transform.zIndex));
             modelMat = glm::translate(modelMat, -pivotTranslation);
