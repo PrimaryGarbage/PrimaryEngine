@@ -113,7 +113,7 @@ namespace prim
         ss << Utils::createKeyValuePair(StateFields::width, std::to_string(width)) << std::endl;
         ss << Utils::createKeyValuePair(StateFields::height, std::to_string(height)) << std::endl;
         ss << Utils::createKeyValuePair(StateFields::zIndex, std::to_string(zIndex)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::imagePath, image->getFilePath()) << std::endl;
+        ss << Utils::createKeyValuePair(StateFields::imagePath, image->getResPath()) << std::endl;
         
         if(withChildren) ss << serializeChildren();
         
@@ -160,7 +160,7 @@ namespace prim
             setHeight(heightBuffer);
         }
         ImGui::DragFloat("Z-Index", &zIndex, 0.01f);
-        ImGui::LabelText("Image", image->getFilePath().c_str());
+        ImGui::LabelText("Image", image->getResPath().c_str());
         ImGui::SameLine();
 
         if (ImGui::Button("...")) // change image button
@@ -194,7 +194,7 @@ namespace prim
     {
         Node2D::unbind();
 
-        std::string oldImagePath = image->empty() ? "" : image->getFilePath();
+        std::string oldImagePath = image->empty() ? "" : image->getResPath();
         image = std::make_shared<Image>();
         planeMesh = Primitives::createSquareMesh(defaultSize);
 

@@ -11,7 +11,7 @@ namespace prim
     {
     private:
         unsigned char* data = nullptr;
-        std::string filePath;
+        std::string resPath;
         int width;
         int height;
         int channelCount;
@@ -23,7 +23,7 @@ namespace prim
 
     public:
         Image() = default;
-        Image(std::string filePath);
+        Image(std::string resPath);
         Image(const unsigned char* data, unsigned int dataLength, ImageType type);
         Image(const Image& other);
         Image(Image&& other);
@@ -40,7 +40,7 @@ namespace prim
         inline int getHeight() const { return height; }
         inline int getChannelCount() const { return channelCount; }
         inline unsigned int getSize() const { return size; }
-        inline std::string getFilePath() const { return filePath; }
+        inline std::string getResPath() const { return resPath; }
         inline ImageType getType() const { return type; }
         inline bool empty() const { return !data; }
         inline bool wasModified() const { return modified; }

@@ -89,10 +89,10 @@ namespace prim
         }
         else
         {
-            auto it = textureCache.find(image.getFilePath());    
+            auto it = textureCache.find(image.getResPath());    
             if(it == textureCache.end())
             {
-                std::string imageFilePath = image.getFilePath();
+                std::string imageFilePath = image.getResPath();
                 Texture* texture = new Texture(imageFilePath);
                 Globals::logger->logInfo("Texture loaded. Path: " + imageFilePath);
                 textureCache[imageFilePath] = texture;
