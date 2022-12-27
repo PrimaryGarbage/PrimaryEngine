@@ -38,7 +38,7 @@ namespace prim
 
         virtual std::string serialize(bool withChildren = true) const override;
         virtual void deserialize(FieldValues& fieldValues) override;
-        virtual void renderFields() override;
+        virtual void renderFields(SceneEditor* sceneEditor) override;
     };
 
 }

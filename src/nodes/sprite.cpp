@@ -134,9 +134,9 @@ namespace prim
         setZIndex(std::stof(fieldValues[StateFields::zIndex]));
     }
 
-    void Sprite::renderFields()
+    void Sprite::renderFields(SceneEditor* sceneEditor)
     {
-        Node2D::renderFields();
+        Node2D::renderFields(sceneEditor);
 
         static float pivotBuffer[2];
         static float widthBuffer;

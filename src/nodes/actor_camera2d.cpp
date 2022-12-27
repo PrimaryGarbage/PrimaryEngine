@@ -104,9 +104,9 @@ namespace prim
         targetPath = fieldValues[StateFields::targetPath];
     }
 
-    void ActorCamera2D::renderFields()
+    void ActorCamera2D::renderFields(SceneEditor* sceneEditor)
     {
-        Camera2D::renderFields();
+        Camera2D::renderFields(sceneEditor);
 
         ImGui::Checkbox("Rotate with target", &rotateWithTarget);
 

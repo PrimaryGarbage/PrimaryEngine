@@ -199,9 +199,9 @@ namespace prim
         transform.pivot = Utils::deserializeVec2(fieldValues[StateFields::pivot]);
     }
     
-    void Node2D::renderFields() 
+    void Node2D::renderFields(SceneEditor* sceneEditor) 
     {
-        Node::renderFields();
+        Node::renderFields(sceneEditor);
 
         static float posBuffer[2];
         static float rotBuffer;
@@ -227,5 +227,7 @@ namespace prim
         {
             setScale(glm::vec2(scaleBuffer[0], scaleBuffer[1]));
         }
+
+        sceneEditor->drawSelectedNodePositionPoint(getGlobalPosition());
     }
 }

@@ -24,7 +24,7 @@ namespace prim
         {
             panelSize = ImVec2(ImGui::GetWindowSize().x, renderer->getWindowHeight());
 
-            if (selectedNode) selectedNode->renderFields();
+            if (selectedNode) selectedNode->renderFields(this);
 
             ImGui::Separator();
 
@@ -146,20 +146,20 @@ namespace prim
         if (node) renderer->drawSelectedNodeFraming(node);
     }
 
-    void SceneEditor::drawSelectedNodePositionPoint()
+    void SceneEditor::drawSelectedNodePositionPoint(glm::vec2 position)
     {
         static constexpr glm::vec4 color { 1.0f, 0.0f, 1.0f, 1.0f };
         static Mesh positionPointMesh = createPositionPointMesh();
         static Shader* shader = positionPointMesh.compositions.front().shader;
         static const glm::vec2 halfSizeVec = glm::vec2(positionPointSize) / 2.0f;
-        static constexpr float rotationSpeed = 0.05f;
+        static constexpr float rotationSpeed = 0.1f;
         static float rotation = 0.0f;
 
         if (!selectedNode) return;
         shader->setUniform4f("u_color", color);
         shader->setUniform1f("u_time", Globals::app->getElapsedTime());
         glm::mat4 modelMat(1.0f);
-        modelMat = glm::translate(modelMat, Utils::toVec3(selectedNode->getGlobalPosition(), 1.0f));
+        modelMat = glm::translate(modelMat, Utils::toVec3(position, 1.0f));
         rotation += rotationSpeed;
         if(rotation > Utils::twoPi) rotation -= Utils::twoPi;
         modelMat = glm::rotate(modelMat, rotation, glm::vec3(0.0f, 0.0f, 1.0f));
@@ -344,7 +344,6 @@ namespace prim
         /////////////////////////////
 
         drawSelectedNodeFraming();
-        drawSelectedNodePositionPoint();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -178,7 +178,7 @@ namespace prim
         return child;
     }
 
-    void Node::renderFields()
+    void Node::renderFields(SceneEditor* sceneEditor)
     {
         static const unsigned int maxBufferSize = 100u;
         static const ImVec4 typeTextColor = { 0.1f, 0.9f, 0.1f, 1.0f };

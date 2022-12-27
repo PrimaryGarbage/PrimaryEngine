@@ -60,10 +60,8 @@ namespace prim
     {
         if (!controlParent)
         {
-            CameraBase* camera = Globals::mainRenderer->getCurrentCamera();
-            if(!camera) return glm::vec2(0.0f, 0.0f);
             glm::vec2 windowSize = Globals::mainRenderer->getWindowSize();
-            return camera->getGlobalPosition() - (windowSize / 2.0f - transform.anchor * windowSize) + transform.position;
+            return transform.anchor * windowSize + transform.position;
         }
         return parent->getGlobalPosition() + glm::rotate(transform.position, parent->getGlobalRotation());
     }
@@ -71,11 +69,7 @@ namespace prim
     float Control::getGlobalRotation() const 
     {
         if (!controlParent)
-        {
-            CameraBase* camera = Globals::mainRenderer->getCurrentCamera();
-            if(!camera) return 0.0f;
-            return camera->getGlobalRotation() + transform.rotation;
-        }
+            return transform.rotation;
         return parent->getGlobalRotation() + transform.rotation;
     }
     
@@ -205,9 +199,9 @@ namespace prim
         transform.anchor = Utils::deserializeVec2(fieldValues[StateFields::anchor]);
     }
     
-    void Control::renderFields() 
+    void Control::renderFields(SceneEditor* sceneEditor) 
     {
-        Node::renderFields();
+        Node::renderFields(sceneEditor);
 
         ImGui::DragFloat2("Position", &transform.position.x);
         ImGui::DragFloat("Rotation", &transform.rotation, 0.01f);
@@ -215,6 +209,11 @@ namespace prim
         ImGui::DragFloat("zIndex", &transform.zIndex, 0.01f);
         //ImGui::DragFloat2("Pivot", &transform.pivot.x, 0.01f);
         ImGui::DragFloat2("Anchor", &transform.anchor.x, 0.01f);
+        
+        glm::mat4 rendererViewMat = Globals::mainRenderer->getViewMat();
+        Globals::mainRenderer->setViewMat(glm::mat4(1.0f));
+        sceneEditor->drawSelectedNodePositionPoint(getGlobalPosition());
+        Globals::mainRenderer->setViewMat(rendererViewMat);
     }
 
     

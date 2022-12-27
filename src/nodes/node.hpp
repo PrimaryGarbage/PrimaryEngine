@@ -11,6 +11,7 @@
 namespace prim
 {
     class Renderer;
+    class SceneEditor;
 
     class Node : public NodeBase
     {
@@ -83,7 +84,7 @@ namespace prim
         std::string getName() const;
         void setName(std::string name);
         Node* findChild(std::string name) const;
-        virtual void renderFields();
+        virtual void renderFields(SceneEditor* sceneEditor);
         inline bool isBound() const noexcept { return cloneBound; };
         virtual void unbind();
 

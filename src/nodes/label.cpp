@@ -40,15 +40,20 @@ namespace prim
             const Glyph* glyph = font.getGlyph(ch);
             const glm::vec3 pivotTranslation = glm::vec3(offset, 0.0f, transform.zIndex);
             const glm::vec2 glyphOffset = glyph->offset * globalSize;
+            const glm::mat4& rendererViewMat = renderer.getViewMat();
+            renderer.setViewMat(glm::mat4(1.0f));
             modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x + offset + glyphOffset.x, globalPosition.y + glyphOffset.y, transform.zIndex));
             modelMat = glm::translate(modelMat, -pivotTranslation);
             modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
             modelMat = glm::translate(modelMat, pivotTranslation);
             modelMat = glm::scale(modelMat, glm::vec3(globalSize.x * glyph->size.x, globalSize.y * glyph->size.y, 1.0f));
+            // modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x + offset + glyphOffset.x, globalPosition.y + glyphOffset.y, transform.zIndex));
+            // modelMat = glm::scale(modelMat, glm::vec3(globalSize.x * glyph->size.x, globalSize.y * glyph->size.y, 1.0f));
             offset += globalSize.x * glyph->advanceX;
             renderer.setModelMat(std::move(modelMat));
             glyphMesh.compositions.front().texture = glyph->texture;
             renderer.drawMesh(glyphMesh);
+            renderer.setViewMat(rendererViewMat);
         }
     }
 
@@ -75,9 +80,9 @@ namespace prim
         textColor = Utils::deserializeVec4(fieldValues[StateFields::textColor]);
     }
     
-    void Label::renderFields() 
+    void Label::renderFields(SceneEditor* sceneEditor) 
     {
-        Control::renderFields();
+        Control::renderFields(sceneEditor);
         
         static char textBuf[textBufferSize];
         std::copy(text.begin(), text.end(), textBuf);

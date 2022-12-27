@@ -40,7 +40,6 @@ namespace prim
         void drawLeftPanel();
         void drawNodeInTree(Node* node);
         void drawSelectedNodeFraming();
-        void drawSelectedNodePositionPoint();
         void drawLoadSceneButton();
         void drawSaveSceneButton();
         void drawNodeTreeContextMenu(Node* node, bool hovered, bool cloningAllowed = true);
@@ -58,6 +57,7 @@ namespace prim
         void addDragFloat(const char* label, float* f, float speed = 0.1f);
         inline void setSelectedNode(Node* node) { selectedNode = node; }
         inline Node* getSelectedNode() const { return selectedNode; }
+        void drawSelectedNodePositionPoint(glm::vec2 position);
     };
 }
 

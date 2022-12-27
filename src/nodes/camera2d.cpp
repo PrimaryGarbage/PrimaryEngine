@@ -89,9 +89,9 @@ namespace prim
         transform.pivot = Utils::deserializeVec2(fieldValues[StateFields::pivot]);
     }
     
-    void Camera2D::renderFields() 
+    void Camera2D::renderFields(SceneEditor* sceneEditor) 
     {
-        Node2D::renderFields();
+        Node2D::renderFields(sceneEditor);
 
         static bool current;
 

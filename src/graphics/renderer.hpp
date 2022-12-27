@@ -64,6 +64,9 @@ public:
 	inline void setProjectMat(glm::mat4 proj) { projectMat = proj; }
 	inline void setViewMat(glm::mat4 view) { viewMat = view; }
 	inline void setModelMat(glm::mat4 model) { modelMat = model; }
+	inline glm::mat4 getProjectMat() const { return projectMat; }
+	inline glm::mat4 getViewMat() const { return viewMat; }
+	inline glm::mat4 getModelMat() const { return modelMat; }
 	inline glm::vec2 getWindowSize() const { return glm::vec2(windowWidth, windowHeight); }
 	inline int getWindowWidth() const { return windowWidth; }
 	inline int getWindowHeight() const { return windowHeight; }
