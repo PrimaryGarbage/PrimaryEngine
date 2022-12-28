@@ -148,11 +148,13 @@ namespace prim
 
     void SceneEditor::drawSelectedNodePositionPoint(glm::vec2 position)
     {
-        static constexpr glm::vec4 color { 1.0f, 0.0f, 1.0f, 1.0f };
+        const float elapsedTime = Globals::app->getElapsedTime();
+        const float sinTime = std::pow(std::sin(elapsedTime * 4.0f), 2);
+        const glm::vec4 color(sinTime, sinTime, sinTime, 1.0f);
         static Mesh positionPointMesh = createPositionPointMesh();
         static Shader* shader = positionPointMesh.compositions.front().shader;
         static const glm::vec2 halfSizeVec = glm::vec2(positionPointSize) / 2.0f;
-        static constexpr float rotationSpeed = 0.1f;
+        static constexpr float rotationSpeed = 0.2f;
         static float rotation = 0.0f;
 
         if (!selectedNode) return;

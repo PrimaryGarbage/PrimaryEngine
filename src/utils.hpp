@@ -91,6 +91,12 @@ namespace prim
             return std::min(max, std::max(value, min));
         }
 
+        template <class T>
+        static inline constexpr T map(T value, T valueMin, T valueMax, T rangeMin, T rangeMax)
+        {
+            return rangeMin + (((rangeMax - rangeMin) * value)/(valueMax - valueMin));
+        }
+
         static std::vector<std::string> splitString(std::string str, std::string delimiter)
         {
             std::vector<std::string> strings;
