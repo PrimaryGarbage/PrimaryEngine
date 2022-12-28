@@ -6,6 +6,7 @@
 #include "logger.hpp"
 #include "imgui.h"
 #include "node_utils.hpp"
+#include "scene_editor.hpp"
 
 namespace prim
 {

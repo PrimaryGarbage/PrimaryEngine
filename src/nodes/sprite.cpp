@@ -138,27 +138,9 @@ namespace prim
     {
         Node2D::renderFields(sceneEditor);
 
-        static float pivotBuffer[2];
-        static float widthBuffer;
-
-        pivotBuffer[0] = transform.pivot.x;
-        pivotBuffer[1] = transform.pivot.y;
-        widthBuffer = width;
-
-        if(ImGui::DragFloat2("Pivot", pivotBuffer))
-        {
-            setPivot(glm::vec2(pivotBuffer[0], pivotBuffer[1]));
-        }
-        if (ImGui::DragFloat("Width", &widthBuffer))
-        {
-            setWidth(widthBuffer);
-        }
-        static float heightBuffer;
-        heightBuffer = height;
-        if (ImGui::DragFloat("Height", &heightBuffer))
-        {
-            setHeight(heightBuffer);
-        }
+        if(ImGui::DragFloat2("Pivot", &transform.pivot.x, 0.01f));
+        if(ImGui::DragFloat("Width", &width));
+        if (ImGui::DragFloat("Height", &height))
         ImGui::DragFloat("Z-Index", &zIndex, 0.01f);
         ImGui::LabelText("Image", image->getResPath().c_str());
         ImGui::SameLine();
