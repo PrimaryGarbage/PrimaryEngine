@@ -5,6 +5,7 @@
 #include "imgui.h"
 #include "utils.hpp"
 #include "node_utils.hpp"
+#include "math.h"
 
 namespace prim
 {
@@ -47,14 +48,15 @@ namespace prim
         {
             auto followTargetFunction = [this]() {
                 glm::vec2 position;
+                float modifiedStiffness = std::pow(stiffness, 4);
                 if (rotateWithTarget)
                 {
                     float targetAngle = target->getGlobalRotation();
-                    position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + glm::rotate(initialOffset, targetAngle), stiffness);
-                    setGlobalRotation(Utils::lerpAngle(getGlobalRotation(), targetAngle, stiffness));
+                    position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + glm::rotate(initialOffset, targetAngle), modifiedStiffness);
+                    setGlobalRotation(Utils::lerpAngle(getGlobalRotation(), targetAngle, modifiedStiffness));
                 }
                 else
-                    position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + initialOffset, stiffness);
+                    position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + initialOffset, modifiedStiffness);
 
                 setGlobalPosition(position);
             };
@@ -126,14 +128,7 @@ namespace prim
             }
         }
 
-        static float initialOffsetBuffer[2];
-        initialOffsetBuffer[0] = initialOffset.x;
-        initialOffsetBuffer[1] = initialOffset.y;
-        if (ImGui::DragFloat2("Initial Offset", initialOffsetBuffer))
-        {
-            initialOffset = glm::vec2(initialOffsetBuffer[0], initialOffsetBuffer[1]);
-        }
-
+        ImGui::DragFloat2("Initial Offset", &initialOffset.x);
         ImGui::DragFloat("Stiffness", &stiffness, 0.01f, 0.0f, 1.0f);
     }
 
