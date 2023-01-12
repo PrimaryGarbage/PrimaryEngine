@@ -30,6 +30,7 @@ namespace prim
         Node* loadScene(std::string resPath);
         void saveScene(Node* scene, std::string resPath, bool ovewrite = false);
         void freeScene(Node* scene);
+        Node* createEmptyScene() const;
     };
 }
 

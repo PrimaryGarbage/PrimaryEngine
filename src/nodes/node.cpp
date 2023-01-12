@@ -1,7 +1,7 @@
 #include "node.hpp"
 #include "prim_exception.hpp"
 #include <algorithm>
-#include "renderer.hpp"
+#include "../graphics/renderer.hpp"
 #include "imgui.h"
 #include <sstream>
 #include "utils.hpp"

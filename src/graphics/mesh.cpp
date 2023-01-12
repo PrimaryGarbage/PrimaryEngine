@@ -4,8 +4,13 @@
 
 namespace prim
 {
-    Mesh::Mesh(shptr<VertexBuffer> vb) : vb(vb)
+    Mesh::Mesh(unptr<VertexBuffer> vb) : vb(std::move(vb))
     {
+    }
+    
+    Mesh::Mesh(const Mesh& other) 
+    {
+        
     }
     
     void Mesh::addComposition(MeshComposition&& composition)

@@ -4,7 +4,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <stack>
-#include "node.hpp"
+#include "./nodes/node.hpp"
 #include "utils.hpp"
 #include "globals.hpp"
 #include "resource_manager.hpp"
@@ -98,9 +98,15 @@ namespace prim
 
     void SceneManager::freeScene(Node* scene)
     {
+        Globals::logger->logInfo("Scene freed: '" + scene->getName() + "'");
         for (Node* child : scene->getChildren())
             freeScene(child);
         delete scene;
         Globals::sceneEditor->setSelectedNode(nullptr);
+    }
+    
+    Node* SceneManager::createEmptyScene() const
+    {
+        return new Node("Empty Scene");
     }
 }

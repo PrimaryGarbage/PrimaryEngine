@@ -8,7 +8,6 @@
 #include <algorithm>
 #include "glm.hpp"
 #include "globals.hpp"
-#include "test_scenes_creator.hpp"
 #include "utils.hpp"
 #include <iostream>
 
@@ -134,10 +133,7 @@ namespace prim
 
 	void PrimaryApp::mainLoop()
 	{
-		//Node* scene1 = TestScenesCreator::createLabelScene();
-		//Node* scene1 = TestScenesCreator::createScene1();
-		Node* scene1 = sceneManager.loadScene("scenes/TestScene4.psc");
-		setCurrentScene(scene1);
+		if(!currentScene) setCurrentScene(sceneManager.createEmptyScene());
 
 		float speed = 10.0f;
 

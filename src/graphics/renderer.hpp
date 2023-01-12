@@ -6,7 +6,7 @@
 #include "GLFW/glfw3.h"
 #include "mesh.hpp"
 #include <unordered_map>
-#include "camera_base.hpp"
+#include "../nodes/camera_base.hpp"
 
 namespace prim
 {

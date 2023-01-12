@@ -2,3 +2,4 @@
 logs/
 *.code-workspace
 imgui.ini
+test_project/out

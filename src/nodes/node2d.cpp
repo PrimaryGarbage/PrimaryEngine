@@ -1,5 +1,5 @@
 #include "node2d.hpp"
-#include "renderer.hpp"
+#include "../graphics/renderer.hpp"
 #include "gtx/rotate_vector.hpp"
 #include "gtx/vector_angle.hpp"
 #include "utils.hpp"

@@ -3,18 +3,18 @@
 source /usr/local/bin/color.sh
 
 CMAKE_BUILD_DIR='../out'
-PROJECT_NAME='PrimaryEngine'
+PROJECT_NAME='libPrimaryEngine'
+TEST_PROJECT_NAME='PrimaryEngineTest'
+LIB_EXTENSION='dll'
 BUILD_TYPE=Debug
 POSTFIX='-d'
-INTERNAL_RES_DIR_TARGET="$CMAKE_BUILD_DIR/bin/"
-RES_DIR_TARGET="$CMAKE_BUILD_DIR/bin/"
-RES_DIR_SOURCE="./resources"
+TEST_PROJECT_PATH="test_project/project"
+TEST_PROJECT_PRIMARY_LIB_PATH="$TEST_PROJECT_PATH/external/primary_engine"
+HEADER_FILENAME='PrimaryEngine.hpp'
 
-copy_res_dir() {
-	if [[ -d RES_DIR_TARGET ]]; then
-		rm -rf $RES_DIR_TARGET
-	fi
-	cp $RES_DIR_SOURCE $RES_DIR_TARGET -r
+copy_lib() {
+	cp $CMAKE_BUILD_DIR/bin/$PROJECT_NAME$POSTFIX.$LIB_EXTENSION $TEST_PROJECT_PRIMARY_LIB_PATH/
+	cp -r ./include $TEST_PROJECT_PRIMARY_LIB_PATH/
 }
 
 configure() {
@@ -24,18 +24,28 @@ configure() {
 
 build() {
 	echo -e "Building..."
-	{ cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE && copy_res_dir; } \
-	|| { configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE && copy_res_dir; } \
+	{ cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_lib; } \
+	|| { configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_lib; } \
 	|| { echo -e "${RED}Building failure${NOCOLOR}"; false; }
 }
 
-run() {
+build_test_project() {
+	echo -e "Building test project..."
+	cd $TEST_PROJECT_PATH
+	echo 5 | source ./build.sh
+	echo 2 | source ./build.sh
+	cd -
+}
+
+run_test_project() {
 	echo -e "Running..."
-	$CMAKE_BUILD_DIR/bin/$PROJECT_NAME$POSTFIX || echo -e "${RED}Working build wasn't found!${NOCOLOR}"
+	cd $TEST_PROJECT_PATH
+	echo 4 | source ./build.sh
+	cd -
 }
 
 build_and_run() {
-	{ build && run; } || echo -e "${RED}Build&Run failed${NOCOLOR}"
+	{ build && run_test_project; } || echo -e "${RED}Build&Run failed${NOCOLOR}"
 }
 
 clean_all() {
@@ -69,8 +79,9 @@ Build type -> ${GREEN}${BUILD_TYPE}${NOCOLOR}\n \
 (${RED}1${NOCOLOR}) configure cmake, \n \
 (${RED}2${NOCOLOR}) build, \n \
 (${RED}3${NOCOLOR}) build & run, \n \
-(${RED}4${NOCOLOR}) run, \n \
+(${RED}4${NOCOLOR}) run test project, \n \
 (${RED}5${NOCOLOR}) clean all, \n \
+(${RED}6${NOCOLOR}) build test project, \n \
 (${RED}b${NOCOLOR}) change build type, \n \
 (${GREEN}q${NOCOLOR}) exit\
 "
@@ -87,10 +98,13 @@ case $input in
 		build_and_run
 		;;
 	4)
-		run
+		run_test_project
 		;;
 	5)
 		clean_all
+		;;
+	6)
+		build_test_project
 		;;
 	b)
 		change_build_type

@@ -1,6 +1,6 @@
 #include "sprite.hpp"
-#include "primitives.hpp"
-#include "renderer.hpp"
+#include "../graphics/primitives.hpp"
+#include "../graphics/renderer.hpp"
 #include "gtc/matrix_transform.hpp"
 #include "utils.hpp"
 #include "imgui.h"
@@ -156,7 +156,7 @@ namespace prim
         {
             if (ImGuiFileDialog::Instance()->IsOk())
             {
-                std::string path = Utils::splitString(ImGuiFileDialog::Instance()->GetFilePathName(), ResourceManager::resDirName + "/").back();
+                std::string path = Utils::splitString(ImGuiFileDialog::Instance()->GetFilePathName(), ResourceManager::resDirName + ResourceManager::separator()).back();
                 setImage(ResourceManager::createResourcePath(path));
             }
             

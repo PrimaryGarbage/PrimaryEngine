@@ -11,10 +11,11 @@ namespace prim
 class Mesh
 {
 public:
-    shptr<VertexBuffer> vb;
+    unptr<VertexBuffer> vb;
     std::vector<MeshComposition> compositions;
 
-    Mesh(shptr<VertexBuffer> vb);
+    Mesh(unptr<VertexBuffer> vb);
+    Mesh(const Mesh& other);
     void addComposition(MeshComposition&& composition);
 };
 

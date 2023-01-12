@@ -17,6 +17,8 @@ namespace prim
 
     template<class T>
     using shptr = std::shared_ptr<T>;
+    template<class T>
+    using unptr = std::unique_ptr<T>;
 
 }
 

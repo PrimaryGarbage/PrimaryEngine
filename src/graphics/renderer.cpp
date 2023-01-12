@@ -2,7 +2,7 @@
 #include "logger.hpp"
 #include "gtc/matrix_transform.hpp"
 #include "globals.hpp"
-#include "drawable.hpp"
+#include "../nodes/drawable.hpp"
 
 namespace prim
 {

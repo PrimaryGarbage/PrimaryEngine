@@ -37,14 +37,14 @@ namespace prim
         layout.push<float>(3);
         layout.push<float>(2);
 
-        shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 40 * sizeof(float), layout);
+        unptr<VertexBuffer> vb = std::make_unique<VertexBuffer>(vertices, 40 * sizeof(float), layout);
 
         Shader* shader = Shader::getDefaultShader();
         shader->bind();
 
         shader->setUniform1i("u_texture", 0);
 
-        shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 36);
+        unptr<IndexBuffer> ib = std::make_unique<IndexBuffer>(indices, 36);
 
         Mesh mesh(std::move(vb));
         MeshComposition meshComposition(std::move(ib), shader, Texture::getDefaultTexture());
@@ -71,13 +71,13 @@ namespace prim
         layout.push<float>(2);
         layout.push<float>(2);
 
-        shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 16 * sizeof(float), layout);
+        unptr<VertexBuffer> vb = std::make_unique<VertexBuffer>(vertices, 16 * sizeof(float), layout);
 
         Shader* shader = Shader::getDefaultShader();
 
         shader->setUniform1i("u_texture", 0);
 
-        shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 6);
+        unptr<IndexBuffer> ib = std::make_unique<IndexBuffer>(indices, 6);
 
         Mesh mesh(std::move(vb));
         MeshComposition meshComposition(std::move(ib), shader, Texture::getDefaultTexture());
@@ -105,13 +105,13 @@ namespace prim
         layout.push<float>(2);
         layout.push<float>(2, true);
 
-        shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 24 * sizeof(float), layout);
+        unptr<VertexBuffer> vb = std::make_unique<VertexBuffer>(vertices, 24 * sizeof(float), layout);
 
         Shader* shader = Shader::getDefaultShader();
 
         shader->setUniform1i("u_texture", 0);
 
-        shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 6);
+        unptr<IndexBuffer> ib = std::make_unique<IndexBuffer>(indices, 6);
 
         Mesh mesh(std::move(vb));
         MeshComposition meshComposition(std::move(ib), shader, Texture::getDefaultTexture());
@@ -146,13 +146,13 @@ namespace prim
         layout.push<float>(2);
         layout.push<float>(2, true);
 
-        shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 24 * sizeof(float), layout);
+        unptr<VertexBuffer> vb = std::make_unique<VertexBuffer>(vertices, 24 * sizeof(float), layout);
 
         Shader* shader = Shader::getDefaultShader(DefaultShader::text);
 
         shader->setUniform1i("u_texture", 0);
 
-        shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 6);
+        unptr<IndexBuffer> ib = std::make_unique<IndexBuffer>(indices, 6);
 
         Mesh mesh(std::move(vb));
         MeshComposition meshComposition(std::move(ib), shader);

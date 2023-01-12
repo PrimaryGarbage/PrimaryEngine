@@ -105,10 +105,10 @@ namespace prim
         }
         shaderCache.clear();
 
-        delete defaultShader;
-        delete selectShader;
-        delete textDefaultShader;
-        delete defaultPlainColorShaderData;
+        if(defaultShader) delete defaultShader;
+        if(selectShader) delete selectShader;
+        if(textDefaultShader) delete textDefaultShader;
+        if(defaultPlainColorShaderData) delete defaultPlainColorShaderData;
         Globals::logger->logInfo("Default shaders terminated.");
     }
 

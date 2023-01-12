@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BINARY_DIR}bin)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+set(BUILD_SHARED_LIBS OFF)
+set(CMAKE_EXE_LINKER_FLAGS "-static")
 
 set(glew-cmake_BUILD_SHARED OFF)						# glew stuff
 set(ONLY_LIBS ON)										# glew stuff
@@ -21,7 +23,6 @@ set(PRIMARY_SRC
 	globals.hpp
 	scene_editor.hpp scene_editor.cpp
 	scene_manager.hpp scene_manager.cpp
-	test_scenes_creator.hpp
 	ImGuiFileDialog.h ImGuiFileDialog.cpp ImGuiFileDialogConfig.h
 	typedefs.hpp
 	resource_manager.hpp resource_manager.cpp
@@ -81,11 +82,13 @@ list(TRANSFORM PRIMARY_SRC PREPEND "src/")
 
 list(APPEND PRIMARY_SRC ${IMGUI_SRC})
 
-add_executable(${PROJECT_NAME} ${PRIMARY_SRC})
+add_library(${PROJECT_NAME} SHARED ${PRIMARY_SRC})
 
-target_compile_options(${PROJECT_NAME} PRIVATE -static)
+target_compile_options(${PROJECT_NAME} BEFORE PRIVATE -static -static-libstdc++)
+target_link_options(${PROJECT_NAME} PRIVATE -static -Wl,--export-all-symbols)
 
-add_compile_definitions(USE_STD_FILESYSTEM)
+#add_compile_definitions(USE_STD_FILESYSTEM)
+add_compile_definitions(PRIMARY_BUILD_LIB)
 
 add_subdirectory(external/glfw)
 add_subdirectory(external/glew)
@@ -97,7 +100,7 @@ set(CMAKE_LINK_SEARCH_START_STATIC ON)
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-		external/glfw/include external/glew/include external/glm src/graphics src/nodes src external/imgui 
+		src external external/glfw/include external/glew/include external/glm external/imgui 
 	)
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/external/glfw/src ${CMAKE_BINARY_DIR}/external/glew/lib ${CMAKE_BINARY_DIR}/external/freetype2)
