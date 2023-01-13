@@ -19,6 +19,7 @@ private:
 	const uint32_t windowWidth = 800;
 	const uint32_t windowHeight = 800;
 	const char* windowName = "PrimaryEngine";
+	bool initialized = false;
 	float deltaTime;
 	float elapsedTime;
 	Logger logger;
@@ -34,7 +35,6 @@ private:
 	void drawEditor();
 	void initEditor();
 	void initGlobals();
-	void init();
 public:
 	bool useEditor = false;
 
@@ -42,6 +42,7 @@ public:
 	PrimaryApp(const PrimaryApp& other) = delete;
 	~PrimaryApp();
 
+	void init();
 	int run();
 
 	void setCurrentScene(Node* scene);

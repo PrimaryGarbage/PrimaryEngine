@@ -17,18 +17,25 @@ namespace prim
 
     Sprite::Sprite(std::string name)
         : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), 
-        width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f),
+        width(defaultSize), height(defaultSize),
         image(std::make_shared<Image>())
     {
     }
 
     Sprite::Sprite(std::string name, std::string imagePath)
         : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), 
-        width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f),
+        width(defaultSize), height(defaultSize),
         image(std::make_shared<Image>())
     {
         image->load(imagePath);
         planeMesh.compositions[0].texture = Texture::create(*image);
+    }
+    
+    Sprite::Sprite(const Sprite& other) 
+        : Drawable(other.name), planeMesh(Primitives::createSquareMesh(other.width)),
+        width(other.width), height(other.height),
+        image(other.image)
+    {
     }
 
     Sprite::~Sprite()
@@ -54,7 +61,7 @@ namespace prim
         glm::mat4 modelMat(1.0f);
         modelMat = glm::translate(modelMat, Utils::toVec3(globalPosition, zIndex));
         modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
-        modelMat = glm::scale(modelMat, glm::vec3(globalScale.x * relativeWidth, globalScale.y * relativeHeight, 1.0f));
+        modelMat = glm::scale(modelMat, glm::vec3(globalScale.x * getRelativeWidth(), globalScale.y * getRelativeHeight(), 1.0f));
         modelMat = glm::translate(modelMat, -Utils::toVec3(getPivot() * defaultSize));
 
         renderer.setModelMat(std::move(modelMat));
@@ -84,13 +91,11 @@ namespace prim
     void Sprite::setWidth(float width)
     {
         this->width = width;
-        relativeWidth = width / defaultSize;
     }
 
     void Sprite::setHeight(float height)
     {
         this->height = height;
-        relativeHeight = height / defaultSize;
     }
 
     void Sprite::setImage(std::string path)
@@ -102,6 +107,16 @@ namespace prim
     void Sprite::setZIndex(float value)
     {
         zIndex = value;
+    }
+    
+    float Sprite::getRelativeWidth() const
+    {
+        return width / defaultSize;
+    }
+    
+    float Sprite::getRelativeHeight() const
+    {
+        return height / defaultSize;
     }
 
     std::string Sprite::serialize(bool withChildren) const

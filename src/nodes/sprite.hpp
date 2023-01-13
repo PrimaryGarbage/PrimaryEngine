@@ -28,14 +28,12 @@ namespace prim
         shptr<Image> image;
         float width;
         float height;
-        float relativeWidth;
-        float relativeHeight;
         float zIndex = 0.0f;
     public:
         Sprite();
         Sprite(std::string name);
         Sprite(std::string name, std::string imagePath);
-        Sprite(const Sprite& other) = default;
+        Sprite(const Sprite& other);
         virtual ~Sprite();
 
         virtual void start() override;
@@ -52,6 +50,8 @@ namespace prim
         void setZIndex(float value);
         inline float getWidth() const { return width; }
         inline float getHeight() const { return height; }
+        float getRelativeWidth() const;
+        float getRelativeHeight() const;
         inline glm::vec2 getSize() const { return glm::vec2(width, height); }
         inline float getZIndex() const { return zIndex; }
         inline const Image* getImage() const { return &*image; }
