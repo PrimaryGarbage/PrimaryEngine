@@ -50,7 +50,7 @@ namespace prim
         MeshComposition meshComposition(std::move(ib), shader, Texture::getDefaultTexture());
         mesh.addComposition(std::move(meshComposition));
 
-        return mesh;
+        return std::move(mesh);
     }
 
     Mesh Primitives::createRectangleMesh(float width, float height)
@@ -83,7 +83,7 @@ namespace prim
         MeshComposition meshComposition(std::move(ib), shader, Texture::getDefaultTexture());
         mesh.addComposition(std::move(meshComposition));
 
-        return mesh;
+        return std::move(mesh);
     }
 
     Mesh Primitives::createSquareMesh(float size)
@@ -105,9 +105,7 @@ namespace prim
         layout.push<float>(2);
         layout.push<float>(2, true);
 
-        //shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 24 * sizeof(float), layout);
-        VertexBuffer* vbraw = new VertexBuffer(vertices, 24 * sizeof(float), layout);
-        shptr<VertexBuffer> vb(vbraw);
+        shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 24 * sizeof(float), layout);
 
         Shader* shader = Shader::getDefaultShader();
 
@@ -119,14 +117,14 @@ namespace prim
         MeshComposition meshComposition(std::move(ib), shader, Texture::getDefaultTexture());
         mesh.addComposition(std::move(meshComposition));
 
-        return mesh;
+        return std::move(mesh);
     }
 
     Mesh Primitives::createSquareMesh(std::string imagePath, float size)
     {
         Mesh mesh(createSquareMesh());
         mesh.compositions.front().texture = Texture::create(imagePath);
-        return mesh;
+        return std::move(mesh);
     }
     
     Mesh Primitives::createGlyphMesh() 
@@ -160,6 +158,6 @@ namespace prim
         MeshComposition meshComposition(std::move(ib), shader);
         mesh.addComposition(std::move(meshComposition));
 
-        return mesh;
+        return std::move(mesh);
     }
 }

@@ -29,6 +29,7 @@ namespace prim
         float width;
         float height;
         float zIndex = 0.0f;
+        glm::vec4 tint = glm::vec4(1.0f);
     public:
         Sprite();
         Sprite(std::string name);

@@ -59,6 +59,7 @@ namespace prim
         glm::vec2 globalPosition = getGlobalPosition();
         glm::vec2 globalScale = getGlobalScale();
         glm::mat4 modelMat(1.0f);
+        planeMesh.compositions.front().shader->setUniform4f("u_color", tint);
         modelMat = glm::translate(modelMat, Utils::toVec3(globalPosition, zIndex));
         modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
         modelMat = glm::scale(modelMat, glm::vec3(globalScale.x * getRelativeWidth(), globalScale.y * getRelativeHeight(), 1.0f));

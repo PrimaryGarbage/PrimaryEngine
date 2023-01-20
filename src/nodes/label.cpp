@@ -6,11 +6,13 @@
 
 namespace prim
 {
-    Label::Label(): Control(), glyphMesh(Primitives::createGlyphMesh())
+    Label::Label(): Control(), glyphMesh(Primitives::createGlyphMesh()), 
+        backgroundMesh(Primitives::createSquareMesh(1.0f))
     {
     }
     
-    Label::Label(std::string name): Control(name), glyphMesh(Primitives::createGlyphMesh())
+    Label::Label(std::string name): Control(name), glyphMesh(Primitives::createGlyphMesh()),
+        backgroundMesh(Primitives::createSquareMesh(1.0f))
     {
     }
     
@@ -33,6 +35,20 @@ namespace prim
         float offset = 0.0f;
 
         glyphMesh.compositions.front().shader->setUniform4f("u_color", textColor.r, textColor.g, textColor.b, textColor.a);
+        backgroundMesh.compositions.front().shader->setUniform4f("u_color", backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.0f);
+
+        const glm::mat4& rendererViewMat = renderer.getViewMat();
+        renderer.setViewMat(glm::mat4(1.0f));
+
+        // render background
+        glm::mat4 modelMat(1.0f);
+        float width = font.calculateWidth(text);
+        modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x, globalPosition.y, transform.zIndex));
+        modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
+        // here: background size is wrong
+        modelMat = glm::scale(modelMat, glm::vec3(globalSize.x * width, globalSize.y, 1.0f));
+        renderer.setModelMat(std::move(modelMat));
+        renderer.drawMesh(backgroundMesh);
 
         for(const char& ch : text)
         {
@@ -40,8 +56,6 @@ namespace prim
             const Glyph* glyph = font.getGlyph(ch);
             const glm::vec3 pivotTranslation = glm::vec3(offset, 0.0f, transform.zIndex);
             const glm::vec2 glyphOffset = glyph->offset * globalSize;
-            const glm::mat4& rendererViewMat = renderer.getViewMat();
-            renderer.setViewMat(glm::mat4(1.0f));
             modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x + offset + glyphOffset.x, globalPosition.y + glyphOffset.y, transform.zIndex));
             modelMat = glm::translate(modelMat, -pivotTranslation);
             modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -53,8 +67,9 @@ namespace prim
             renderer.setModelMat(std::move(modelMat));
             glyphMesh.compositions.front().texture = glyph->texture;
             renderer.drawMesh(glyphMesh);
-            renderer.setViewMat(rendererViewMat);
         }
+
+        renderer.setViewMat(rendererViewMat);
     }
 
     std::string Label::serialize(bool withChildren) const 
@@ -91,10 +106,8 @@ namespace prim
         {
             setText(textBuf);
         }
-        if(ImGui::ColorEdit4("Text Color", &textColor.x))
-        {
-            setTextColor(textColor);
-        }
+        ImGui::ColorEdit4("Text Color", &textColor.x);
+        ImGui::ColorEdit4("Background Color", &backgroundColor.x);
     }
     
 } // namespace prim

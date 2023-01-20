@@ -41,6 +41,7 @@ namespace prim
         void setEmSize(int size);
         int getEmSize() const;
         const Glyph* getGlyph(unsigned char ch) const;
+        float calculateWidth(const std::string& str) const;
     };
 } // namespace prim
 

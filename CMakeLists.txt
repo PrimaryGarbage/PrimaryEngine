@@ -28,6 +28,12 @@ set(PRIMARY_SRC
 	resource_manager.hpp resource_manager.cpp
 	)
 
+set(MISC_SRC
+	shape2d.hpp
+	rectangle.hpp rectangle.cpp
+)
+
+
 set(NODES_SRC
 	transform3d.hpp transform2d.hpp
 	node_base.hpp node_base.cpp
@@ -74,9 +80,11 @@ set(IMGUI_SRC
 list(TRANSFORM NODES_SRC PREPEND "nodes/")
 list(TRANSFORM GRAPHICS_SRC PREPEND "graphics/")
 list(TRANSFORM IMGUI_SRC PREPEND "external/imgui/")
+list(TRANSFORM MISC_SRC PREPEND "misc/")
 
 list(APPEND PRIMARY_SRC ${NODES_SRC})
 list(APPEND PRIMARY_SRC ${GRAPHICS_SRC})
+list(APPEND PRIMARY_SRC ${MISC_SRC})
 
 list(TRANSFORM PRIMARY_SRC PREPEND "src/")
 
@@ -100,7 +108,7 @@ set(CMAKE_LINK_SEARCH_START_STATIC ON)
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-		src external external/glfw/include external/glew/include external/glm external/imgui 
+		${CMAKE_SOURCE_DIR} src external external/glfw/include external/glew/include external/glm external/imgui  
 	)
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/external/glfw/src ${CMAKE_BINARY_DIR}/external/glew/lib ${CMAKE_BINARY_DIR}/external/freetype2)

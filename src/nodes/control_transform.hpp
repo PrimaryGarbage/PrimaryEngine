@@ -1,7 +1,7 @@
 #ifndef __CONTROL_TRANSFORM_HPP__
 #define __CONTROL_TRANSFORM_HPP__
 
-#include "glm.hpp"
+#include "glm/glm.hpp"
 
 namespace prim
 {

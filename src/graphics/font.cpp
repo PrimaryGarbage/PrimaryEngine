@@ -75,6 +75,16 @@ namespace prim
         return &textureMap.at(ch);
     }
     
+    float Font::calculateWidth(const std::string& str) const
+    {
+        float width = 0.0f;
+        for(const char& ch : str)
+        {
+            width += getGlyph(ch)->advanceX;
+        }
+        return width;
+    }
+    
     FT_GlyphSlot Font::renderGlyph(char ch) 
     {
         FT_CHECK_ERROR(FT_Load_Char(ftFace, ch, FT_LOAD_RENDER));

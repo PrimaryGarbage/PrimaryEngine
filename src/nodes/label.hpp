@@ -2,8 +2,8 @@
 #define __LABEL_HPP__
 
 #include "control.hpp"
-#include "../graphics/font.hpp"
-#include "../graphics/mesh.hpp"
+#include "src/graphics/font.hpp"
+#include "src/graphics/mesh.hpp"
 
 namespace prim
 {
@@ -25,7 +25,9 @@ namespace prim
         std::string text;
         Font font;
         Mesh glyphMesh;
+        Mesh backgroundMesh;
         glm::vec4 textColor = glm::vec4(1.0f);
+        glm::vec4 backgroundColor {0.0f, 0.0f, 0.0f, 1.0f};
     public:
         using Control::Control;
         Label();
@@ -37,6 +39,7 @@ namespace prim
 
         inline void setText(std::string text) { this->text = text; }
         inline void setTextColor(glm::vec4 color) { this->textColor = color; }
+        inline void setBackgroundColor(glm::vec4 color) { this->backgroundColor = color; }
 
         virtual void start() override;
         virtual void update(float deltaTime) override;
