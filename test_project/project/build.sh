@@ -7,11 +7,22 @@ POSTFIX=''
 INTERNAL_RES_DIR_TARGET="$CMAKE_BUILD_DIR/bin/"
 RES_DIR_TARGET="$CMAKE_BUILD_DIR/bin/"
 RES_DIR_SOURCE="./resources"
-PRIMARY_LIB_NAME="libPrimaryEngine-d.dll";
-PRIMARY_LIB_PATH="external/primary_engine/$PRIMARY_LIB_NAME"
+PRIMARY_LIB_EXTENSION=""
+PRIMARY_LIB_NAME="libPrimaryEngine-d";
+PRIMARY_LIB_PATH="external/lib"
+
+determine_lib_extension() {
+	if [[ $(uname -s) == "Linux" ]]; then
+		PRIMARY_LIB_EXTENSION='so'
+		echo Linux
+	else
+		PRIMARY_LIB_EXTENSION='dll'
+		echo Windows
+	fi
+}
 
 copy_lib() {
-	cp $PRIMARY_LIB_PATH $RES_DIR_TARGET
+	cp $PRIMARY_LIB_PATH/$PRIMARY_LIB_NAME.$PRIMARY_LIB_EXTENSION $RES_DIR_TARGET
 }
 
 copy_res_dir() {
@@ -68,6 +79,9 @@ change_build_type() {
 }
 
 
+##### Script Start #####
+
+determine_lib_extension
 
 # while true
 # do

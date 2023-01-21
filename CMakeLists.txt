@@ -7,10 +7,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BINARY_DIR}bin)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 set(BUILD_SHARED_LIBS OFF)
 set(CMAKE_EXE_LINKER_FLAGS "-static")
-
-set(glew-cmake_BUILD_SHARED OFF)						# glew stuff
-set(ONLY_LIBS ON)										# glew stuff
-set(PKG_CONFIG_REPRESENTATIVE_TARGET libglew_static)	# glew stuff
+set(TEST_PROJECT_LIB_PATH "test_project/project/external/primary_engine")
 
 set(PRIMARY_SRC
 	main.cpp
@@ -32,7 +29,6 @@ set(MISC_SRC
 	shape2d.hpp
 	rectangle.hpp rectangle.cpp
 )
-
 
 set(NODES_SRC
 	transform3d.hpp transform2d.hpp
@@ -92,15 +88,8 @@ list(APPEND PRIMARY_SRC ${IMGUI_SRC})
 
 add_library(${PROJECT_NAME} SHARED ${PRIMARY_SRC})
 
-target_compile_options(${PROJECT_NAME} BEFORE PRIVATE -static -static-libstdc++)
-target_link_options(${PROJECT_NAME} PRIVATE -static -Wl,--export-all-symbols)
-
 #add_compile_definitions(USE_STD_FILESYSTEM)
 add_compile_definitions(PRIMARY_BUILD_LIB)
-
-add_subdirectory(external/glfw)
-add_subdirectory(external/glew)
-add_subdirectory(external/freetype2)
 
 # link statically after generating glfw and glew
 set(CMAKE_LINK_SEARCH_START_STATIC ON)
@@ -108,15 +97,16 @@ set(CMAKE_LINK_SEARCH_START_STATIC ON)
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-		${CMAKE_SOURCE_DIR} src external external/glfw/include external/glew/include external/glm external/imgui  
+		${CMAKE_SOURCE_DIR} src external external/glfw external/glew external/glm external/imgui external/freetype2
 	)
 
-target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/external/glfw/src ${CMAKE_BINARY_DIR}/external/glew/lib ${CMAKE_BINARY_DIR}/external/freetype2)
+target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/external/lib)
 
 if(WIN32)
 	target_link_libraries(${PROJECT_NAME} PRIVATE opengl32)
+    target_link_options(${PROJECT_NAME} PRIVATE -Wl,--export-all-symbols)
 elseif(UNIX)
 	target_link_libraries(${PROJECT_NAME} PRIVATE GL)
 endif()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw libglew_static freetype)
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw3 glewd freetyped)

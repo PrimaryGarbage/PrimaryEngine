@@ -4,17 +4,24 @@ source /usr/local/bin/color.sh
 
 CMAKE_BUILD_DIR='../out'
 PROJECT_NAME='libPrimaryEngine'
-TEST_PROJECT_NAME='PrimaryEngineTest'
 LIB_EXTENSION='dll'
 BUILD_TYPE=Debug
 POSTFIX='-d'
 TEST_PROJECT_PATH="test_project/project"
-TEST_PROJECT_PRIMARY_LIB_PATH="$TEST_PROJECT_PATH/external/primary_engine"
-HEADER_FILENAME='PrimaryEngine.hpp'
+TEST_PROJECT_LIB_PATH="$TEST_PROJECT_PATH/external/lib"
+TEST_PROJECT_INCLUDE_PATH="$TEST_PROJECT_PATH/external/primary_engine/include"
+
+determine_lib_extension() {
+	if [[ $(uname -s) == "Linux" ]]; then
+		LIB_EXTENSION='so'
+	else
+		LIB_EXTENSION='dll'
+	fi
+}
 
 copy_lib() {
-	cp $CMAKE_BUILD_DIR/bin/$PROJECT_NAME$POSTFIX.$LIB_EXTENSION $TEST_PROJECT_PRIMARY_LIB_PATH/
-	cp -r ./include $TEST_PROJECT_PRIMARY_LIB_PATH/
+	cp $CMAKE_BUILD_DIR/$PROJECT_NAME$POSTFIX.$LIB_EXTENSION $TEST_PROJECT_LIB_PATH/
+	cp -r ./include $TEST_PROJECT_INCLUDE_PATH/
 }
 
 configure() {
@@ -71,6 +78,10 @@ change_build_type() {
 			;;
 	esac
 }
+
+##### Script Start #####
+
+determine_lib_extension
 
 while true
 do
