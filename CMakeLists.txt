@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BINARY_DIR}bin)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 set(BUILD_SHARED_LIBS OFF)
-set(CMAKE_EXE_LINKER_FLAGS "-static")
 set(TEST_PROJECT_LIB_PATH "test_project/project/external/primary_engine")
 
 set(PRIMARY_SRC
@@ -90,6 +89,7 @@ add_library(${PROJECT_NAME} SHARED ${PRIMARY_SRC})
 
 #add_compile_definitions(USE_STD_FILESYSTEM)
 add_compile_definitions(PRIMARY_BUILD_LIB)
+add_compile_definitions(GLEW_STATIC)
 
 # link statically after generating glfw and glew
 set(CMAKE_LINK_SEARCH_START_STATIC ON)
@@ -102,11 +102,19 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/external/lib)
 
+# build type specifics
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+	target_link_libraries(${PROJECT_NAME} PRIVATE glfw3 glewd freetyped)
+else()
+	target_link_libraries(${PROJECT_NAME} PRIVATE glfw3 glew freetype)
+endif()
+
+# system type specifics
 if(WIN32)
+	target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/external/lib/win)
 	target_link_libraries(${PROJECT_NAME} PRIVATE opengl32)
     target_link_options(${PROJECT_NAME} PRIVATE -Wl,--export-all-symbols)
 elseif(UNIX)
+	target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/external/lib/linux)
 	target_link_libraries(${PROJECT_NAME} PRIVATE GL)
 endif()
-
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw3 glewd freetyped)
