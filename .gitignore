@@ -3,3 +3,7 @@ logs/
 *.code-workspace
 imgui.ini
 test_project/out
+libPrimaryEngine-d.dll
+libPrimaryEngine.dll
+libPrimaryEngine-d.so
+libPrimaryEngine.so
