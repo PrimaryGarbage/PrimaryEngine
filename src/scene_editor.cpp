@@ -1,14 +1,13 @@
-#include "./graphics/renderer.hpp"
+#include "graphics/renderer.hpp"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "globals.hpp"
 #include "input.hpp"
 #include "ImGuiFileDialog.h"
-#include "./nodes/drawable.hpp"
-#include "./nodes/node_utils.hpp"
+#include "nodes/drawable.hpp"
 #include "resource_manager.hpp"
-#include "./graphics/primitives.hpp"
-#include "gtc/matrix_transform.hpp"
+#include "graphics/primitives.hpp"
+#include "GLM/gtc/matrix_transform.hpp"
 
 namespace prim
 {

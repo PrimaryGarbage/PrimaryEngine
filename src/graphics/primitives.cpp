@@ -1,5 +1,5 @@
 #include "primitives.hpp"
-#include "mesh.hpp"
+#include "graphics/mesh.hpp"
 
 namespace prim
 {

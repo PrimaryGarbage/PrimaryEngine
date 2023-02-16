@@ -6,9 +6,10 @@
 #include <cassert>
 #include <filesystem>
 #include <algorithm>
-#include "glm.hpp"
+#include "GLM/glm.hpp"
 #include "globals.hpp"
 #include "utils.hpp"
+#include "nodes/node.hpp"
 #include <iostream>
 
 #define THROW_IF_NOT_INITIALIZED if(!initialized) throw PRIM_EXCEPTION("Calling Primary App functions before PrimaryApp::init() is forbidden");	

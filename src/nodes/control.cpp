@@ -1,6 +1,6 @@
 #include "control.hpp"
-#include "gtx/rotate_vector.hpp"
-#include "gtx/vector_angle.hpp"
+#include "GLM/gtx/rotate_vector.hpp"
+#include "GLM/gtx/vector_angle.hpp"
 #include "camera_base.hpp"
 #include "globals.hpp"
 

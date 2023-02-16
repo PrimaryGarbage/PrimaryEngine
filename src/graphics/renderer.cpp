@@ -1,8 +1,9 @@
 #include "renderer.hpp"
 #include "logger.hpp"
-#include "gtc/matrix_transform.hpp"
+#include "GLM/gtc/matrix_transform.hpp"
 #include "globals.hpp"
-#include "../nodes/drawable.hpp"
+#include "nodes/drawable.hpp"
+#include "nodes/camera_base.hpp"
 
 namespace prim
 {
@@ -19,6 +20,7 @@ namespace prim
 		{
 			Globals::logger->logError("[OpenGL Error] (" + std::to_string(error) + "): " + function + " " + file + ":" + std::to_string(line), true);
 			return false;
+			long long a;
 		}
 		return true;
 	}

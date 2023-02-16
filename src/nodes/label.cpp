@@ -1,8 +1,8 @@
 #include "label.hpp"
-#include "../graphics/renderer.hpp"
+#include "graphics/renderer.hpp"
 #include "globals.hpp"
-#include "../graphics/primitives.hpp"
-#include "gtc/matrix_transform.hpp"
+#include "graphics/primitives.hpp"
+#include "GLM/gtc/matrix_transform.hpp"
 
 namespace prim
 {

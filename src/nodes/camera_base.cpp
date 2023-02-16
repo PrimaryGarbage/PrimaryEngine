@@ -1,5 +1,5 @@
 #include "camera_base.hpp"
-#include "../graphics/renderer.hpp"
+#include "graphics/renderer.hpp"
 #include "globals.hpp"
 
 namespace prim

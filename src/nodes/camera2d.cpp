@@ -1,6 +1,6 @@
 #include "camera2d.hpp"
-#include "../graphics/renderer.hpp"
-#include "gtc/matrix_transform.hpp"
+#include "graphics/renderer.hpp"
+#include "GLM/gtc/matrix_transform.hpp"
 #include "utils.hpp"
 #include "imgui.h"
 #include "node_utils.hpp"

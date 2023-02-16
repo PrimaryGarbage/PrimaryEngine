@@ -4,7 +4,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <stack>
-#include "./nodes/node.hpp"
+#include "nodes/node.hpp"
 #include "utils.hpp"
 #include "globals.hpp"
 #include "resource_manager.hpp"

@@ -1,5 +1,5 @@
 #include "actor_camera2d.hpp"
-#include "gtx/rotate_vector.hpp"
+#include "GLM/gtx/rotate_vector.hpp"
 #include "utils.hpp"
 #include "globals.hpp"
 #include "imgui.h"

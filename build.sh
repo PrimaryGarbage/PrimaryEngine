@@ -10,6 +10,28 @@ POSTFIX='-d'
 TEST_PROJECT_PATH="test_project/project"
 TEST_PROJECT_LIB_PATH="$TEST_PROJECT_PATH/external/lib"
 TEST_PROJECT_INCLUDE_PATH="$TEST_PROJECT_PATH/external/primary_engine/include"
+INCLUDE_EXPORT_DIR="include"
+
+compile_include_files() {
+	EXTERNAL_INCLUDE_DIR="external/include_export"
+	INTERNAL_SOURCE_DIR="src"
+	FREETYPE_HEADER_PATH="freetype2/ft2build.h"
+	PRIMARY_HEADER_PATH="primary_engine.hpp"
+
+	echo "Compiling include files folder..."
+
+	rm -rf $INCLUDE_EXPORT_DIR
+	mkdir -p $INCLUDE_EXPORT_DIR
+
+	# copy external header files
+	cp -r $EXTERNAL_INCLUDE_DIR/* $INCLUDE_EXPORT_DIR
+	# copy all internal source files
+	cp -r $INTERNAL_SOURCE_DIR/* $INCLUDE_EXPORT_DIR
+	# remove all internal .cpp files
+	find $INCLUDE_EXPORT_DIR -type f -name "*.cpp" -delete
+
+	echo "Include files folder compiled ($INCLUDE_EXPORT_DIR)"
+}
 
 determine_lib_extension() {
 	if [[ $(uname -s) == "Linux" ]]; then
@@ -19,9 +41,11 @@ determine_lib_extension() {
 	fi
 }
 
-copy_lib() {
+copy_lib_to_test_project() {
 	cp $CMAKE_BUILD_DIR/bin/$PROJECT_NAME$POSTFIX.$LIB_EXTENSION $TEST_PROJECT_LIB_PATH/
-	cp -r ./include $TEST_PROJECT_INCLUDE_PATH/
+	rm -rf $TEST_PROJECT_INCLUDE_PATH
+	mkdir -p $TEST_PROJECT_INCLUDE_PATH
+	cp -r $INCLUDE_EXPORT_DIR/* $TEST_PROJECT_INCLUDE_PATH/
 }
 
 configure() {
@@ -31,8 +55,9 @@ configure() {
 
 build() {
 	echo -e "Building..."
-	{ cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_lib; } \
-	|| { configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_lib; } \
+	compile_include_files
+	{ cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_lib_to_test_project; } \
+	|| { configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_lib_to_test_project; } \
 	|| { echo -e "${RED}Building failure${NOCOLOR}"; false; }
 }
 
