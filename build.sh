@@ -13,10 +13,10 @@ TEST_PROJECT_INCLUDE_PATH="$TEST_PROJECT_PATH/external/primary_engine/include"
 INCLUDE_EXPORT_DIR="include"
 
 compile_include_files() {
-	EXTERNAL_INCLUDE_DIR="external/include_export"
+	# path to manually compiled external lib headers
+	EXTERNAL_HEADER_DIR="external/include_export"
+	# path to internal source files
 	INTERNAL_SOURCE_DIR="src"
-	FREETYPE_HEADER_PATH="freetype2/ft2build.h"
-	PRIMARY_HEADER_PATH="primary_engine.hpp"
 
 	echo "Compiling include files folder..."
 
@@ -24,13 +24,13 @@ compile_include_files() {
 	mkdir -p $INCLUDE_EXPORT_DIR
 
 	# copy external header files
-	cp -r $EXTERNAL_INCLUDE_DIR/* $INCLUDE_EXPORT_DIR
+	cp -r $EXTERNAL_HEADER_DIR/* $INCLUDE_EXPORT_DIR
 	# copy all internal source files
 	cp -r $INTERNAL_SOURCE_DIR/* $INCLUDE_EXPORT_DIR
 	# remove all internal .cpp files
 	find $INCLUDE_EXPORT_DIR -type f -name "*.cpp" -delete
 
-	echo "Include files folder compiled ($INCLUDE_EXPORT_DIR)"
+	echo "Include files folder compiled ($PWD/$INCLUDE_EXPORT_DIR)"
 }
 
 determine_lib_extension() {
@@ -48,6 +48,14 @@ copy_lib_to_test_project() {
 	cp -r $INCLUDE_EXPORT_DIR/* $TEST_PROJECT_INCLUDE_PATH/
 }
 
+build_test_project() {
+	echo -e "Building test project..."
+	cd $TEST_PROJECT_PATH
+	echo 5 | source ./build.sh
+	echo 2 | source ./build.sh
+	cd -
+}
+
 configure() {
 	echo -e "Configuring Cmake..."
 	cmake -G Ninja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -S . -B $CMAKE_BUILD_DIR
@@ -56,17 +64,9 @@ configure() {
 build() {
 	echo -e "Building..."
 	compile_include_files
-	{ cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_lib_to_test_project; } \
-	|| { configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_lib_to_test_project; } \
+	{ cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_lib_to_test_project && build_test_project; } \
+	|| { configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_lib_to_test_project && build_test_project; } \
 	|| { echo -e "${RED}Building failure${NOCOLOR}"; false; }
-}
-
-build_test_project() {
-	echo -e "Building test project..."
-	cd $TEST_PROJECT_PATH
-	echo 5 | source ./build.sh
-	echo 2 | source ./build.sh
-	cd -
 }
 
 run_test_project() {

@@ -40,7 +40,7 @@ configure() {
 build() {
 	echo -e "Building..."
 	{ cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_res_dir; } \
-	|| { configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_res_dir; } \
+	|| { echo "CMake hasn't been configured prior to building"; configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_res_dir; } \
 	|| { echo -e "${RED}Building failure${NOCOLOR}"; false; }
 }
 
