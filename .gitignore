@@ -7,3 +7,5 @@ libPrimaryEngine-d.dll
 libPrimaryEngine.dll
 libPrimaryEngine-d.so
 libPrimaryEngine.so
+include/
+test_project/project/external/
