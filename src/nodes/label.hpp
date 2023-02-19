@@ -19,6 +19,7 @@ namespace prim
             inline static const char* textColor = "textColor";
             inline static const char* backgroundColor = "backgoundColor";
             inline static const char* padding = "padding";
+            inline static const char* borderRadius = "borderRadius";
         };
 
     private:
@@ -31,6 +32,7 @@ namespace prim
         glm::vec4 textColor = glm::vec4(1.0f);
         glm::vec4 backgroundColor {0.0f, 0.0f, 0.0f, 1.0f};
         glm::vec2 padding { 1.0f, 1.0f };
+        float borderRadius = 0.0f;
     public:
         using Control::Control;
         Label();
@@ -39,10 +41,15 @@ namespace prim
 
         inline std::string_view getText() const { return text; }
         inline glm::vec4 getTextColor() const { return textColor; }
+        inline glm::vec4 getBackgroudColor() const { return backgroundColor; }
+        inline glm::vec2 getPadding() const { return padding; }
+        inline float getBorderRadius() const { return borderRadius; }
 
         inline void setText(std::string text) { this->text = text; }
         inline void setTextColor(glm::vec4 color) { this->textColor = color; }
         inline void setBackgroundColor(glm::vec4 color) { this->backgroundColor = color; }
+        inline void setPadding(glm::vec2 padding) { this->padding = padding; }
+        inline void setBorderRadius(float radius) { this->borderRadius = borderRadius; }
 
         virtual void start() override;
         virtual void update(float deltaTime) override;

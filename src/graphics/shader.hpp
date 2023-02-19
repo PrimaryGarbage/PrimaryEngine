@@ -11,7 +11,7 @@ namespace prim
 {
     struct ShaderProgramSource;
 
-    enum class DefaultShader { simple, plainColor, select, text };
+    enum class DefaultShader { simple, plainColor, select, text, controlBackground };
 
     class Shader
     {
@@ -22,6 +22,7 @@ namespace prim
         inline static Shader* defaultPlainColorShader = nullptr;
         inline static Shader* selectShader = nullptr;
         inline static Shader* textDefaultShader = nullptr;
+        inline static Shader* defaultControlBackgroundShader = nullptr;
 
         unsigned int gl_id;
         mutable std::unordered_map<std::string, int> uniformLocationCache;
@@ -51,6 +52,7 @@ namespace prim
         void setUniform4f(const std::string name, glm::vec4 vec) const;
         void setUniform1f(const std::string name, float value) const;
         void setUniform1i(const std::string name, int value) const;
+        void setUniform2f(const std::string name, glm::vec2 vec) const;
 
         inline unsigned int getId() const { return gl_id; }
     };

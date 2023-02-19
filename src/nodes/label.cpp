@@ -9,13 +9,13 @@ namespace prim
     Label::Label(): Control(), glyphMesh(Primitives::createGlyphMesh()), 
         backgroundMesh(Primitives::createSquareMesh(1.0f))
     {
-        backgroundMesh.compositions.front().shader = Shader::getDefaultShader(DefaultShader::plainColor);
+        backgroundMesh.compositions.front().shader = Shader::getDefaultShader(DefaultShader::controlBackground);
     }
     
     Label::Label(std::string name): Control(name), glyphMesh(Primitives::createGlyphMesh()),
         backgroundMesh(Primitives::createSquareMesh(1.0f))
     {
-        backgroundMesh.compositions.front().shader = Shader::getDefaultShader(DefaultShader::plainColor);
+        backgroundMesh.compositions.front().shader = Shader::getDefaultShader(DefaultShader::controlBackground);
     }
     
     void Label::start() 
@@ -47,8 +47,8 @@ namespace prim
         StringFontInfo stringInfo = font.calculateStringInfo(text);
         modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x - padding.x, globalPosition.y - globalSize.y * stringInfo.emMaxDescend - padding.y, transform.zIndex));
         modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
-        // here: background size is wrong
         modelMat = glm::scale(modelMat, glm::vec3(globalSize.x * stringInfo.emSize.x + padding.x * 2.0f, globalSize.y * (stringInfo.emSize.y + stringInfo.emMaxDescend) + padding.y * 2.0f, 1.0f));
+        backgroundMesh.compositions.front().shader->setUniform1f("u_borderRadius", borderRadius);
         renderer.setModelMat(std::move(modelMat));
         renderer.drawMesh(backgroundMesh);
 
@@ -82,6 +82,7 @@ namespace prim
         ss << Utils::createKeyValuePair(StateFields::textColor, Utils::serializeVec4(textColor)) << std::endl;
         ss << Utils::createKeyValuePair(StateFields::backgroundColor, Utils::serializeVec4(backgroundColor)) << std::endl;
         ss << Utils::createKeyValuePair(StateFields::padding, Utils::serializeVec2(padding)) << std::endl;
+        ss << Utils::createKeyValuePair(StateFields::borderRadius, std::to_string(borderRadius)) << std::endl;
 
         if(withChildren) ss << serializeChildren();
 
@@ -96,6 +97,7 @@ namespace prim
         textColor = Utils::deserializeVec4(fieldValues[StateFields::textColor]);
         backgroundColor = Utils::deserializeVec4(fieldValues[StateFields::backgroundColor]);
         padding = Utils::deserializeVec2(fieldValues[StateFields::padding]);
+        borderRadius = std::stof(fieldValues[StateFields::borderRadius]);
     }
     
     void Label::renderFields(SceneEditor* sceneEditor) 
@@ -112,6 +114,7 @@ namespace prim
         ImGui::DragFloat2("Padding", &padding.x, 0.1f, 0.0f, std::numeric_limits<float>::max());
         ImGui::ColorEdit4("Text Color", &textColor.x);
         ImGui::ColorEdit4("Background Color", &backgroundColor.x);
+        ImGui::DragFloat("Border Radius", &borderRadius, 0.01f, 0.0f, 5.0f);
     }
     
 } // namespace prim

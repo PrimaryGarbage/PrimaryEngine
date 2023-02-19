@@ -89,6 +89,15 @@ namespace prim
                 }
                 return defaultPlainColorShader;
             }
+            case DefaultShader::controlBackground:
+            {
+                if(!defaultControlBackgroundShader)
+                {
+                    defaultControlBackgroundShader = new Shader(defaultControlBackgroundShaderData);
+                    Globals::logger->logInfo("Loaded default control background shader");
+                }
+                return defaultControlBackgroundShader;
+            }
             default:
             {
                 throw PRIM_EXCEPTION("Trying to get unknown type of default shader");
@@ -109,6 +118,7 @@ namespace prim
         if(selectShader) delete selectShader;
         if(textDefaultShader) delete textDefaultShader;
         if(defaultPlainColorShader) delete defaultPlainColorShader;
+        if(defaultControlBackgroundShader) delete defaultControlBackgroundShader;
         Globals::logger->logInfo("Default shaders terminated.");
     }
 
@@ -169,6 +179,12 @@ namespace prim
     {
         bind();
         GL_CALL(glUniform1i(getUniformLocation(name), value));
+    }
+    
+    void Shader::setUniform2f(const std::string name, glm::vec2 vec) const
+    {
+        bind();
+        GL_CALL(glUniform2f(getUniformLocation(name), vec.x, vec.y));
     }
 
     unsigned int Shader::createShaderProgram(const std::string vertexShader, const std::string fragmentShader)
