@@ -182,6 +182,9 @@ in vec2 uv;
 uniform vec4 u_color;
 uniform float u_time;
 uniform float u_borderRadius = 0.0;
+uniform vec2 u_resolution = vec2(1.0, 1.0);
+
+float resRatio = u_resolution.y / u_resolution.x;
 
 float isOutsideOfCircle(float px, float py, float cx, float cy, float rad)
 {
@@ -190,30 +193,32 @@ float isOutsideOfCircle(float px, float py, float cx, float cy, float rad)
     return step(rad * rad, pxAdj * pxAdj + pyAdj * pyAdj);
 }
 
-float notInLeftUpperCorner()
+float notInLeftUpperCorner(vec2 uv, float borderRadius)
 {
-    return 1.0 - (1.0 - step(u_borderRadius, uv.x)) * (step(1.0 - u_borderRadius, uv.y)) * (isOutsideOfCircle(uv.x, uv.y, u_borderRadius, 1.0 - u_borderRadius, u_borderRadius));
+    return 1.0 - (1.0 - step(borderRadius, uv.x)) * (step(resRatio - borderRadius, uv.y)) * (isOutsideOfCircle(uv.x, uv.y, borderRadius, resRatio - borderRadius, borderRadius));
 }
 
-float notInLeftLowerCorner()
+float notInLeftLowerCorner(vec2 uv, float borderRadius)
 {
-    return 1.0 - (1.0 - step(u_borderRadius, uv.x)) * (1.0 - step(u_borderRadius, uv.y)) * (isOutsideOfCircle(uv.x, uv.y, u_borderRadius, u_borderRadius, u_borderRadius));
+    return 1.0 - (1.0 - step(borderRadius, uv.x)) * (1.0 - step(borderRadius, uv.y)) * (isOutsideOfCircle(uv.x, uv.y, borderRadius, borderRadius, borderRadius));
 }
 
-float notInRightUpperCorner()
+float notInRightUpperCorner(vec2 uv, float borderRadius)
 {
-   return 1.0 - (step(1.0 - u_borderRadius, uv.x)) * (step(1.0 - u_borderRadius, uv.y)) * (isOutsideOfCircle(uv.x, uv.y, 1.0 - u_borderRadius, 1.0 - u_borderRadius, u_borderRadius));
+   return 1.0 - (step(1.0 - borderRadius, uv.x)) * (step(resRatio - borderRadius, uv.y)) * (isOutsideOfCircle(uv.x, uv.y, 1.0 - borderRadius, resRatio - borderRadius, borderRadius));
 }
 
-float notInRightLowerCorner()
+float notInRightLowerCorner(vec2 uv, float borderRadius)
 {
-    return 1.0 - (step(1.0 - u_borderRadius, uv.x)) * (1.0 - step(u_borderRadius, uv.y)) * (isOutsideOfCircle(uv.x, uv.y, 1.0 - u_borderRadius, u_borderRadius, u_borderRadius));
+    return 1.0 - (step(1.0 - borderRadius, uv.x)) * (1.0 - step(borderRadius, uv.y)) * (isOutsideOfCircle(uv.x, uv.y, 1.0 - borderRadius, borderRadius, borderRadius));
 }
 
 void main()
 {
-	float visible = notInLeftUpperCorner() * notInRightUpperCorner() * notInLeftLowerCorner() * notInRightLowerCorner();
-	color = vec4(u_color.xyz, visible);
+	float bRad = u_borderRadius / u_resolution.x;
+	vec2 uvScaled = vec2(uv.x, uv.y * u_resolution.y / u_resolution.x);
+	float visible = notInLeftUpperCorner(uvScaled, bRad) * notInRightUpperCorner(uvScaled, bRad) * notInLeftLowerCorner(uvScaled, bRad) * notInRightLowerCorner(uvScaled, bRad);
+	color = vec4(u_color.xyz, visible * u_color.a);
 })rawstring";
 
 #endif // __DEFAULT_SHADER_DATA_HPP__

@@ -45,9 +45,13 @@ namespace prim
         // render background
         glm::mat4 modelMat(1.0f);
         StringFontInfo stringInfo = font.calculateStringInfo(text);
+        glm::vec3 pivotTranslation = glm::vec3(-padding.x, -globalSize.y * stringInfo.emMaxDescend - padding.y, 0.0f);
         modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x - padding.x, globalPosition.y - globalSize.y * stringInfo.emMaxDescend - padding.y, transform.zIndex));
+        modelMat = glm::translate(modelMat, -pivotTranslation);
         modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
+        modelMat = glm::translate(modelMat, pivotTranslation);
         modelMat = glm::scale(modelMat, glm::vec3(globalSize.x * stringInfo.emSize.x + padding.x * 2.0f, globalSize.y * (stringInfo.emSize.y + stringInfo.emMaxDescend) + padding.y * 2.0f, 1.0f));
+        backgroundMesh.compositions.front().shader->setUniform2f("u_resolution", stringInfo.pxSize);
         backgroundMesh.compositions.front().shader->setUniform1f("u_borderRadius", borderRadius);
         renderer.setModelMat(std::move(modelMat));
         renderer.drawMesh(backgroundMesh);
@@ -56,10 +60,9 @@ namespace prim
         {
             glm::mat4 modelMat(1.0f);
             const Glyph* glyph = font.getGlyph(ch);
-            const glm::vec3 pivotTranslation = glm::vec3(offset, 0.0f, transform.zIndex);
             const glm::vec2 glyphOffset = glyph->emOffset * globalSize;
-            modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x + offset + glyphOffset.x, globalPosition.y + glyphOffset.y, transform.zIndex));
-            modelMat = glm::translate(modelMat, -pivotTranslation);
+            const glm::vec3 pivotTranslation = glm::vec3(offset + glyphOffset.x, glyphOffset.y, 0.0f);
+            modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x, globalPosition.y, transform.zIndex));
             modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
             modelMat = glm::translate(modelMat, pivotTranslation);
             modelMat = glm::scale(modelMat, glm::vec3(globalSize.x * glyph->emSize.x, globalSize.y * glyph->emSize.y, 1.0f));
@@ -114,7 +117,7 @@ namespace prim
         ImGui::DragFloat2("Padding", &padding.x, 0.1f, 0.0f, std::numeric_limits<float>::max());
         ImGui::ColorEdit4("Text Color", &textColor.x);
         ImGui::ColorEdit4("Background Color", &backgroundColor.x);
-        ImGui::DragFloat("Border Radius", &borderRadius, 0.01f, 0.0f, 5.0f);
+        ImGui::DragFloat("Border Radius", &borderRadius, 0.1f, 0.0f, 100.0f);
     }
     
 } // namespace prim
