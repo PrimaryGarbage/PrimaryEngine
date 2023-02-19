@@ -11,19 +11,35 @@
 namespace prim
 {
 
-    // all numeric values here are relative (0.0 <= x <= 1.0)
     struct Glyph
     {
-        glm::vec2 size;
-        glm::vec2 offset;
-        float advanceX;
+        // relative metrics are relative to the EM
+
+        glm::vec2 pxSize;
+        glm::vec2 emSize;
+        glm::vec2 emOffset;
+        float emAdvanceX;
+        float pxAdvanceX;
+        float pxAscend;
+        float pxDescend;
         Texture* texture;
+    };
+    
+    struct StringFontInfo
+    {
+        glm::vec2 pxSize;
+        float pxMaxAscend;
+        float pxMaxDescend;
+
+        glm::vec2 emSize;
+        float emMaxAscend;
+        float emMaxDescend;
     };
 
     class Font
     {
     private:
-        static const unsigned int defaultEmSize = 3000u;
+        static const unsigned int defaultEmSize = 100u;
 
         FT_Library ftLibrary = NULL;
         FT_Face ftFace = NULL;
@@ -31,6 +47,7 @@ namespace prim
 
         void generateTextures();
         FT_GlyphSlot renderGlyph(char ch);
+
     public:
         Font();
         Font(std::string filename);
@@ -40,8 +57,10 @@ namespace prim
         void load(uchar* data, uint size);
         void setEmSize(int size);
         int getEmSize() const;
+        int getEmSizeInPixels() const;
         const Glyph* getGlyph(unsigned char ch) const;
-        float calculateWidth(const std::string& str) const;
+
+        StringFontInfo calculateStringInfo(const std::string& str) const;
     };
 } // namespace prim
 

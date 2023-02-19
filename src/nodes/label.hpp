@@ -17,6 +17,8 @@ namespace prim
         {
             inline static const char* text = "text";
             inline static const char* textColor = "textColor";
+            inline static const char* backgroundColor = "backgoundColor";
+            inline static const char* padding = "padding";
         };
 
     private:
@@ -28,6 +30,7 @@ namespace prim
         Mesh backgroundMesh;
         glm::vec4 textColor = glm::vec4(1.0f);
         glm::vec4 backgroundColor {0.0f, 0.0f, 0.0f, 1.0f};
+        glm::vec2 padding { 1.0f, 1.0f };
     public:
         using Control::Control;
         Label();

@@ -77,8 +77,8 @@ configure() {
 build() {
 	echo -e "Building..."
 	compile_include_files
-	{ cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_lib_to_test_project && build_test_project; } \
-	|| { configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_lib_to_test_project && build_test_project; } \
+	{ cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_lib_to_test_project; } \
+	|| { configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_lib_to_test_project; } \
 	|| { echo -e "${RED}Building failure${NOCOLOR}"; false; }
 }
 

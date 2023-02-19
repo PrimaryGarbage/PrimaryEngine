@@ -36,14 +36,19 @@ namespace prim
         textureMap.clear();
         float emSizeFloat = static_cast<float>(getEmSize());
 
-        for(unsigned char ch = 32; ch < 126; ++ch)
+        for(unsigned char ch = 0; ch < 126; ++ch)
         {
             FT_GlyphSlot glyph = renderGlyph(ch);   
             Texture* texture = Texture::create(glyph->bitmap.buffer, glyph->bitmap.width, glyph->bitmap.rows, ImageType::bitmap);
-            textureMap[ch] = Glyph{ glm::vec2(glyph->metrics.width, glyph->metrics.height) / emSizeFloat, 
-                glm::vec2(glyph->metrics.horiBearingX, glyph->metrics.horiBearingY - glyph->metrics.height) / emSizeFloat, 
-                glyph->advance.x / emSizeFloat, 
-                texture };
+            textureMap[ch] = Glyph { 
+                glm::vec2(glyph->metrics.width >> 6, glyph->metrics.height >> 6), // pxSize
+                glm::vec2(glyph->metrics.width, glyph->metrics.height) / emSizeFloat, // emSize
+                glm::vec2(glyph->metrics.horiBearingX, glyph->metrics.horiBearingY - glyph->metrics.height) / emSizeFloat, // emOffset
+                glyph->advance.x / emSizeFloat, // emAdvance
+                static_cast<float>(glyph->advance.x >> 6), // pxAdvance
+                static_cast<float>(glyph->metrics.horiBearingY >> 6), // pxAscend
+                static_cast<float>((glyph->metrics.height - glyph->metrics.horiBearingY) >> 6), // pxDescend
+                texture }; // texture
         }
     }
     
@@ -61,7 +66,7 @@ namespace prim
     
     void Font::setEmSize(int size) 
     {
-        FT_CHECK_ERROR(FT_Set_Char_Size(ftFace, 0, size, 0, 0));
+        FT_CHECK_ERROR(FT_Set_Pixel_Sizes(ftFace, 0, size));
         generateTextures();
     }
     
@@ -69,20 +74,47 @@ namespace prim
     {
         return ftFace->size->metrics.height;
     }
+
+    int Font::getEmSizeInPixels() const
+    {
+        return ftFace->size->metrics.height >> 6;
+    }
     
     const Glyph* Font::getGlyph(unsigned char ch) const
     {
+        if(textureMap.count(ch) == 0) 
+            throw PRIM_EXCEPTION("Trying to access font glyph that doesn't exist!");
+
         return &textureMap.at(ch);
     }
     
-    float Font::calculateWidth(const std::string& str) const
+    StringFontInfo Font::calculateStringInfo(const std::string& str) const
     {
-        float width = 0.0f;
+        StringFontInfo info;
+        int emSize = getEmSizeInPixels();
+
         for(const char& ch : str)
         {
-            width += getGlyph(ch)->advanceX;
+            const Glyph* glyph = getGlyph(ch);
+
+            info.pxSize.x += glyph->pxAdvanceX;
+
+            if(info.pxSize.y < glyph->pxSize.y) 
+                info.pxSize.y = glyph->pxSize.y;
+
+            if(info.pxMaxAscend < glyph->pxAscend)
+                info.pxMaxAscend = glyph->pxAscend;
+
+            if(info.pxMaxDescend < glyph->pxDescend)
+                info.pxMaxDescend = glyph->pxDescend;
         }
-        return width;
+
+        info.emSize.x = info.pxSize.x / emSize;
+        info.emSize.y = info.pxSize.y / emSize;
+        info.emMaxAscend = info.pxMaxAscend / emSize;
+        info.emMaxDescend = info.pxMaxDescend / emSize;
+
+        return info;
     }
     
     FT_GlyphSlot Font::renderGlyph(char ch) 

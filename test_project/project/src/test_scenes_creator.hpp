@@ -69,11 +69,11 @@ namespace prim
             uiLabel->setText("Imagine this is a UI element");
             uiChildLabel->setText("And this is a UI element child");
             uiLabel->setAnchor({ 0.0f, 1.0f });
-            uiLabel->setSize({ 90.0f, 90.0f });
-            uiLabel->move({0.0f, -80.0f});
+            uiLabel->setSize({ 80.0f, 80.0f });
+            uiLabel->move({50.0f, -130.0f});
             uiChildLabel->setPivot({ 1.0f, 0.0f });
             uiChildLabel->move(180.0f, -85.0f);
-            uiChildLabel->setSize(70.0f, 70.0f);
+            uiChildLabel->setSize(60.0f, 60.0f);
             uiChildLabel->setTextColor({0.1f, 1.0f, 0.1f, 1.0f});
 
             scene->addChild(background);
