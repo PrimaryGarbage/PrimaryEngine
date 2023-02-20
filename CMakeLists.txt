@@ -15,7 +15,7 @@ set(PRIMARY_SRC
 	input.cpp input.hpp input_utils.hpp
 	logger.hpp logger.cpp
 	timer.hpp
-	utils.hpp
+	utils.hpp utils.cpp
 	globals.hpp
 	scene_editor.hpp scene_editor.cpp
 	scene_manager.hpp scene_manager.cpp

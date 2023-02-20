@@ -32,33 +32,39 @@ void Logger::logInfo(std::string msg, bool printAlso)
 {
     if(logLevel < LogLevel::Info) return;
 
-    static const char* prefix = "<INFO>: ";
+    static const char* prefix = " <INFO>: ";
 
-    buffer.append(prefix + msg);
+    std::string message = Utils::currentDateTimeString("[%d-%m-%Y %H:%M:%S]") + prefix + msg;
+
+    buffer.append(message);
     buffer.push_back('\n');
-	if(printAlso) printLine(prefix + msg);
+	if(printAlso) printLine(message);
 }
 
 void Logger::logWarning(std::string msg, bool printAlso) 
 {
     if(logLevel < LogLevel::Warning) return;
 
-    static const char* prefix = "<WARNING>: ";
+    static const char* prefix = " <WARNING>: ";
 
-    buffer.append(prefix + msg);
+    std::string message = Utils::currentDateTimeString("[%d-%m-%Y %H:%M:%S]") + prefix + msg;
+
+    buffer.append(message);
     buffer.push_back('\n');
-	if(printAlso) printLine(prefix + msg);
+	if(printAlso) printLine(message);
 }
 
 void Logger::logError(std::string msg, bool printAlso) 
 {
     if(logLevel < LogLevel::Error) return;
 
-    static const char* prefix = "<ERROR>: ";
+    static const char* prefix = " <ERROR>: ";
 
-    buffer.append(prefix + msg);
+    std::string message = Utils::currentDateTimeString("[%d-%m-%Y %H:%M:%S]") + prefix + msg;
+
+    buffer.append(message);
     buffer.push_back('\n');
-	if(printAlso) printLine(prefix + msg);
+	if(printAlso) printLine(message);
 }
 
 void Logger::terminate()
