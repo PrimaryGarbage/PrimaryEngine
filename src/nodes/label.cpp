@@ -34,34 +34,29 @@ namespace prim
 
         glm::vec2 globalPosition = getGlobalPosition();
         glm::vec2 globalSize = getSize();
-        float offset = 0.0f;
-
-        glyphMesh.compositions.front().shader->setUniform4f("u_color", textColor.r, textColor.g, textColor.b, textColor.a);
-        backgroundMesh.compositions.front().shader->setUniform4f("u_color", backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
-
         const glm::mat4& rendererViewMat = renderer.getViewMat();
         renderer.setViewMat(glm::mat4(1.0f));
+        glyphMesh.compositions.front().shader->setUniform4f("u_color", textColor.r, textColor.g, textColor.b, textColor.a);
 
         // render background
         glm::mat4 modelMat(1.0f);
         StringFontInfo stringInfo = font.calculateStringInfo(text);
-        glm::vec3 pivotTranslation = glm::vec3(-padding.x, -globalSize.y * stringInfo.emMaxDescend - padding.y, 0.0f);
-        modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x - padding.x, globalPosition.y - globalSize.y * stringInfo.emMaxDescend - padding.y, transform.zIndex));
-        modelMat = glm::translate(modelMat, -pivotTranslation);
+        modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x, globalPosition.y, transform.zIndex));
         modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
-        modelMat = glm::translate(modelMat, pivotTranslation);
         modelMat = glm::scale(modelMat, glm::vec3(globalSize.x * stringInfo.emSize.x + padding.x * 2.0f, globalSize.y * (stringInfo.emSize.y + stringInfo.emMaxDescend) + padding.y * 2.0f, 1.0f));
+        backgroundMesh.compositions.front().shader->setUniform4f("u_color", backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
         backgroundMesh.compositions.front().shader->setUniform2f("u_resolution", stringInfo.pxSize);
         backgroundMesh.compositions.front().shader->setUniform1f("u_borderRadius", borderRadius);
         renderer.setModelMat(std::move(modelMat));
         renderer.drawMesh(backgroundMesh);
 
+        float offset = 0.0f;
         for(const char& ch : text)
         {
             glm::mat4 modelMat(1.0f);
             const Glyph* glyph = font.getGlyph(ch);
             const glm::vec2 glyphOffset = glyph->emOffset * globalSize;
-            const glm::vec3 pivotTranslation = glm::vec3(offset + glyphOffset.x, glyphOffset.y, 0.0f);
+            const glm::vec3 pivotTranslation = glm::vec3(offset + glyphOffset.x + padding.x, glyphOffset.y + padding.y + stringInfo.emMaxDescend * globalSize.y, 0.0f);
             modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x, globalPosition.y, transform.zIndex));
             modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
             modelMat = glm::translate(modelMat, pivotTranslation);
