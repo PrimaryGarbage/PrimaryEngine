@@ -13,7 +13,7 @@ bool glLogCall(const char* function, const char* file, int line)
 {
 	if (GLenum error = glGetError())
 	{
-		prim::Globals::logger->logError("[OpenGL Error] (" + std::to_string(error) + "): " + function + " " + file + ":" + std::to_string(line), true);
+		prim::Logger::inst().logError("[OpenGL Error] (" + std::to_string(error) + "): " + function + " " + file + ":" + std::to_string(line), true);
 		return false;
 		long long a;
 	}

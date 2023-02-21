@@ -11,6 +11,7 @@ set(TEST_PROJECT_LIB_PATH "test_project/project/external/primary_engine")
 set(PRIMARY_SRC
 	main.cpp
 	primary_app.cpp primary_app.hpp
+	primary_app_options.hpp
 	prim_exception.hpp
 	input.cpp input.hpp input_utils.hpp
 	logger.hpp logger.cpp
@@ -22,7 +23,6 @@ set(PRIMARY_SRC
 	ImGuiFileDialog.h ImGuiFileDialog.cpp ImGuiFileDialogConfig.h
 	typedefs.hpp
 	resource_manager.hpp resource_manager.cpp
-	app_status.hpp
 	)
 
 set(MISC_SRC

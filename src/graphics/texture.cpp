@@ -1,6 +1,5 @@
 #include "texture.hpp"
 #include "glfw_extensions.hpp"
-#include "macros.hpp"
 #include "image.hpp"
 #include "globals.hpp"
 #include "default_texture_data.hpp"
@@ -72,7 +71,7 @@ namespace prim
         {
             Texture* texture = new Texture(resPath);
             textureCache[resPath] = texture;
-            Globals::logger->logInfo("Texture loaded. Path: " + resPath);
+            Logger::inst().logInfo("Texture loaded. Path: " + resPath);
             return texture;
         }
         
@@ -85,7 +84,7 @@ namespace prim
         {
             Texture* texture = new Texture(image);
             modifiedImageTextureCache.push_back(texture);
-            Globals::logger->logInfo("Texture loaded from modified image");
+            Logger::inst().logInfo("Texture loaded from modified image");
             return texture;
         }
         else
@@ -95,7 +94,7 @@ namespace prim
             {
                 std::string imageFilePath = image.getResPath();
                 Texture* texture = new Texture(imageFilePath);
-                Globals::logger->logInfo("Texture loaded. Path: " + imageFilePath);
+                Logger::inst().logInfo("Texture loaded. Path: " + imageFilePath);
                 textureCache[imageFilePath] = texture;
                 return texture;
             }
@@ -123,7 +122,7 @@ namespace prim
         if(!defaultTexture)
         {
             defaultTexture = Texture::create(defaultTextureData, defaultTextureDataLength, ImageType::jpeg);
-            Globals::logger->logInfo("Default texture loaded.");
+            Logger::inst().logInfo("Default texture loaded.");
         }
         return defaultTexture;
     }
@@ -161,7 +160,6 @@ namespace prim
     
     void Texture::unload()
     {
-        ASSERT_GLFW_NOT_TERMINATED
         if(gl_id > 0)
         {
             unbind();

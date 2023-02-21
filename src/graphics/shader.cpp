@@ -5,8 +5,8 @@
 #include "prim_exception.hpp"
 #include "resource_manager.hpp"
 #include "default_shader_data.hpp"
-#include "macros.hpp"
 #include "glfw_extensions.hpp"
+#include "globals.hpp"
 
 namespace prim
 {
@@ -41,7 +41,7 @@ namespace prim
         {
             Shader* shader = new Shader(ResourceManager::createResourcePath(resPath));
             shaderCache[resPath] = shader;
-            Globals::logger->logInfo("Shader loaded. Path: " + resPath);
+            Logger::inst().logInfo("Shader loaded. Path: " + resPath);
             return shader;
         }
 
@@ -57,7 +57,7 @@ namespace prim
                 if(!defaultShader) 
                 {
                     defaultShader = new Shader(defaultShaderData);
-                    Globals::logger->logInfo("Loaded default shader");
+                    Logger::inst().logInfo("Loaded default shader");
                 }
                 return defaultShader;
             }
@@ -66,7 +66,7 @@ namespace prim
                 if(!frameShader) 
                 {
                     frameShader = new Shader(frameShaderData);
-                    Globals::logger->logInfo("Loaded frame shader");
+                    Logger::inst().logInfo("Loaded frame shader");
                 }
                 return frameShader;
             }
@@ -75,7 +75,7 @@ namespace prim
                 if(!defaultTextShader) 
                 {
                     defaultTextShader = new Shader(defaultTextShaderData);
-                    Globals::logger->logInfo("Loaded text default shader");
+                    Logger::inst().logInfo("Loaded text default shader");
                 }
                 return defaultTextShader;
             }
@@ -84,7 +84,7 @@ namespace prim
                 if(!defaultPlainColorShader)
                 {
                     defaultPlainColorShader = new Shader(defaultPlainColorShaderData);
-                    Globals::logger->logInfo("Loaded default plain color shader");
+                    Logger::inst().logInfo("Loaded default plain color shader");
                 }
                 return defaultPlainColorShader;
             }
@@ -93,7 +93,7 @@ namespace prim
                 if(!defaultControlBackgroundShader)
                 {
                     defaultControlBackgroundShader = new Shader(defaultControlBackgroundShaderData);
-                    Globals::logger->logInfo("Loaded default control background shader");
+                    Logger::inst().logInfo("Loaded default control background shader");
                 }
                 return defaultControlBackgroundShader;
             }
@@ -109,7 +109,7 @@ namespace prim
         for(auto& pair : shaderCache)
         {
             delete pair.second;
-            Globals::logger->logInfo("Shader terminated. Path: " + pair.first);
+            Logger::inst().logInfo("Shader terminated. Path: " + pair.first);
         }
         shaderCache.clear();
 
@@ -118,7 +118,7 @@ namespace prim
         if(defaultTextShader) delete defaultTextShader;
         if(defaultPlainColorShader) delete defaultPlainColorShader;
         if(defaultControlBackgroundShader) delete defaultControlBackgroundShader;
-        Globals::logger->logInfo("Default shaders terminated.");
+        Logger::inst().logInfo("Default shaders terminated.");
     }
 
     void Shader::bind() const
@@ -144,7 +144,7 @@ namespace prim
 
         GL_CALL(int location = glGetUniformLocation(gl_id, name.c_str()));
         if (location == -1)
-            Globals::logger->logWarning("Warning: uniform '" + name + "' doesn't exist!", true);
+            Logger::inst().logWarning("Warning: uniform '" + name + "' doesn't exist!", true);
 
         uniformLocationCache[name] = location;
 
@@ -282,8 +282,8 @@ namespace prim
             glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
             char* message = (char*)alloca(length * sizeof(char));
             glGetShaderInfoLog(id, length, &length, message);
-            Globals::logger->logError("Failed to compile shader. Shader type: " + std::to_string(type), true);
-            Globals::logger->logError(message, true);
+            Logger::inst().logError("Failed to compile shader. Shader type: " + std::to_string(type), true);
+            Logger::inst().logError(message, true);
             glDeleteShader(id);
             throw PRIM_EXCEPTION("Failed to compile shader Shader type: " + std::to_string(type) + std::string(std::move(message)));
         }
@@ -293,7 +293,6 @@ namespace prim
 
     void Shader::unload()
     {
-        ASSERT_GLFW_NOT_TERMINATED
         if (gl_id > 0)
         {
             unbind();

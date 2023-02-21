@@ -49,9 +49,8 @@ namespace prim
     public:
         static inline const char* dragNodePayloadType = "NODE";
 
-        SceneEditor();
+        SceneEditor(Renderer* renderer);
         ~SceneEditor();
-        void init(Renderer* renderer);
         void draw();
         void print(std::string str);
         void addDragFloat(const char* label, float* f, float speed = 0.1f);

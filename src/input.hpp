@@ -12,6 +12,7 @@ namespace prim
 class Input final
 {
 private:
+	static bool initialized;
 	static const int keysCount = 350;
 	static PressInfo keys[keysCount];
 	static MouseInfo mouse;
@@ -30,6 +31,8 @@ private:
 	static void insertCodepointIntoString(unsigned int codepoint, std::string& str);
 	static void registerAllGamepads();
 public:
+	Input(GLFWwindow* window); // constructor here is just for calling init()
+
 	static void init(GLFWwindow* window);
 	static void update();
 	static void clear();

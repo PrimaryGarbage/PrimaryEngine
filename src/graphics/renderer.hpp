@@ -21,10 +21,6 @@ class Renderer
 private:
 	inline static std::unordered_map<GLFWwindow*, Renderer*> windowRendererMap;
 
-	const unsigned int defaultWidth = 800u;
-	const unsigned int defaultHeight = 800u;
-	const char* defaultName = "Prim Engine";
-
 	GLFWwindow* window = nullptr;
 	int windowWidth;
 	int windowHeight;
@@ -41,10 +37,9 @@ private:
 
 	void prepareForDrawing();
 public:
-	Renderer();
+	Renderer(uint32_t windowWidth, uint32_t windowHeight, const std::string& windowName);
 	~Renderer();
 
-	void init(unsigned int windowWidth, unsigned int windowHeight, const char* windowName);
 	void drawLists();
 	void drawMesh(const Mesh& mesh);
 	void drawMesh(const Mesh& mesh, const Shader* shader);

@@ -9,19 +9,7 @@
 
 namespace prim
 {
-	Renderer::Renderer()
-	{}
-
-	Renderer::~Renderer()
-	{
-		Shader::terminate();
-		Texture::terminate();
-		glfwTerminate();
-		Globals::logger->logInfo("GLFW successfully terminated", true);
-		Globals::appStatus.rendererTerminated = true;
-	}
-
-	void Renderer::init(unsigned int windowWidth, unsigned int windowHeight, const char* windowName)
+	Renderer::Renderer(uint32_t windowWidth, uint32_t windowHeight, const std::string& windowName)
 	{
 		if (!glfwInit())
 		{
@@ -34,7 +22,7 @@ namespace prim
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		window = glfwCreateWindow(windowWidth, windowHeight, windowName, nullptr, nullptr);
+		window = glfwCreateWindow(windowWidth, windowHeight, windowName.c_str(), nullptr, nullptr);
 		if (window == nullptr)
 		{
 			throw std::runtime_error("Failed to create glfw window!");
@@ -64,10 +52,17 @@ namespace prim
 		GL_CALL(glEnable(GL_DEPTH_TEST));
 		GL_CALL(glDepthFunc(GL_LEQUAL));
 
-		Globals::logger->logInfo("GLFW and GLEW initialized successfully", true);
-		Globals::logger->logInfo("OpenGL version: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))), true);
-		Globals::logger->logInfo("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
-		Globals::appStatus.rendererInitialized = true;
+		Logger::inst().logInfo("GLFW and GLEW initialized successfully", true);
+		Logger::inst().logInfo("OpenGL version: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))), true);
+		Logger::inst().logInfo("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
+	}
+
+	Renderer::~Renderer()
+	{
+		Shader::terminate();
+		Texture::terminate();
+		glfwTerminate();
+		Logger::inst().logInfo("GLFW successfully terminated", true);
 	}
 
 	void Renderer::drawLists()
@@ -189,8 +184,8 @@ namespace prim
 
 	void Renderer::error_callback(int error, const char* description)
 	{
-		Globals::logger->logError("GLFW error: " + std::to_string(error), true);
-		Globals::logger->logError(description);
+		Logger::inst().logError("GLFW error: " + std::to_string(error), true);
+		Logger::inst().logError(description);
 		// std::cerr << "GLFW error: " << error << std::endl;
 		// std::cerr << description;
 	}

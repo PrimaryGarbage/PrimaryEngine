@@ -13,8 +13,8 @@ class Exception
 private:
     std::string whatString;
 public:
-    Exception(): whatString("prim exception.") {}
-    Exception(std::string what, std::string file, int line): whatString("<PRIM EXCEPTION>. File: " + file + "; Line: " + std::to_string(line) + "; What: " + what) {}
+    Exception(): whatString("[PRIM EXCEPTION]") {}
+    Exception(std::string what, std::string file, int line): whatString("[PRIM EXCEPTION] -> File: '" + file + "', Line: '" + std::to_string(line) + "', What: '" + what + "'.") {}
 
     inline std::string what() const { return whatString; }
 };

@@ -12,36 +12,24 @@
 
 namespace prim
 {
-    SceneEditor::SceneEditor() : positionPointMesh(Primitives::createSquareMesh(positionPointSize))
+    SceneEditor::SceneEditor(Renderer* renderer) : 
+        renderer(renderer), positionPointMesh(Primitives::createSquareMesh(positionPointSize))
     {
         positionPointMesh.compositions.front().shader = Shader::getDefaultShader(DefaultShader::plainColor);
-    }
-
-    SceneEditor::~SceneEditor()
-    {
-        if (Globals::appStatus.sceneEditorTerminated) return;
-
-        ImGui_ImplOpenGL3_Shutdown();
-        ImGui_ImplGlfw_Shutdown();
-        ImGui::DestroyContext();
-
-        Globals::appStatus.sceneEditorTerminated = true;
-    }
-
-    void SceneEditor::init(Renderer* renderer)
-    {
-        if(Globals::appStatus.sceneEditorInitialized) return;
-
-        this->renderer = renderer;
         ImGui::CreateContext();
         ImGui_ImplGlfw_InitForOpenGL(renderer->getWindow(), true);
         ImGui_ImplOpenGL3_Init("#version 130");
         ImGui::StyleColorsDark();
         io = &ImGui::GetIO();
         io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        Logger::inst().logInfo("Scene editor initialized");
+    }
 
-
-        Globals::appStatus.sceneEditorInitialized = true;
+    SceneEditor::~SceneEditor()
+    {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
     }
 
     void SceneEditor::drawRightPanel()
@@ -175,7 +163,7 @@ namespace prim
     {
         if (!selectedNode) return;
         Drawable* node = dynamic_cast<Drawable*>(selectedNode);
-        if (node) renderer->drawNodeFrame(node, Utils::Color::Green, 1.3f);
+        if (node) renderer->drawNodeFrame(node, Utils::Color::Green, 1.4f);
     }
 
     void SceneEditor::drawSelectedNodePositionPoint(glm::vec2 position)

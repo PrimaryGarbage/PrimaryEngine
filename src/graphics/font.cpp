@@ -15,7 +15,7 @@ namespace prim
         FT_CHECK_ERROR(FT_New_Memory_Face(ftLibrary, defaultFontData, defaultFontDataLength, 0, &ftFace));
         setEmSize(defaultEmSize);
         generateTextures();
-        Globals::logger->logInfo("Loaded default font. //TODO: Need to fix this multiple font loading");
+        Logger::inst().logInfo("Loaded default font. //TODO: Need to fix this multiple font loading");
     }
     
     Font::Font(std::string filePath) 

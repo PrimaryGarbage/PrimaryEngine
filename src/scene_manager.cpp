@@ -98,7 +98,7 @@ namespace prim
 
     void SceneManager::freeScene(Node* scene)
     {
-        Globals::logger->logInfo("Scene freed: '" + scene->getName() + "'");
+        Logger::inst().logInfo("Scene freed: '" + scene->getName() + "'");
         for (Node* child : scene->getChildren())
             freeScene(child);
         delete scene;

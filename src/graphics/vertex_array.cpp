@@ -1,12 +1,10 @@
 #include "vertex_array.hpp"
 #include "glfw_extensions.hpp"
-#include "macros.hpp"
 
 namespace prim
 {
 	void VertexArray::unload()
 	{
-		ASSERT_GLFW_NOT_TERMINATED
 		if (gl_id > 0)
 		{
 			unbind();
