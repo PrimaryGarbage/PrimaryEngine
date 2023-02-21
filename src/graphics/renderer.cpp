@@ -4,27 +4,11 @@
 #include "globals.hpp"
 #include "nodes/drawable.hpp"
 #include "nodes/camera_base.hpp"
+#include "glfw_extensions.hpp"
+
 
 namespace prim
 {
-
-	void glClearError()
-	{
-		while (glGetError() != GL_NO_ERROR)
-			;
-	}
-
-	bool glLogCall(const char* function, const char* file, int line)
-	{
-		if (GLenum error = glGetError())
-		{
-			Globals::logger->logError("[OpenGL Error] (" + std::to_string(error) + "): " + function + " " + file + ":" + std::to_string(line), true);
-			return false;
-			long long a;
-		}
-		return true;
-	}
-
 	Renderer::Renderer()
 	{}
 
@@ -34,6 +18,7 @@ namespace prim
 		Texture::terminate();
 		glfwTerminate();
 		Globals::logger->logInfo("GLFW successfully terminated", true);
+		Globals::appStatus.rendererTerminated = true;
 	}
 
 	void Renderer::init(unsigned int windowWidth, unsigned int windowHeight, const char* windowName)
@@ -82,6 +67,7 @@ namespace prim
 		Globals::logger->logInfo("GLFW and GLEW initialized successfully", true);
 		Globals::logger->logInfo("OpenGL version: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))), true);
 		Globals::logger->logInfo("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
+		Globals::appStatus.rendererInitialized = true;
 	}
 
 	void Renderer::drawLists()
@@ -124,7 +110,7 @@ namespace prim
 		preparedForDrawing = true;
 	}
 
-	void Renderer::drawSelectedNodeFraming(Drawable* node)
+	void Renderer::drawNodeFrame(Drawable* node, glm::vec4 color, float frameScale)
 	{
 		GL_CALL(glEnable(GL_STENCIL_TEST));
 
@@ -136,7 +122,10 @@ namespace prim
 		GL_CALL(glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE));
 		GL_CALL(glStencilFunc(GL_NOTEQUAL, 1, 0xFF));
 		GL_CALL(glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP));
-		node->drawWithShader(*this, Shader::getDefaultShader(DefaultShader::select));
+		Shader* frameShader = Shader::getDefaultShader(DefaultShader::frame);
+		frameShader->setUniform1f("u_frameWidth", frameScale);
+		frameShader->setUniform4f("u_color", color);
+		node->drawWithShader(*this, Shader::getDefaultShader(DefaultShader::frame));
 		
 		GL_CALL(glDisable(GL_STENCIL_TEST));
 	}

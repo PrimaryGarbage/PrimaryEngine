@@ -11,8 +11,8 @@
 #include "utils.hpp"
 #include "nodes/node.hpp"
 #include <iostream>
+#include "macros.hpp"
 
-#define THROW_IF_NOT_INITIALIZED if(!initialized) throw PRIM_EXCEPTION("Calling Primary App functions before PrimaryApp::init() is forbidden");	
 
 namespace prim
 {
@@ -28,19 +28,19 @@ namespace prim
 
 	void PrimaryApp::init()
 	{
-		if(initialized) return;
+		if(Globals::appStatus.appInitialized) return;
 
 		initGlobals();
 		renderer.init(windowWidth, windowHeight, windowName);
 		Input::init(renderer.getWindow());
 		initEditor();
 
-		initialized = true;
+		Globals::appStatus.appInitialized = true;
 	}
 
 	int PrimaryApp::run()
 	{
-		THROW_IF_NOT_INITIALIZED
+		ASSERT_APP_INITIALIZED
 		try
 		{
 			timer.start();
@@ -71,7 +71,7 @@ namespace prim
 
 	void PrimaryApp::setCurrentScene(Node* scene)
 	{
-		THROW_IF_NOT_INITIALIZED
+		ASSERT_APP_INITIALIZED
 		if (currentScene) sceneManager.freeScene(currentScene);
 		currentScene = scene;
 		currentScene->start();
@@ -79,32 +79,32 @@ namespace prim
 
 	void PrimaryApp::loadCurrentScene(std::string resPath)
 	{
-		THROW_IF_NOT_INITIALIZED
+		ASSERT_APP_INITIALIZED
 		setCurrentScene(sceneManager.loadScene(resPath));
 	}
 	
 	void PrimaryApp::saveCurrentScene(std::string resPath, bool overwrite)
 	{
-		THROW_IF_NOT_INITIALIZED
+		ASSERT_APP_INITIALIZED
 		if(!currentScene) return;
 		sceneManager.saveScene(currentScene, resPath, overwrite);
 	}
 	
 	Node* PrimaryApp::loadScene(std::string resPath)
 	{
-		THROW_IF_NOT_INITIALIZED
+		ASSERT_APP_INITIALIZED
 		return sceneManager.loadScene(resPath);
 	}
 
 	Node* PrimaryApp::getCurrentScene() const
 	{
-		THROW_IF_NOT_INITIALIZED
+		ASSERT_APP_INITIALIZED
 		return currentScene;
 	}
 
 	Node* PrimaryApp::getNode(NodePath nodePath)
 	{
-		THROW_IF_NOT_INITIALIZED
+		ASSERT_APP_INITIALIZED
 		if (!currentScene) return nullptr;
 		Node* currentNode = currentScene;
 		if (nodePath.front() == currentScene->getName())
@@ -130,19 +130,19 @@ namespace prim
 	
 	float PrimaryApp::getDeltaTime() const
 	{
-		THROW_IF_NOT_INITIALIZED
+		ASSERT_APP_INITIALIZED
 		return deltaTime;
 	}
 	
 	float PrimaryApp::getElapsedTime() const
 	{
-		THROW_IF_NOT_INITIALIZED
+		ASSERT_APP_INITIALIZED
 		return elapsedTime;
 	}
 
 	void PrimaryApp::deferFunctionExecution(deferred_func_type function, short order)
 	{
-		THROW_IF_NOT_INITIALIZED
+		ASSERT_APP_INITIALIZED
 		deferredFunctions.push_back(std::pair<deferred_func_type, short>(function, order));
 	}
 

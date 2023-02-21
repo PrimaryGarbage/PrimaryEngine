@@ -1,6 +1,7 @@
 #include "graphics/renderer.hpp"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "imgui.h"
 #include "globals.hpp"
 #include "input.hpp"
 #include "ImGuiFileDialog.h"
@@ -11,6 +12,38 @@
 
 namespace prim
 {
+    SceneEditor::SceneEditor() : positionPointMesh(Primitives::createSquareMesh(positionPointSize))
+    {
+        positionPointMesh.compositions.front().shader = Shader::getDefaultShader(DefaultShader::plainColor);
+    }
+
+    SceneEditor::~SceneEditor()
+    {
+        if (Globals::appStatus.sceneEditorTerminated) return;
+
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+
+        Globals::appStatus.sceneEditorTerminated = true;
+    }
+
+    void SceneEditor::init(Renderer* renderer)
+    {
+        if(Globals::appStatus.sceneEditorInitialized) return;
+
+        this->renderer = renderer;
+        ImGui::CreateContext();
+        ImGui_ImplGlfw_InitForOpenGL(renderer->getWindow(), true);
+        ImGui_ImplOpenGL3_Init("#version 130");
+        ImGui::StyleColorsDark();
+        io = &ImGui::GetIO();
+        io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+
+        Globals::appStatus.sceneEditorInitialized = true;
+    }
+
     void SceneEditor::drawRightPanel()
     {
         const static ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove;
@@ -142,7 +175,7 @@ namespace prim
     {
         if (!selectedNode) return;
         Drawable* node = dynamic_cast<Drawable*>(selectedNode);
-        if (node) renderer->drawSelectedNodeFraming(node);
+        if (node) renderer->drawNodeFrame(node, Utils::Color::Green, 1.3f);
     }
 
     void SceneEditor::drawSelectedNodePositionPoint(glm::vec2 position)
@@ -150,7 +183,6 @@ namespace prim
         const float elapsedTime = Globals::app->getElapsedTime();
         const float sinTime = std::pow(std::sin(elapsedTime * 4.0f), 2);
         const glm::vec4 color(sinTime, sinTime, sinTime, 1.0f);
-        static Mesh positionPointMesh = createPositionPointMesh();
         static Shader* shader = positionPointMesh.compositions.front().shader;
         static const glm::vec2 halfSizeVec = glm::vec2(positionPointSize) / 2.0f;
         static constexpr float rotationSpeed = 0.2f;
@@ -162,7 +194,7 @@ namespace prim
         glm::mat4 modelMat(1.0f);
         modelMat = glm::translate(modelMat, Utils::toVec3(position, 1.0f));
         rotation += rotationSpeed;
-        if(rotation > Utils::twoPi) rotation -= Utils::twoPi;
+        if (rotation > Utils::twoPi) rotation -= Utils::twoPi;
         modelMat = glm::rotate(modelMat, rotation, glm::vec3(0.0f, 0.0f, 1.0f));
         modelMat = glm::translate(modelMat, Utils::toVec3(-halfSizeVec));
         renderer->setModelMat(modelMat);
@@ -174,7 +206,7 @@ namespace prim
         if (ImGui::Button("Load Scene"))
             ImGuiFileDialog::Instance()->OpenDialog("LoadSceneKey", "Open Scene", ".psc", ResourceManager::getResourceDirPathAbsolute(), 1, nullptr, ImGuiFileDialogFlags_Modal);
 
-        if (ImGuiFileDialog::Instance()->Display("LoadSceneKey", 32, fileExplorerMinSize))
+        if (ImGuiFileDialog::Instance()->Display("LoadSceneKey", 32, Utils::castVec2<ImVec2>(fileExplorerMinSize)))
         {
             if (ImGuiFileDialog::Instance()->IsOk())
             {
@@ -198,7 +230,7 @@ namespace prim
 
         if (ImGui::BeginPopupModal("Save Scene", nullptr, ImGuiWindowFlags_NoResize))
         {
-            ImGui::SetWindowSize(popupMinSize);
+            ImGui::SetWindowSize(Utils::castVec2<ImVec2>(popupMinSize));
 
             ImGui::Text("Path to save:");
             ImGui::InputText("##SceneNameInput", scenePathBuf, INPUT_STRING_MAX_LENGTH, ImGuiInputTextFlags_AutoSelectAll);
@@ -232,7 +264,7 @@ namespace prim
 
         if (ImGui::BeginPopupModal("Overwrite warning", nullptr, ImGuiWindowFlags_NoResize))
         {
-            ImGui::SetWindowSize(popupMinSize);
+            ImGui::SetWindowSize(Utils::castVec2<ImVec2>(popupMinSize));
 
             ImGui::TextWrapped(std::string("File with the path '" + std::string(scenePathBuf) + "' already exists. Overwrite?").c_str());
 
@@ -302,33 +334,7 @@ namespace prim
         ImGui::End();
 
     }
-    
-    Mesh SceneEditor::createPositionPointMesh() 
-    {
-        Mesh mesh = Primitives::createSquareMesh(positionPointSize);
-        mesh.compositions.front().shader = Shader::getDefaultShader(DefaultShader::plainColor);
-        return mesh;
-    }
 
-    SceneEditor::~SceneEditor()
-    {
-        if (!initialized) return;
-        ImGui_ImplOpenGL3_Shutdown();
-        ImGui_ImplGlfw_Shutdown();
-        ImGui::DestroyContext();
-    }
-
-    void SceneEditor::init(Renderer* renderer)
-    {
-        this->renderer = renderer;
-        ImGui::CreateContext();
-        ImGui_ImplGlfw_InitForOpenGL(renderer->getWindow(), true);
-        ImGui_ImplOpenGL3_Init("#version 130");
-        ImGui::StyleColorsDark();
-        io = &ImGui::GetIO();
-        io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        initialized = true;
-    }
 
     void SceneEditor::draw()
     {

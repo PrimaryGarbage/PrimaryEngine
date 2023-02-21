@@ -3,6 +3,7 @@
 #include "globals.hpp"
 #include "graphics/primitives.hpp"
 #include "GLM/gtc/matrix_transform.hpp"
+#include "imgui.h"
 
 namespace prim
 {

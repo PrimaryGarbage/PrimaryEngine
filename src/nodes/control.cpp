@@ -3,6 +3,7 @@
 #include "GLM/gtx/vector_angle.hpp"
 #include "camera_base.hpp"
 #include "globals.hpp"
+#include "imgui.h"
 
 namespace prim
 {

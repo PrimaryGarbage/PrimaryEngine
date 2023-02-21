@@ -11,7 +11,7 @@ namespace prim
 {
     struct ShaderProgramSource;
 
-    enum class DefaultShader { simple, plainColor, select, text, controlBackground };
+    enum class DefaultShader { simple, plainColor, frame, text, controlBackground };
 
     class Shader
     {
@@ -20,8 +20,8 @@ namespace prim
         inline static std::unordered_map<std::string, Shader*> shaderCache;
         inline static Shader* defaultShader = nullptr;
         inline static Shader* defaultPlainColorShader = nullptr;
-        inline static Shader* selectShader = nullptr;
-        inline static Shader* textDefaultShader = nullptr;
+        inline static Shader* frameShader = nullptr;
+        inline static Shader* defaultTextShader = nullptr;
         inline static Shader* defaultControlBackgroundShader = nullptr;
 
         unsigned int gl_id;

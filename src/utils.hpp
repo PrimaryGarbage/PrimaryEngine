@@ -7,15 +7,7 @@
 
 #include "GLM/glm.hpp"
 #include "GLM/gtc/constants.hpp"
-#include "logger.hpp"
-#include <vector>
-#include <unordered_map>
-#include "imgui.h"
-#include <sstream>
-#include <filesystem>
-#include <ctime>
-#include <chrono>
-#include "typedefs.hpp"
+#include "globals.hpp"
 
 namespace prim
 {
@@ -26,11 +18,11 @@ namespace prim
         class Color
         {
         public:
-            static inline constexpr ImVec4 White = { 1.0f, 1.0f, 1.0f, 1.0f };
-            static inline constexpr ImVec4 Red = { 1.0f, 0.0f, 0.0f, 1.0f };
-            static inline constexpr ImVec4 Green = { 0.0f, 1.0f, 0.0f, 1.0f };
-            static inline constexpr ImVec4 Blue = { 0.0f, 0.0f, 1.0f, 1.0f };
-            static inline constexpr ImVec4 Black = { 0.0f, 0.0f, 0.0f, 1.0f };
+            static inline constexpr glm::vec4 White = { 1.0f, 1.0f, 1.0f, 1.0f };
+            static inline constexpr glm::vec4 Red = { 1.0f, 0.0f, 0.0f, 1.0f };
+            static inline constexpr glm::vec4 Green = { 0.0f, 1.0f, 0.0f, 1.0f };
+            static inline constexpr glm::vec4 Blue = { 0.0f, 0.0f, 1.0f, 1.0f };
+            static inline constexpr glm::vec4 Black = { 0.0f, 0.0f, 0.0f, 1.0f };
         };
 
         constexpr static inline float radiansInDegree = glm::pi<float>() / 180.0f;
@@ -66,10 +58,17 @@ namespace prim
         static constexpr float clamp(T value, T min, T max);
         template <class T>
         static constexpr T map(T value, T valueMin, T valueMax, T rangeMin, T rangeMax);
+        template <class T> 
+        static T castVec2(const glm::vec2& vec);
+        template <class T> 
+        static T castVec3(const glm::vec3& vec);
+        template <class T> 
+        static T castVec4(const glm::vec4& vec);
     };
 
 }
 
 #include "utils.tpp"
+
 
 #endif // __UTILS_HPP__

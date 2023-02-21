@@ -1,11 +1,13 @@
 #include "index_buffer.hpp"
-#include "renderer.hpp"
+#include "glfw_extensions.hpp"
+#include "macros.hpp"
 
 
 namespace prim
 {
 	void IndexBuffer::unload()
 	{
+		ASSERT_GLFW_NOT_TERMINATED
 		if (gl_id > 0)
 		{
 			unbind();

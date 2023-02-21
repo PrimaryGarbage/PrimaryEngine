@@ -1,5 +1,7 @@
 #include "vertex_buffer.hpp"
-#include "renderer.hpp"
+#include "macros.hpp"
+#include "glfw_extensions.hpp"
+#include "macros.hpp"
 
 namespace prim
 {
@@ -54,6 +56,7 @@ void VertexBuffer::unbind() const
 
 void VertexBuffer::unload()
 {
+	ASSERT_GLFW_NOT_TERMINATED
 	if(gl_id_vao > 0)
 	{
 		unbind();

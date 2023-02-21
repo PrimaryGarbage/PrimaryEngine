@@ -2,6 +2,7 @@
 #define __GLOBALS_HPP__
 
 #include "primary_app.hpp"
+#include "app_status.hpp"
 
 namespace prim
 {
@@ -12,6 +13,7 @@ namespace prim
         static inline SceneEditor* sceneEditor = nullptr;
         static inline SceneManager* sceneManager = nullptr;
         static inline Logger* logger = nullptr;
+        static inline AppStatus appStatus {};
     };
 }
 

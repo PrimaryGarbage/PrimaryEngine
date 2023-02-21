@@ -8,6 +8,7 @@
 #include "globals.hpp"
 #include "node_utils.hpp"
 #include "resource_manager.hpp"
+#include <sstream>
 
 namespace prim
 {

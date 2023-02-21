@@ -22,6 +22,24 @@ namespace prim
     {
         return rangeMin + (((rangeMax - rangeMin) * value)/(valueMax - valueMin));
     }
+
+    template <class T>
+    T Utils::castVec2(const glm::vec2& vec)
+    {
+        return T(vec.x, vec.y);
+    }
+
+    template <class T>
+    T Utils::castVec3(const glm::vec3& vec)
+    {
+        return T(vec.x, vec.y, vec.z);
+    }
+
+    template <class T>
+    T Utils::castVec4(const glm::vec4& vec)
+    {
+        return T(vec.x, vec.y, vec.z, vec.a);
+    }
 }
 
 

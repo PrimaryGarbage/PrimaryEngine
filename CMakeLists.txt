@@ -22,6 +22,7 @@ set(PRIMARY_SRC
 	ImGuiFileDialog.h ImGuiFileDialog.cpp ImGuiFileDialogConfig.h
 	typedefs.hpp
 	resource_manager.hpp resource_manager.cpp
+	app_status.hpp
 	)
 
 set(MISC_SRC
@@ -61,6 +62,7 @@ set(GRAPHICS_SRC
 	image.hpp image.cpp image_utils.hpp
 	font.hpp font.cpp
 	default_font_data.hpp default_shader_data.hpp default_texture_data.hpp
+	glfw_extensions.hpp glfw_extensions.cpp
 )
 
 set(IMGUI_SRC

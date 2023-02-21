@@ -25,7 +25,6 @@ private:
 	const uint32_t windowWidth = 800;
 	const uint32_t windowHeight = 800;
 	const char* windowName = "PrimaryEngine";
-	bool initialized = false;
 	float deltaTime;
 	float elapsedTime;
 	Logger logger;

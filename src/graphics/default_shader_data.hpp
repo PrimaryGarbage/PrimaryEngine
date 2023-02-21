@@ -74,7 +74,7 @@ void main()
 	color = u_color;
 })rawstring";
 
-static const char* selectShaderData = 
+static const char* frameShaderData = 
 R"rawstring(#shader vertex
 #version 330 core
 
@@ -85,15 +85,14 @@ layout(location = 2)in vec4 vertexNormal;
 out vec2 uv;
 
 uniform mat4 u_mvp;
-uniform float u_time;
-const float borderWidth = 5.0f;
+uniform float u_frameWidth = 1.2;
 
 void main()
 {
 	uv = texCoord;
 
 	vec4 newPosition = position;
-	newPosition.xyz += vertexNormal.xyz * borderWidth;
+	newPosition.xyz += vertexNormal.xyz * u_frameWidth;
 
 	gl_Position = u_mvp * newPosition;
 }
@@ -105,17 +104,14 @@ layout(location = 0)out vec4 color;
 
 in vec2 uv;
 
-uniform vec4 u_color;
-uniform sampler2D u_texture;
-uniform float u_time;
-const vec4 select_color = vec4(1.0f, 1.0f, 0.0f, 0.8f);
+uniform vec4 u_color = vec4(1.0f, 1.0f, 0.0f, 0.8f);
 
 void main()
 {
-	color = select_color;
+	color = u_color;
 })rawstring";
 
-static const char* textDefaultShaderData = 
+static const char* defaultTextShaderData = 
 R"rawstring(#shader vertex
 #version 330 core
 

@@ -2,12 +2,11 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "renderer.hpp"
-#include "logger.hpp"
 #include "prim_exception.hpp"
-#include "globals.hpp"
 #include "resource_manager.hpp"
 #include "default_shader_data.hpp"
+#include "macros.hpp"
+#include "glfw_extensions.hpp"
 
 namespace prim
 {
@@ -62,23 +61,23 @@ namespace prim
                 }
                 return defaultShader;
             }
-            case DefaultShader::select:
+            case DefaultShader::frame:
             {
-                if(!selectShader) 
+                if(!frameShader) 
                 {
-                    selectShader = new Shader(selectShaderData);
-                    Globals::logger->logInfo("Loaded select shader");
+                    frameShader = new Shader(frameShaderData);
+                    Globals::logger->logInfo("Loaded frame shader");
                 }
-                return selectShader;
+                return frameShader;
             }
             case DefaultShader::text:
             {
-                if(!textDefaultShader) 
+                if(!defaultTextShader) 
                 {
-                    textDefaultShader = new Shader(textDefaultShaderData);
+                    defaultTextShader = new Shader(defaultTextShaderData);
                     Globals::logger->logInfo("Loaded text default shader");
                 }
-                return textDefaultShader;
+                return defaultTextShader;
             }
             case DefaultShader::plainColor:
             {
@@ -115,8 +114,8 @@ namespace prim
         shaderCache.clear();
 
         if(defaultShader) delete defaultShader;
-        if(selectShader) delete selectShader;
-        if(textDefaultShader) delete textDefaultShader;
+        if(frameShader) delete frameShader;
+        if(defaultTextShader) delete defaultTextShader;
         if(defaultPlainColorShader) delete defaultPlainColorShader;
         if(defaultControlBackgroundShader) delete defaultControlBackgroundShader;
         Globals::logger->logInfo("Default shaders terminated.");
@@ -294,6 +293,7 @@ namespace prim
 
     void Shader::unload()
     {
+        ASSERT_GLFW_NOT_TERMINATED
         if (gl_id > 0)
         {
             unbind();

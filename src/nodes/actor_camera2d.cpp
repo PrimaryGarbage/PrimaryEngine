@@ -112,7 +112,7 @@ namespace prim
 
         ImGui::Checkbox("Rotate with target", &rotateWithTarget);
 
-        ImGui::PushStyleColor(ImGuiCol_Text, target ? Utils::Color::White : Utils::Color::Red);
+        ImGui::PushStyleColor(ImGuiCol_Text, Utils::castVec4<ImVec4>(target ? Utils::Color::White : Utils::Color::Red));
         ImGui::LabelText("Target", targetPath.string().c_str());
         ImGui::PopStyleColor();
 

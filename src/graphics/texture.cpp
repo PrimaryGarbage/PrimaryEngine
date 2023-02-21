@@ -1,5 +1,6 @@
 #include "texture.hpp"
-#include "renderer.hpp"
+#include "glfw_extensions.hpp"
+#include "macros.hpp"
 #include "image.hpp"
 #include "globals.hpp"
 #include "default_texture_data.hpp"
@@ -160,6 +161,7 @@ namespace prim
     
     void Texture::unload()
     {
+        ASSERT_GLFW_NOT_TERMINATED
         if(gl_id > 0)
         {
             unbind();

@@ -1,11 +1,12 @@
 #ifndef __SCENE_EDITOR_HPP__
 #define __SCENE_EDITOR_HPP__
 
-#include "imgui.h"
 #include <vector>
 #include <string>
 
 #define INPUT_STRING_MAX_LENGTH 50
+
+class ImGuiIO;
 
 namespace prim
 {
@@ -24,8 +25,8 @@ namespace prim
     {
     private:
         inline const static float rightPanelWidth = 200.0f;
-        inline const static ImVec2 fileExplorerMinSize = { 640.0f, 480.0f };
-        inline const static ImVec2 popupMinSize = { 250.0f, 170.0f };
+        inline const static glm::vec2 fileExplorerMinSize = { 640.0f, 480.0f };
+        inline const static glm::vec2 popupMinSize = { 250.0f, 170.0f };
         inline const static float positionPointSize = 10.0f;
 
         Renderer* renderer;
@@ -34,7 +35,7 @@ namespace prim
         std::vector<DragFloat> dragFloats;
         Node* selectedNode = nullptr;
         Node* nodeToAddTo = nullptr;
-        bool initialized = false;
+        Mesh positionPointMesh;
         
         void drawRightPanel();
         void drawLeftPanel();
@@ -44,12 +45,11 @@ namespace prim
         void drawSaveSceneButton();
         void drawNodeTreeContextMenu(Node* node, bool hovered, bool cloningAllowed = true);
         void drawCreateNodeMenu();
-        Mesh createPositionPointMesh();
 
     public:
         static inline const char* dragNodePayloadType = "NODE";
 
-        SceneEditor() = default;
+        SceneEditor();
         ~SceneEditor();
         void init(Renderer* renderer);
         void draw();

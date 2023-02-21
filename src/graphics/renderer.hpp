@@ -13,16 +13,8 @@ namespace prim
 
 // fordec
 class CameraBase;
-//
-
-#define GL_CALL(glFunction) glClearError(); \
-	glFunction; \
-	assert(glLogCall(#glFunction, __FILE__, __LINE__))
-
-void glClearError();
-bool glLogCall(const char* function, const char* file, int line);
-
 class Drawable;
+//
 
 class Renderer
 {
@@ -48,7 +40,6 @@ private:
 	static void error_callback(int error, const char* description);
 
 	void prepareForDrawing();
-
 public:
 	Renderer();
 	~Renderer();
@@ -57,7 +48,7 @@ public:
 	void drawLists();
 	void drawMesh(const Mesh& mesh);
 	void drawMesh(const Mesh& mesh, const Shader* shader);
-	void drawSelectedNodeFraming(Drawable* node);
+	void drawNodeFrame(Drawable* node, glm::vec4 color, float frameScale);
 	void addMesh(Mesh* mesh);
 	void clear();
 	bool windowShouldClose();
