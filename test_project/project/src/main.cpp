@@ -4,11 +4,21 @@
 
 int main()
 {
-    prim::PrimaryAppOptions options;
-    options.useEditor = true;
-    options.windowName = "PrimaryEngine test project";
+    try
+    {
+        using namespace prim;
 
-    prim::PrimaryApp primaryApp(options);
-    primaryApp.setCurrentScene(prim::TestScenesCreator::createScene3());
-    return primaryApp.run();
+        PrimaryAppOptions options;
+        options.useEditor = true;
+        options.windowName = "PrimaryEngine test project";
+
+        PrimaryApp primaryApp(options);
+        primaryApp.setCurrentScene(TestScenesCreator::createScene3());
+        return primaryApp.run();
+    }
+    catch(prim::Exception ex)
+    {
+        std::cerr << ex.what() << std::endl;
+        return 1;
+    }
 }

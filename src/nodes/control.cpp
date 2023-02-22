@@ -4,6 +4,7 @@
 #include "camera_base.hpp"
 #include "globals.hpp"
 #include "imgui.h"
+#include <sstream>
 
 namespace prim
 {

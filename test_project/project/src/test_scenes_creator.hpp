@@ -66,12 +66,14 @@ namespace prim
             actorCamera->setStiffness(0.3f);
             Label* uiLabel = new Label("UILabel");
             Label* uiChildLabel = new Label("UIChildLabel");
+            Control* control = new Control("Control");
+            control->addChild(uiLabel);
             uiLabel->setText("Imagine this is a UI element");
             uiLabel->setBackgroundColor({ 0.0f, 0.6f, 0.9f, 1.0f});
             uiChildLabel->setText("And this is a UI element child");
             uiLabel->setAnchor({ 0.0f, 1.0f });
             uiLabel->setSize({ 80.0f, 80.0f });
-            uiLabel->move({480.0f, -130.0f});
+            //uiLabel->move({480.0f, -130.0f});
             uiChildLabel->setPivot({ 1.0f, 0.0f });
             uiChildLabel->move(180.0f, -85.0f);
             uiChildLabel->setSize(60.0f, 60.0f);
@@ -81,7 +83,7 @@ namespace prim
             scene->addChild(sprite1);
             sprite1->addChild(sprite2);
             scene->addChild(actorCamera);
-            scene->addChild(uiLabel);
+            scene->addChild(control);
             uiLabel->addChild(uiChildLabel);
 
             return scene;
