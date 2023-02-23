@@ -13,12 +13,43 @@ namespace prim
     {
     }
 
-    Node::Node(std::string name) : name(name), nodePath(this)
+    Node::Node(std::string name) : id(getUniqueId()), name(name), nodePath(this)
     {
     }
 
     Node::~Node()
     {
+        freeUniqueId(id);
+    }
+
+    unsigned int Node::getUniqueId()
+    {
+        if (!freeIds.empty())
+        {
+            int newId = freeIds.top();
+            idPool[newId] = true;
+            freeIds.pop();
+            return newId;
+        }
+        else
+        {
+            for (unsigned int i = 0; i < maxId; ++i)
+            {
+                if (!idPool[i])
+                {
+                    idPool[i] = true;
+                    return i;
+                }
+            }
+        }
+
+        throw PRIM_EXCEPTION("There are no more free node IDs");
+    }
+
+    void Node::freeUniqueId(unsigned int id)
+    {
+        idPool[id] = false;
+        freeIds.push(id);
     }
 
     void Node::start()

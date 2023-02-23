@@ -32,7 +32,6 @@ set(MISC_SRC
 
 set(NODES_SRC
 	transform3d.hpp transform2d.hpp
-	node_base.hpp node_base.cpp
 	node.hpp node.cpp
 	node2d.hpp node2d.cpp
 	sprite.hpp sprite.cpp

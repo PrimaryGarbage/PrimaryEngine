@@ -3,7 +3,7 @@
 
 #include "node_factory.hpp"
 #include <vector>
-#include "node_base.hpp"
+#include <stack>
 #include "GLM/glm.hpp"
 #include "node_path.hpp"
 #include "utils.hpp"
@@ -13,11 +13,15 @@ namespace prim
     class Renderer;
     class SceneEditor;
 
-    class Node : public NodeBase
+    class Node
     {
         NODE_FIXTURE(Node)
 
     private:
+        static constexpr unsigned int maxId = 100000;
+        inline static bool idPool[maxId]{};
+        inline static std::stack<unsigned int> freeIds;
+
         void updateNodePath();
     protected:
 
@@ -29,16 +33,23 @@ namespace prim
             inline static const char* childrenEnd = "children_end";
         };
 
+
+        const unsigned int id;
         std::string name;
         Node* parent = nullptr;
         std::vector<Node*> children;
         NodePath nodePath;
         bool cloneBound = false;
 
+        static unsigned int getUniqueId();
+        void freeUniqueId(unsigned int id);
+
     public:
         Node();
         Node(std::string name);
         virtual ~Node();
+
+        inline uint getId() const { return id; }
 
         virtual void start();
         virtual void update(float deltaTime);
@@ -77,9 +88,9 @@ namespace prim
         virtual void updateChildren(float deltaTime);
         virtual const std::vector<Node*>& getChildren() const;
         virtual const Node* getParent() const;
-        virtual std::string serialize(bool withChildren = true) const override;
-        virtual std::string serializeChildren() const override;
-        virtual void deserialize(FieldValues& fieldValues) override;
+        virtual std::string serialize(bool withChildren = true) const;
+        virtual std::string serializeChildren() const;
+        virtual void deserialize(FieldValues& fieldValues);
         NodePath getNodePath() const;
         std::string getName() const;
         void setName(std::string name);
