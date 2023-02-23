@@ -89,20 +89,16 @@ namespace prim
 
 	void Renderer::prepareForDrawing()
 	{
-		if (preparedForDrawing) return;
-
 		if (currentCamera)
 		{
-			setViewMat(currentCamera->calculateViewMatrix());
-			setProjectMat(currentCamera->calculateProjectMatrix());
+			if(!viewMatIsRelevant) setViewMat(currentCamera->calculateViewMatrix());
+			if(!projectMatIsRelevant) setProjectMat(currentCamera->calculateProjectMatrix());
 		}
 		else
 		{
 			setViewMat(glm::mat4(1.0f));
 			setProjectMat(glm::ortho(0.0f, static_cast<float>(windowWidth), 0.0f, static_cast<float>(windowHeight)));
 		}
-
-		preparedForDrawing = true;
 	}
 
 	void Renderer::drawNodeFrame(Drawable* node, glm::vec4 color, float frameScale)
@@ -198,7 +194,9 @@ namespace prim
 	void Renderer::swapBuffers()
 	{
 		glfwSwapBuffers(window);
-		preparedForDrawing = false;
+
+		viewMatIsRelevant = false;
+		projectMatIsRelevant = false;
 	}
 
 	void Renderer::pollEvents()
@@ -209,6 +207,23 @@ namespace prim
 	const std::vector<Mesh*>& Renderer::getDrawList() const
 	{
 		return drawList;
+	}
+	
+	void Renderer::setProjectMat(glm::mat4 proj) 
+	{
+		projectMat = proj;
+		projectMatIsRelevant = true;
+	}
+	
+	void Renderer::setViewMat(glm::mat4 view) 
+	{
+		viewMat = view;
+		viewMatIsRelevant = true;
+	}
+	
+	void Renderer::setModelMat(glm::mat4 model) 
+	{
+		modelMat = model;
 	}
 
 }

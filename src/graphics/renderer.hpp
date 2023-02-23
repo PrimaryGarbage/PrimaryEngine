@@ -29,7 +29,8 @@ private:
 	glm::mat4 projectMat;
 	glm::mat4 viewMat;
 	glm::mat4 modelMat;
-	bool preparedForDrawing = false;
+	bool viewMatIsRelevant {};
+	bool projectMatIsRelevant {};
 	CameraBase* currentCamera = nullptr;
 
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -51,9 +52,9 @@ public:
 	void pollEvents();
 	const std::vector<Mesh*>&  getDrawList() const;
 	inline GLFWwindow* getWindow() const { return window; }
-	inline void setProjectMat(glm::mat4 proj) { projectMat = proj; }
-	inline void setViewMat(glm::mat4 view) { viewMat = view; }
-	inline void setModelMat(glm::mat4 model) { modelMat = model; }
+	void setProjectMat(glm::mat4 proj);
+	void setViewMat(glm::mat4 view);
+	void setModelMat(glm::mat4 model);
 	inline glm::mat4 getProjectMat() const { return projectMat; }
 	inline glm::mat4 getViewMat() const { return viewMat; }
 	inline glm::mat4 getModelMat() const { return modelMat; }

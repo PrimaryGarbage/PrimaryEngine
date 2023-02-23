@@ -83,8 +83,8 @@ namespace prim
             scene->addChild(sprite1);
             sprite1->addChild(sprite2);
             scene->addChild(actorCamera);
-            scene->addChild(control);
             uiLabel->addChild(uiChildLabel);
+            scene->addChild(control);
 
             return scene;
         }

@@ -4,6 +4,7 @@
 #include "graphics/primitives.hpp"
 #include "GLM/gtc/matrix_transform.hpp"
 #include "imgui.h"
+#include <sstream>
 
 namespace prim
 {
