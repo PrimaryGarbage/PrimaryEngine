@@ -2,12 +2,12 @@
 
 source /usr/local/bin/color.sh
 
-CMAKE_BUILD_DIR='../out'
+CMAKE_BUILD_DIR='./bin'
 PROJECT_NAME='libPrimaryEngine'
 LIB_EXTENSION='dll'
 BUILD_TYPE=Debug
 POSTFIX='-d'
-TEST_PROJECT_PATH="test_project/project"
+TEST_PROJECT_PATH="test_project"
 TEST_PROJECT_LIB_PATH="$TEST_PROJECT_PATH/external/lib"
 TEST_PROJECT_INCLUDE_PATH="$TEST_PROJECT_PATH/external/primary_engine/include"
 INCLUDE_EXPORT_DIR="include"
@@ -45,17 +45,7 @@ copy_lib_to_test_project() {
 	# create lib dir for test project if it doesn't exist
 	mkdir -p $TEST_PROJECT_LIB_PATH
 
-	# for some reason on linux "bin" directory isn't created
-	LIB_PATH_WINDOWS="$CMAKE_BUILD_DIR/bin/$PROJECT_NAME$POSTFIX.$LIB_EXTENSION"
-	LIB_PATH_LINUX="$CMAKE_BUILD_DIR/$PROJECT_NAME$POSTFIX.$LIB_EXTENSION"
-	if test -f $LIB_PATH_WINDOWS; then
-		cp $LIB_PATH_WINDOWS $TEST_PROJECT_LIB_PATH/
-	elif test -f $LIB_PATH_LINUX; then
-		cp $LIB_PATH_LINUX $TEST_PROJECT_LIB_PATH/
-	else
-		echo "Wasn't able to find library file"
-		return 1
-	fi
+	cp "$CMAKE_BUILD_DIR/$PROJECT_NAME$POSTFIX.$LIB_EXTENSION" $TEST_PROJECT_LIB_PATH/
 	rm -rf $TEST_PROJECT_INCLUDE_PATH
 	mkdir -p $TEST_PROJECT_INCLUDE_PATH
 	cp -r $INCLUDE_EXPORT_DIR/* $TEST_PROJECT_INCLUDE_PATH/

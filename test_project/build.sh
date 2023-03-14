@@ -1,11 +1,11 @@
 #!/bin/bash
 
-CMAKE_BUILD_DIR='../out'
+CMAKE_BUILD_DIR='./bin'
 PROJECT_NAME='PrimaryEngineTest'
 BUILD_TYPE=Debug
 POSTFIX=''
-INTERNAL_RES_DIR_TARGET="$CMAKE_BUILD_DIR/bin/"
-RES_DIR_TARGET="$CMAKE_BUILD_DIR/bin/"
+INTERNAL_RES_DIR_TARGET="$CMAKE_BUILD_DIR"
+RES_DIR_TARGET="$CMAKE_BUILD_DIR"
 RES_DIR_SOURCE="./resources"
 PRIMARY_LIB_EXTENSION=""
 PRIMARY_LIB_NAME="libPrimaryEngine-d";
@@ -47,7 +47,7 @@ build() {
 run() {
 	echo -e "Running..."
 	copy_lib
-	$CMAKE_BUILD_DIR/bin/$PROJECT_NAME$POSTFIX || echo -e "${RED}Working build wasn't found!${NOCOLOR}"
+	$CMAKE_BUILD_DIR/$PROJECT_NAME$POSTFIX || echo -e "${RED}Working build wasn't found!${NOCOLOR}"
 }
 
 build_and_run() {
