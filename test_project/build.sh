@@ -34,7 +34,7 @@ copy_res_dir() {
 
 configure() {
 	echo -e "Configuring Cmake..."
-	cmake -G Ninja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -S . -B $CMAKE_BUILD_DIR
+	cmake -G Ninja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -S . -B $CMAKE_BUILD_DIR
 }
 
 build() {
