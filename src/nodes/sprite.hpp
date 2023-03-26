@@ -25,7 +25,7 @@ namespace prim
 
         inline static const float defaultSize = 100.0f;
         Mesh planeMesh;
-        shptr<Image> image;
+        Shp<Image> image;
         float width;
         float height;
         float zIndex = 0.0f;

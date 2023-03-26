@@ -12,14 +12,14 @@ namespace prim
     class MeshComposition
     {
     public:
-        shptr<IndexBuffer> ib;
+        Shp<IndexBuffer> ib;
         Shader* shader = nullptr;
         Texture* texture = nullptr;
 
-        MeshComposition(shptr<IndexBuffer> ib, Shader* shader)
+        MeshComposition(Shp<IndexBuffer> ib, Shader* shader)
             : ib(ib), shader(shader) {}
 
-        MeshComposition(shptr<IndexBuffer> ib, Shader* shader, Texture* texture)
+        MeshComposition(Shp<IndexBuffer> ib, Shader* shader, Texture* texture)
             : ib(ib), shader(shader), texture(texture) {}
 
         inline void bind() const { ib->bind(); shader->bind(); texture->bind(); }
