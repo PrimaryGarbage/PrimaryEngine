@@ -9,19 +9,6 @@
 
 #define NODE_FIXTURE(NODE_NAME) \
     private: inline static const NodeRegistration<NODE_NAME> nodeRegistration = NodeRegistration<NODE_NAME>(#NODE_NAME); \
-    public: inline virtual Node* clone() \
-    { \
-        NODE_NAME* cloned = new NODE_NAME(*this); \
-        cloned->children.clear(); \
-        for(Node* child : children) \
-        {   \
-            Node* clonedChild = child->clone(); \
-            clonedChild->orphanize(); \
-            cloned->addChild(clonedChild); \
-        }   \
-        cloned->cloneBound = true; \
-        return cloned; \
-    } \
     public: virtual inline const char* type() const { return #NODE_NAME; }
 
 
@@ -74,7 +61,6 @@ namespace prim
         Node* parent = nullptr;
         std::vector<Node*> children;
         NodePath nodePath;
-        bool cloneBound = false;
 
         static unsigned int getUniqueId();
         void freeUniqueId(unsigned int id);
@@ -145,8 +131,7 @@ namespace prim
         void setName(std::string name);
         Node* findChild(std::string name) const;
         virtual void renderFields(SceneEditor* sceneEditor);
-        inline bool isBound() const noexcept { return cloneBound; };
-        virtual void unbind();
+        Node* clone() const;
 
         template<class T>
         T* findChild(std::string name) const;

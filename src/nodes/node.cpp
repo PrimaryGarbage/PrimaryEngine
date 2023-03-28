@@ -284,14 +284,12 @@ namespace prim
         }
     }
     
-    void Node::unbind() 
+    Node* Node::clone() const
     {
-        if(cloneBound)
-        {
-            cloneBound = false;
-        }
+        std::string thisSerialized = serialize(true);   
+        return Node::deserialize(thisSerialized);
     }
-
+    
     glm::vec2 Node::getPosition() const
     { return glm::vec2(); }
     

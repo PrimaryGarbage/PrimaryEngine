@@ -179,26 +179,5 @@ namespace prim
             
             ImGuiFileDialog::Instance()->Close();
         }
-
-        if(cloneBound)
-        {
-            if(ImGui::Button("Unbind"))
-            {
-                unbind();
-            }
-        }
     }
-    
-    void Sprite::unbind() 
-    {
-        Node2D::unbind();
-
-        std::string oldImagePath = image->empty() ? "" : image->getResPath();
-        image = std::make_shared<Image>();
-        planeMesh = Primitives::createSquareMesh(defaultSize);
-
-        if(!oldImagePath.empty())
-            setImage(oldImagePath);
-    }
-
 }

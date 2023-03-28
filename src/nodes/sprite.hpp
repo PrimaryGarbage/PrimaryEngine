@@ -60,7 +60,6 @@ namespace prim
         virtual std::string serialize(bool withChildren = true) const override;
         virtual void restore(NodeValues& nodeValues) override;
         virtual void renderFields(SceneEditor* sceneEditor) override;
-        virtual void unbind() override;
 
     };
 
