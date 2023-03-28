@@ -26,11 +26,8 @@ namespace prim
         parentNodes.push(&rootNode);
         std::unordered_map<std::string, std::string> fields;
 
-        while (true)
+        while (!std::getline(stream, line).eof())
         {
-            std::getline(stream, line);
-            if (stream.eof()) break;
-
             if (line.empty()) continue;
 
             if (line == SceneFileSymbols::childrenStart)
