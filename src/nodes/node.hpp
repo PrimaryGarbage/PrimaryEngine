@@ -1,12 +1,29 @@
 #ifndef __NODE_HPP__
 #define __NODE_HPP__
 
-#include "node_factory.hpp"
 #include <vector>
 #include <stack>
 #include "GLM/glm.hpp"
 #include "node_path.hpp"
 #include "utils.hpp"
+
+#define NODE_FIXTURE(NODE_NAME) \
+    private: inline static const NodeRegistration<NODE_NAME> nodeRegistration = NodeRegistration<NODE_NAME>(#NODE_NAME); \
+    public: inline virtual Node* clone() \
+    { \
+        NODE_NAME* cloned = new NODE_NAME(*this); \
+        cloned->children.clear(); \
+        for(Node* child : children) \
+        {   \
+            Node* clonedChild = child->clone(); \
+            clonedChild->orphanize(); \
+            cloned->addChild(clonedChild); \
+        }   \
+        cloned->cloneBound = true; \
+        return cloned; \
+    } \
+    public: virtual inline const char* type() const { return #NODE_NAME; }
+
 
 namespace prim
 {
@@ -15,15 +32,34 @@ namespace prim
 
     class Node
     {
-        NODE_FIXTURE(Node)
-
     private:
+        static inline std::unordered_map<std::string, Node* (*)()> nodeTypeMap;
         static constexpr unsigned int maxId = 100000;
         inline static bool idPool[maxId]{};
         inline static std::stack<unsigned int> freeIds;
 
         void updateNodePath();
+
+        // helper function. Serves as a generic node factory
+        template<class T>
+        inline static Node* constructNode()
+        {
+            return new T();
+        }
+
     protected:
+
+        template<class T>
+        class NodeRegistration
+        {
+        public:
+            NodeRegistration(const char* type)
+            {
+                nodeTypeMap.insert(std::make_pair(type, &constructNode<T>));
+            }
+        };
+
+        NODE_FIXTURE(Node)
 
         struct StateFields
         {
@@ -32,7 +68,6 @@ namespace prim
             inline static const char* childrenStart = "children_start";
             inline static const char* childrenEnd = "children_end";
         };
-
 
         const unsigned int id;
         std::string name;
@@ -45,9 +80,20 @@ namespace prim
         void freeUniqueId(unsigned int id);
 
     public:
+        struct SerializationSymbols
+        {
+            inline static const char* header = "Node";
+            inline static const char* type = "type";
+            inline static const char* childrenStart = "children_start";
+            inline static const char* childrenEnd = "children_end";
+        };
+
         Node();
         Node(std::string name);
         virtual ~Node();
+
+        static Node* createNode(std::string type);
+        static std::vector<std::string> getAllNodeTypes();
 
         inline uint getId() const { return id; }
 
@@ -103,31 +149,12 @@ namespace prim
         virtual void unbind();
 
         template<class T>
-        T* findChild(std::string name = "") const
-        {
-            T* childT = nullptr;
-            for (Node* child : children)
-            {
-                childT = dynamic_cast<T*>(child);
-                if (childT)
-                {
-                    if (!name.empty())
-                        if (childT->name == name)
-                            return childT;
-                        else
-                            childT = nullptr;
-                    else
-                        return childT;
-                }
+        T* findChild(std::string name) const;
 
-                childT = child->findChild<T>(name);
-                if (childT) return childT;
-            }
-
-            return childT;
-        }
     };
 
 }
+
+#include "node.tpp"
 
 #endif // __NODE_HPP__

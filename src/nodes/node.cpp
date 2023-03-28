@@ -47,6 +47,23 @@ namespace prim
         throw PRIM_EXCEPTION("There are no more free node IDs");
     }
 
+    Node* Node::createNode(std::string type) 
+    {
+        auto iter = nodeTypeMap.find(type);
+        if(iter == nodeTypeMap.end()) throw PRIM_EXCEPTION("Couldn't find node type '" + type + "'");
+        Node* newNode = iter->second();
+        return newNode;
+    }
+    
+    std::vector<std::string> Node::getAllNodeTypes() 
+    {
+        std::vector<std::string> result;
+        result.reserve(nodeTypeMap.size());
+        for(const auto& pair : nodeTypeMap)
+            result.push_back(pair.first);
+        return result;
+    }
+
     void Node::freeUniqueId(unsigned int id)
     {
         idPool[id] = false;
@@ -189,7 +206,7 @@ namespace prim
 
             if (line == Symbols::childrenStart)
             {
-                Node* node = NodeFactory::createNode(fields[Symbols::type]);
+                Node* node = Node::createNode(fields[Symbols::type]);
                 node->restore(fields);
                 if (parentNodes.empty()) rootNode = node;
                 else parentNodes.top()->addChild(node);
@@ -202,7 +219,7 @@ namespace prim
             {
                 if (!fields.empty())
                 {
-                    Node* node = NodeFactory::createNode(fields[Symbols::type]);
+                    Node* node = Node::createNode(fields[Symbols::type]);
                     node->restore(fields);
                     parentNodes.top()->addChild(node);
                 }

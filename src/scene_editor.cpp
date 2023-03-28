@@ -12,7 +12,7 @@
 
 namespace prim
 {
-    SceneEditor::SceneEditor(Renderer* renderer) : 
+    SceneEditor::SceneEditor(Renderer* renderer):
         renderer(renderer), positionPointMesh(Primitives::createSquareMesh(positionPointSize))
     {
         positionPointMesh.compositions.front().shader = Shader::getDefaultShader(DefaultShader::plainColor);
@@ -303,7 +303,7 @@ namespace prim
         if (!nodeToAddTo) return;
         static char nodeNameBuf[INPUT_STRING_MAX_LENGTH] = "NewNode";
         static std::string selectedNodeType;
-        std::vector<std::string> nodeTypes = NodeFactory::getAllNodeTypes();
+        std::vector<std::string> nodeTypes = Node::getAllNodeTypes();
         ImGui::Begin("Create Node");
         ImGui::InputText("Name", nodeNameBuf, INPUT_STRING_MAX_LENGTH, ImGuiInputTextFlags_AutoSelectAll);
         for (const auto& type : nodeTypes)
@@ -313,7 +313,7 @@ namespace prim
         }
         if (ImGui::Button("Create") && !selectedNodeType.empty())
         {
-            Node* newNode = NodeFactory::createNode(selectedNodeType);
+            Node* newNode = Node::createNode(selectedNodeType);
             newNode->setName(nodeNameBuf);
             nodeToAddTo->addChild(newNode);
             nodeToAddTo = nullptr;
