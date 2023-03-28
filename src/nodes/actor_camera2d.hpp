@@ -43,7 +43,7 @@ namespace prim
         inline glm::vec2 getInitialOffset() const { return initialOffset; }
 
         virtual std::string serialize(bool withChildren = true) const override;
-        virtual void deserialize(FieldValues& fieldValues) override;
+        virtual void restore(NodeValues& nodeValues) override;
         virtual void renderFields(SceneEditor* sceneEditor) override;
     };
 }

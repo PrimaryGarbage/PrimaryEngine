@@ -89,15 +89,15 @@ namespace prim
         return ss.str();
     }
     
-    void Label::deserialize(FieldValues& fieldValues) 
+    void Label::restore(NodeValues& nodeValues) 
     {
-        Control::deserialize(fieldValues);   
+        Control::restore(nodeValues);   
 
-        text = fieldValues[StateFields::text];
-        textColor = Utils::deserializeVec4(fieldValues[StateFields::textColor]);
-        backgroundColor = Utils::deserializeVec4(fieldValues[StateFields::backgroundColor]);
-        padding = Utils::deserializeVec2(fieldValues[StateFields::padding]);
-        borderRadius = std::stof(fieldValues[StateFields::borderRadius]);
+        text = nodeValues[StateFields::text];
+        textColor = Utils::deserializeVec4(nodeValues[StateFields::textColor]);
+        backgroundColor = Utils::deserializeVec4(nodeValues[StateFields::backgroundColor]);
+        padding = Utils::deserializeVec2(nodeValues[StateFields::padding]);
+        borderRadius = std::stof(nodeValues[StateFields::borderRadius]);
     }
     
     void Label::renderFields(SceneEditor* sceneEditor) 

@@ -79,14 +79,14 @@ namespace prim
         return ss.str();
     }
     
-    void Camera2D::deserialize(FieldValues& fieldValues) 
+    void Camera2D::restore(NodeValues& nodeValues) 
     {
-        Node2D::deserialize(fieldValues);
+        Node2D::restore(nodeValues);
 
-        zNear = std::stof(fieldValues[StateFields::zNear]);
-        zFar = std::stof(fieldValues[StateFields::zFar]);
-        zoom = std::stof(fieldValues[StateFields::zoom]);
-        transform.pivot = Utils::deserializeVec2(fieldValues[StateFields::pivot]);
+        zNear = std::stof(nodeValues[StateFields::zNear]);
+        zFar = std::stof(nodeValues[StateFields::zFar]);
+        zoom = std::stof(nodeValues[StateFields::zoom]);
+        transform.pivot = Utils::deserializeVec2(nodeValues[StateFields::pivot]);
     }
     
     void Camera2D::renderFields(SceneEditor* sceneEditor) 

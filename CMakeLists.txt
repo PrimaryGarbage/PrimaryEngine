@@ -21,6 +21,7 @@ set(PRIMARY_SRC
 	scene_manager.hpp scene_manager.cpp
 	ImGuiFileDialog.h ImGuiFileDialog.cpp ImGuiFileDialogConfig.h
 	typedefs.hpp
+	node_serialization.hpp
 	resource_manager.hpp resource_manager.cpp
 	)
 

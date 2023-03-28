@@ -137,18 +137,18 @@ namespace prim
         return ss.str();
     }
     
-    void Sprite::deserialize(FieldValues& fieldValues) 
+    void Sprite::restore(NodeValues& nodeValues) 
     {
-        Node2D::deserialize(fieldValues);
+        Node2D::restore(nodeValues);
 
-        if (!fieldValues[StateFields::imagePath].empty())
+        if (!nodeValues[StateFields::imagePath].empty())
         {
-            image->load(fieldValues[StateFields::imagePath]);
-            planeMesh.compositions[0].texture = Texture::create(fieldValues[StateFields::imagePath]);
+            image->load(nodeValues[StateFields::imagePath]);
+            planeMesh.compositions[0].texture = Texture::create(nodeValues[StateFields::imagePath]);
         }
-        setWidth(std::stof(fieldValues[StateFields::width]));
-        setHeight(std::stof(fieldValues[StateFields::height]));
-        setZIndex(std::stof(fieldValues[StateFields::zIndex]));
+        setWidth(std::stof(nodeValues[StateFields::width]));
+        setHeight(std::stof(nodeValues[StateFields::height]));
+        setZIndex(std::stof(nodeValues[StateFields::zIndex]));
     }
 
     void Sprite::renderFields(SceneEditor* sceneEditor)

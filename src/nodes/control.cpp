@@ -190,15 +190,15 @@ namespace prim
         return ss.str();
     }
     
-    void Control::deserialize(FieldValues& fieldValues) 
+    void Control::restore(NodeValues& nodeValues) 
     {
-        Node::deserialize(fieldValues);
+        Node::restore(nodeValues);
 
-        transform.position = Utils::deserializeVec2(fieldValues[StateFields::position]);
-        transform.rotation = std::stof(fieldValues[StateFields::rotation]);
-        transform.size = Utils::deserializeVec2(fieldValues[StateFields::size]);
-        transform.pivot = Utils::deserializeVec2(fieldValues[StateFields::pivot]);
-        transform.anchor = Utils::deserializeVec2(fieldValues[StateFields::anchor]);
+        transform.position = Utils::deserializeVec2(nodeValues[StateFields::position]);
+        transform.rotation = std::stof(nodeValues[StateFields::rotation]);
+        transform.size = Utils::deserializeVec2(nodeValues[StateFields::size]);
+        transform.pivot = Utils::deserializeVec2(nodeValues[StateFields::pivot]);
+        transform.anchor = Utils::deserializeVec2(nodeValues[StateFields::anchor]);
     }
     
     void Control::renderFields(SceneEditor* sceneEditor) 

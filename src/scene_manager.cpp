@@ -11,69 +11,20 @@
 
 namespace prim
 {
-    Node* SceneManager::loadScene(std::string resPath)
+    Node* SceneManager::loadScene(std::string resPath) const
     {
         fs::path path(ResourceManager::createResourcePath(resPath, true));
 
         std::ifstream stream(path.string(), std::ios::in);
-        if (!stream.good()) throw PRIM_EXCEPTION("Unable to open file stream.");
+        if (!stream.good()) throw PRIM_EXCEPTION("Failed to load scene: Unable to open file stream.");
 
-        std::string line;
+        std::stringstream fileSs;
+        fileSs << stream.rdbuf();
 
-        Node* node = nullptr;
-        std::stack<Node*> parentNodes;
-        Node rootNode("Root");
-        parentNodes.push(&rootNode);
-        std::unordered_map<std::string, std::string> fields;
-
-        while (!std::getline(stream, line).eof())
-        {
-            if (line.empty()) continue;
-
-            if (line == SceneFileSymbols::childrenStart)
-            {
-                node = NodeFactory::createNode(fields[SceneFileSymbols::type]);
-                node->deserialize(fields);
-                if (!parentNodes.empty()) parentNodes.top()->addChild(node);
-                parentNodes.push(node);
-                fields.clear();
-                continue;
-            }
-
-            if (line == SceneFileSymbols::childrenEnd)
-            {
-                if (!fields.empty())
-                {
-                    node = NodeFactory::createNode(fields[SceneFileSymbols::type]);
-                    node->deserialize(fields);
-                    parentNodes.top()->addChild(node);
-                }
-                parentNodes.pop();
-                node = nullptr;
-                continue;
-            }
-
-            std::pair<std::string, std::string> keyValuePair = Utils::parseKeyValuePair(line);
-            fields.insert(keyValuePair);
-        }
-
-        if (!fields.empty())
-        {
-            node = NodeFactory::createNode(fields[SceneFileSymbols::type]);
-            node->deserialize(fields);
-            parentNodes.top()->addChild(node);
-            fields.clear();
-            node = nullptr;
-        }
-
-        stream.close();
-
-        if(parentNodes.top()->getChildren().size() > 1) throw PRIM_EXCEPTION("Scene file is corrupted or was written badly. More than one root nodes");
-        rootNode.removeChild(parentNodes.top()->getChildren().front());
-        return parentNodes.top()->getChildren().front();
+        return Node::deserialize(fileSs.str());
     }
 
-    void SceneManager::saveScene(Node* scene, std::string resPath, bool ovewrite)
+    void SceneManager::saveScene(Node* scene, std::string resPath, bool ovewrite) const
     {
         fs::path path(ResourceManager::createResourcePath(resPath, ovewrite));
 
@@ -93,7 +44,7 @@ namespace prim
         stream.close();
     }
 
-    void SceneManager::freeScene(Node* scene)
+    void SceneManager::freeScene(Node* scene) const
     {
         Logger::inst().logInfo("Scene freed: '" + scene->getName() + "'");
         for (Node* child : scene->getChildren())

@@ -190,14 +190,14 @@ namespace prim
         return ss.str();
     }
     
-    void Node2D::deserialize(FieldValues& fieldValues) 
+    void Node2D::restore(NodeValues& nodeValues) 
     {
-        Node::deserialize(fieldValues);
+        Node::restore(nodeValues);
 
-        transform.position = Utils::deserializeVec2(fieldValues[StateFields::position]);
-        transform.rotation = std::stof(fieldValues[StateFields::rotation]);
-        transform.scale = Utils::deserializeVec2(fieldValues[StateFields::scale]);
-        transform.pivot = Utils::deserializeVec2(fieldValues[StateFields::pivot]);
+        transform.position = Utils::deserializeVec2(nodeValues[StateFields::position]);
+        transform.rotation = std::stof(nodeValues[StateFields::rotation]);
+        transform.scale = Utils::deserializeVec2(nodeValues[StateFields::scale]);
+        transform.pivot = Utils::deserializeVec2(nodeValues[StateFields::pivot]);
     }
     
     void Node2D::renderFields(SceneEditor* sceneEditor) 

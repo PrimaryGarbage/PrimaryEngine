@@ -97,13 +97,13 @@ namespace prim
         return ss.str();
     }
     
-    void ActorCamera2D::deserialize(FieldValues& fieldValues) 
+    void ActorCamera2D::restore(NodeValues& nodeValues) 
     {
-        Camera2D::deserialize(fieldValues);
+        Camera2D::restore(nodeValues);
 
-        stiffness = std::stof(fieldValues[StateFields::stiffness]);
-        initialOffset = Utils::deserializeVec2(fieldValues[StateFields::initialOffset]);
-        targetPath = fieldValues[StateFields::targetPath];
+        stiffness = std::stof(nodeValues[StateFields::stiffness]);
+        initialOffset = Utils::deserializeVec2(nodeValues[StateFields::initialOffset]);
+        targetPath = nodeValues[StateFields::targetPath];
     }
 
     void ActorCamera2D::renderFields(SceneEditor* sceneEditor)

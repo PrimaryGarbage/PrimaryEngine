@@ -133,6 +133,20 @@ namespace prim
         for (const char& c : str) lowerStr.push_back(std::tolower(c));
         return lowerStr;
     }
+    
+    bool Utils::contains(const std::string& str, const std::string& substr) 
+    {
+        size_t substrLength = substr.length();
+        if(str.length() < substr.length()) return false;
+
+        size_t searchIdx = 0;
+        for(size_t i = 0; i < str.length(); ++i)
+        {
+            if(str[i] == substr[searchIdx]) ++searchIdx;
+            if(searchIdx == substrLength) return true;
+        }
+        return false;
+    }
 
     fs::path Utils::getAppDirPath()
     {

@@ -6,6 +6,7 @@
 #include <sstream>
 #include "utils.hpp"
 #include "node_utils.hpp"
+#include "node_serialization.hpp"
 
 namespace prim
 {
@@ -173,9 +174,52 @@ namespace prim
         return ss.str();
     }
     
-    void Node::deserialize(FieldValues& fieldValues) 
+    Node* Node::deserialize(const std::string& nodeStr) 
     {
-        setName(fieldValues[StateFields::name]);
+        using Symbols = NodeSerialization::Symbols;
+
+        Node* rootNode = nullptr;
+        std::vector<std::string> lines = Utils::splitString(nodeStr, '\n');
+        std::stack<Node*> parentNodes;
+        std::unordered_map<std::string, std::string> fields;
+
+        for (const std::string& line : lines)
+        {
+            if (line.empty()) continue;
+
+            if (line == Symbols::childrenStart)
+            {
+                Node* node = NodeFactory::createNode(fields[Symbols::type]);
+                node->restore(fields);
+                if (parentNodes.empty()) rootNode = node;
+                else parentNodes.top()->addChild(node);
+                parentNodes.push(node);
+                fields.clear();
+                continue;
+            }
+
+            if (line == Symbols::childrenEnd)
+            {
+                if (!fields.empty())
+                {
+                    Node* node = NodeFactory::createNode(fields[Symbols::type]);
+                    node->restore(fields);
+                    parentNodes.top()->addChild(node);
+                }
+                parentNodes.pop();
+                continue;
+            }
+
+            std::pair<std::string, std::string> keyValuePair = Utils::parseKeyValuePair(line);
+            fields.insert(keyValuePair);
+        }
+
+        return rootNode;
+    }
+    
+    void Node::restore(NodeValues& nodeValues) 
+    {
+        setName(nodeValues[StateFields::name]);
     }
 
     NodePath Node::getNodePath() const

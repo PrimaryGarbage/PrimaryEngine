@@ -88,9 +88,12 @@ namespace prim
         virtual void updateChildren(float deltaTime);
         virtual const std::vector<Node*>& getChildren() const;
         virtual const Node* getParent() const;
+
+        static Node* deserialize(const std::string& nodeStr);
         virtual std::string serialize(bool withChildren = true) const;
-        virtual std::string serializeChildren() const;
-        virtual void deserialize(FieldValues& fieldValues);
+        std::string serializeChildren() const;
+        virtual void restore(NodeValues& nodeValues);
+
         NodePath getNodePath() const;
         std::string getName() const;
         void setName(std::string name);

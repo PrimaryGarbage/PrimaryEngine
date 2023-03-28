@@ -65,7 +65,7 @@ namespace prim
         virtual void setGlobalScale(glm::vec2 s) override final;
 
         virtual std::string serialize(bool withChildren = true) const override;
-        virtual void deserialize(FieldValues& fieldValues) override;
+        virtual void restore(NodeValues& nodeValues) override;
         virtual void renderFields(SceneEditor* sceneEditor) override;
     };
 
