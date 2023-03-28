@@ -87,10 +87,10 @@ namespace prim
 
         ss << Camera2D::serialize(false);
 
-        ss << Utils::createKeyValuePair(StateFields::targetPath, targetPath.string()) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::initialOffset, Utils::serializeVec2(initialOffset)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::stiffness, std::to_string(stiffness)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::rotateWithTarget, std::to_string((int)rotateWithTarget)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::targetPath, targetPath.string()) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::initialOffset, Utils::serializeVec2(initialOffset)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::stiffness, std::to_string(stiffness)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::rotateWithTarget, std::to_string((int)rotateWithTarget)) << std::endl;
 
         if(withChildren) ss << serializeChildren();
 
@@ -101,9 +101,9 @@ namespace prim
     {
         Camera2D::restore(nodeValues);
 
-        stiffness = std::stof(nodeValues[StateFields::stiffness]);
-        initialOffset = Utils::deserializeVec2(nodeValues[StateFields::initialOffset]);
-        targetPath = nodeValues[StateFields::targetPath];
+        stiffness = std::stof(nodeValues[StateValues::stiffness]);
+        initialOffset = Utils::deserializeVec2(nodeValues[StateValues::initialOffset]);
+        targetPath = nodeValues[StateValues::targetPath];
     }
 
     void ActorCamera2D::renderFields(SceneEditor* sceneEditor)

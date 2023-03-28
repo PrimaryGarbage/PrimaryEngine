@@ -70,9 +70,9 @@ namespace prim
 
         ss << Node2D::serialize(false);
 
-        ss << Utils::createKeyValuePair(StateFields::zNear, std::to_string(zNear)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::zFar, std::to_string(zFar)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::zoom, std::to_string(zoom)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::zNear, std::to_string(zNear)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::zFar, std::to_string(zFar)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::zoom, std::to_string(zoom)) << std::endl;
 
         if(withChildren) ss << serializeChildren();
 
@@ -83,10 +83,10 @@ namespace prim
     {
         Node2D::restore(nodeValues);
 
-        zNear = std::stof(nodeValues[StateFields::zNear]);
-        zFar = std::stof(nodeValues[StateFields::zFar]);
-        zoom = std::stof(nodeValues[StateFields::zoom]);
-        transform.pivot = Utils::deserializeVec2(nodeValues[StateFields::pivot]);
+        zNear = std::stof(nodeValues[StateValues::zNear]);
+        zFar = std::stof(nodeValues[StateValues::zFar]);
+        zoom = std::stof(nodeValues[StateValues::zoom]);
+        transform.pivot = Utils::deserializeVec2(nodeValues[StateValues::pivot]);
     }
     
     void Camera2D::renderFields(SceneEditor* sceneEditor) 

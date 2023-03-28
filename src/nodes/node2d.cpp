@@ -180,10 +180,10 @@ namespace prim
 
         ss << Node::serialize(false);
 
-        ss << Utils::createKeyValuePair(StateFields::position, Utils::serializeVec2(getPosition())) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::rotation, std::to_string(getRotation())) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::scale, Utils::serializeVec2(getScale())) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::pivot, Utils::serializeVec2(getPivot())) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::position, Utils::serializeVec2(getPosition())) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::rotation, std::to_string(getRotation())) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::scale, Utils::serializeVec2(getScale())) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::pivot, Utils::serializeVec2(getPivot())) << std::endl;
 
         if(withChildren) ss << serializeChildren();
 
@@ -194,10 +194,10 @@ namespace prim
     {
         Node::restore(nodeValues);
 
-        transform.position = Utils::deserializeVec2(nodeValues[StateFields::position]);
-        transform.rotation = std::stof(nodeValues[StateFields::rotation]);
-        transform.scale = Utils::deserializeVec2(nodeValues[StateFields::scale]);
-        transform.pivot = Utils::deserializeVec2(nodeValues[StateFields::pivot]);
+        transform.position = Utils::deserializeVec2(nodeValues[StateValues::position]);
+        transform.rotation = std::stof(nodeValues[StateValues::rotation]);
+        transform.scale = Utils::deserializeVec2(nodeValues[StateValues::scale]);
+        transform.pivot = Utils::deserializeVec2(nodeValues[StateValues::pivot]);
     }
     
     void Node2D::renderFields(SceneEditor* sceneEditor) 

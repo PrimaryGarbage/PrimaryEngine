@@ -127,10 +127,10 @@ namespace prim
 
         ss << Node2D::serialize(false);
 
-        ss << Utils::createKeyValuePair(StateFields::width, std::to_string(width)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::height, std::to_string(height)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::zIndex, std::to_string(zIndex)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::imagePath, image->getResPath()) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::width, std::to_string(width)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::height, std::to_string(height)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::zIndex, std::to_string(zIndex)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::imagePath, image->getResPath()) << std::endl;
         
         if(withChildren) ss << serializeChildren();
         
@@ -141,14 +141,14 @@ namespace prim
     {
         Node2D::restore(nodeValues);
 
-        if (!nodeValues[StateFields::imagePath].empty())
+        if (!nodeValues[StateValues::imagePath].empty())
         {
-            image->load(nodeValues[StateFields::imagePath]);
-            planeMesh.compositions[0].texture = Texture::create(nodeValues[StateFields::imagePath]);
+            image->load(nodeValues[StateValues::imagePath]);
+            planeMesh.compositions[0].texture = Texture::create(nodeValues[StateValues::imagePath]);
         }
-        setWidth(std::stof(nodeValues[StateFields::width]));
-        setHeight(std::stof(nodeValues[StateFields::height]));
-        setZIndex(std::stof(nodeValues[StateFields::zIndex]));
+        setWidth(std::stof(nodeValues[StateValues::width]));
+        setHeight(std::stof(nodeValues[StateValues::height]));
+        setZIndex(std::stof(nodeValues[StateValues::zIndex]));
     }
 
     void Sprite::renderFields(SceneEditor* sceneEditor)

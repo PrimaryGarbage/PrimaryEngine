@@ -48,7 +48,7 @@ namespace prim
 
         NODE_FIXTURE(Node)
 
-        struct StateFields
+        struct StateValues
         {
             inline static const char* type = "type";
             inline static const char* name = "name";

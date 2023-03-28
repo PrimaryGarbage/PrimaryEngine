@@ -15,7 +15,7 @@ namespace prim
         NODE_FIXTURE(Sprite)
     protected:
         
-        struct StateFields: public Node2D::StateFields
+        struct StateValues: public Node2D::StateValues
         {
             inline static const char* width = "width";
             inline static const char* height = "height";

@@ -179,11 +179,11 @@ namespace prim
 
         ss << Node::serialize(false);
 
-        ss << Utils::createKeyValuePair(StateFields::position, Utils::serializeVec2(getPosition())) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::rotation, std::to_string(getRotation())) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::size, Utils::serializeVec2(getSize())) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::pivot, Utils::serializeVec2(getPivot())) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::anchor, Utils::serializeVec2(getAnchor())) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::position, Utils::serializeVec2(getPosition())) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::rotation, std::to_string(getRotation())) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::size, Utils::serializeVec2(getSize())) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::pivot, Utils::serializeVec2(getPivot())) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::anchor, Utils::serializeVec2(getAnchor())) << std::endl;
 
         if(withChildren) ss << serializeChildren();
 
@@ -194,11 +194,11 @@ namespace prim
     {
         Node::restore(nodeValues);
 
-        transform.position = Utils::deserializeVec2(nodeValues[StateFields::position]);
-        transform.rotation = std::stof(nodeValues[StateFields::rotation]);
-        transform.size = Utils::deserializeVec2(nodeValues[StateFields::size]);
-        transform.pivot = Utils::deserializeVec2(nodeValues[StateFields::pivot]);
-        transform.anchor = Utils::deserializeVec2(nodeValues[StateFields::anchor]);
+        transform.position = Utils::deserializeVec2(nodeValues[StateValues::position]);
+        transform.rotation = std::stof(nodeValues[StateValues::rotation]);
+        transform.size = Utils::deserializeVec2(nodeValues[StateValues::size]);
+        transform.pivot = Utils::deserializeVec2(nodeValues[StateValues::pivot]);
+        transform.anchor = Utils::deserializeVec2(nodeValues[StateValues::anchor]);
     }
     
     void Control::renderFields(SceneEditor* sceneEditor) 

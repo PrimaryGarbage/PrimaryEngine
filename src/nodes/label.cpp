@@ -78,11 +78,11 @@ namespace prim
 
         ss << Control::serialize(false);
 
-        ss << Utils::createKeyValuePair(StateFields::text, text) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::textColor, Utils::serializeVec4(textColor)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::backgroundColor, Utils::serializeVec4(backgroundColor)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::padding, Utils::serializeVec2(padding)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::borderRadius, std::to_string(borderRadius)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::text, text) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::textColor, Utils::serializeVec4(textColor)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::backgroundColor, Utils::serializeVec4(backgroundColor)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::padding, Utils::serializeVec2(padding)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::borderRadius, std::to_string(borderRadius)) << std::endl;
 
         if(withChildren) ss << serializeChildren();
 
@@ -93,11 +93,11 @@ namespace prim
     {
         Control::restore(nodeValues);   
 
-        text = nodeValues[StateFields::text];
-        textColor = Utils::deserializeVec4(nodeValues[StateFields::textColor]);
-        backgroundColor = Utils::deserializeVec4(nodeValues[StateFields::backgroundColor]);
-        padding = Utils::deserializeVec2(nodeValues[StateFields::padding]);
-        borderRadius = std::stof(nodeValues[StateFields::borderRadius]);
+        text = nodeValues[StateValues::text];
+        textColor = Utils::deserializeVec4(nodeValues[StateValues::textColor]);
+        backgroundColor = Utils::deserializeVec4(nodeValues[StateValues::backgroundColor]);
+        padding = Utils::deserializeVec2(nodeValues[StateValues::padding]);
+        borderRadius = std::stof(nodeValues[StateValues::borderRadius]);
     }
     
     void Label::renderFields(SceneEditor* sceneEditor) 

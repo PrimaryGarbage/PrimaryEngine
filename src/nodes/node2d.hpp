@@ -14,7 +14,7 @@ namespace prim
         NODE_FIXTURE(Node2D)
     protected:
 
-        struct StateFields : public Node::StateFields
+        struct StateValues : public Node::StateValues
         {
             inline static const char* position = "position";
             inline static const char* rotation = "rotation";

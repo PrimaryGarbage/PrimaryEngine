@@ -173,8 +173,8 @@ namespace prim
     std::string Node::serialize(bool withChildren) const
     {
         std::stringstream ss;
-        ss << Utils::createKeyValuePair(StateFields::type, type()) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::name, name) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::type, type()) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::name, name) << std::endl;
 
         if (withChildren) ss << serializeChildren();
 
@@ -184,10 +184,10 @@ namespace prim
     std::string Node::serializeChildren() const
     {
         std::stringstream ss;
-        ss << StateFields::childrenStart << std::endl;
+        ss << StateValues::childrenStart << std::endl;
         for (Node* child : children)
             ss << child->serialize() << std::endl;
-        ss << StateFields::childrenEnd << std::endl;
+        ss << StateValues::childrenEnd << std::endl;
         return ss.str();
     }
     
@@ -236,7 +236,7 @@ namespace prim
     
     void Node::restore(NodeValues& nodeValues) 
     {
-        setName(nodeValues[StateFields::name]);
+        setName(nodeValues[StateValues::name]);
     }
 
     NodePath Node::getNodePath() const

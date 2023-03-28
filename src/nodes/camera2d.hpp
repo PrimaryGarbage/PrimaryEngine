@@ -11,7 +11,7 @@ namespace prim
         NODE_FIXTURE(Camera2D)
     protected:
 
-        struct StateFields: public Node2D::StateFields
+        struct StateValues: public Node2D::StateValues
         {
             inline static const char* zNear = "zNear";
             inline static const char* zFar = "zFar";

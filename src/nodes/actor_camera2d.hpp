@@ -10,7 +10,7 @@ namespace prim
         NODE_FIXTURE(ActorCamera2D)
     protected:
 
-        struct StateFields: public Camera2D::StateFields
+        struct StateValues: public Camera2D::StateValues
         {
             inline static const char* targetPath = "targetPath";
             inline static const char* initialOffset = "initialOffset";

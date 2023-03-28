@@ -13,7 +13,7 @@ namespace prim
         NODE_FIXTURE(Label)
     
     protected:
-        struct StateFields : public Control::StateFields
+        struct StateValues : public Control::StateValues
         {
             inline static const char* text = "text";
             inline static const char* textColor = "textColor";
