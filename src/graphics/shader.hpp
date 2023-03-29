@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include "GLM/glm.hpp"
-
+#include "typedefs.hpp"
 
 
 namespace prim
@@ -17,12 +17,12 @@ namespace prim
     {
     private:
         inline static unsigned int currentBoundShader = 0u;
-        inline static std::unordered_map<std::string, Shader*> shaderCache;
-        inline static Shader* defaultShader = nullptr;
-        inline static Shader* defaultPlainColorShader = nullptr;
-        inline static Shader* frameShader = nullptr;
-        inline static Shader* defaultTextShader = nullptr;
-        inline static Shader* defaultControlBackgroundShader = nullptr;
+        inline static std::unordered_map<std::string, Unp<Shader>> shaderCache;
+        inline static Unp<Shader> defaultShader;
+        inline static Unp<Shader> defaultPlainColorShader;
+        inline static Unp<Shader> frameShader;
+        inline static Unp<Shader> defaultTextShader;
+        inline static Unp<Shader> defaultControlBackgroundShader;
 
         unsigned int gl_id;
         mutable std::unordered_map<std::string, int> uniformLocationCache;

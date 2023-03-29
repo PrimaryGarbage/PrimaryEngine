@@ -39,13 +39,12 @@ namespace prim
         auto it = shaderCache.find(resPath);
         if(it == shaderCache.end())
         {
-            Shader* shader = new Shader(ResourceManager::createResourcePath(resPath));
-            shaderCache[resPath] = shader;
+            shaderCache[resPath] = Unp<Shader>(new Shader(ResourceManager::createResourcePath(resPath)));
             Logger::inst().logInfo("Shader loaded. Path: " + resPath);
-            return shader;
+            return shaderCache[resPath].get();
         }
 
-        return it->second;
+        return it->second.get();
     }
     
     Shader* Shader::getDefaultShader(DefaultShader shaderType) 
@@ -56,46 +55,46 @@ namespace prim
             {
                 if(!defaultShader) 
                 {
-                    defaultShader = new Shader(defaultShaderData);
+                    defaultShader = Unp<Shader>(new Shader(defaultShaderData));
                     Logger::inst().logInfo("Loaded default shader");
                 }
-                return defaultShader;
+                return defaultShader.get();
             }
             case DefaultShader::frame:
             {
                 if(!frameShader) 
                 {
-                    frameShader = new Shader(frameShaderData);
+                    frameShader = Unp<Shader>(new Shader(frameShaderData));
                     Logger::inst().logInfo("Loaded frame shader");
                 }
-                return frameShader;
+                return frameShader.get();
             }
             case DefaultShader::text:
             {
                 if(!defaultTextShader) 
                 {
-                    defaultTextShader = new Shader(defaultTextShaderData);
+                    defaultTextShader = Unp<Shader>(new Shader(defaultTextShaderData));
                     Logger::inst().logInfo("Loaded text default shader");
                 }
-                return defaultTextShader;
+                return defaultTextShader.get();
             }
             case DefaultShader::plainColor:
             {
                 if(!defaultPlainColorShader)
                 {
-                    defaultPlainColorShader = new Shader(defaultPlainColorShaderData);
+                    defaultPlainColorShader = Unp<Shader>(new Shader(defaultPlainColorShaderData));
                     Logger::inst().logInfo("Loaded default plain color shader");
                 }
-                return defaultPlainColorShader;
+                return defaultPlainColorShader.get();
             }
             case DefaultShader::controlBackground:
             {
                 if(!defaultControlBackgroundShader)
                 {
-                    defaultControlBackgroundShader = new Shader(defaultControlBackgroundShaderData);
+                    defaultControlBackgroundShader = Unp<Shader>(new Shader(defaultControlBackgroundShaderData));
                     Logger::inst().logInfo("Loaded default control background shader");
                 }
-                return defaultControlBackgroundShader;
+                return defaultControlBackgroundShader.get();
             }
             default:
             {
@@ -108,16 +107,16 @@ namespace prim
     {
         for(auto& pair : shaderCache)
         {
-            delete pair.second;
+            pair.second.reset();
             Logger::inst().logInfo("Shader terminated. Path: " + pair.first);
         }
         shaderCache.clear();
 
-        if(defaultShader) delete defaultShader;
-        if(frameShader) delete frameShader;
-        if(defaultTextShader) delete defaultTextShader;
-        if(defaultPlainColorShader) delete defaultPlainColorShader;
-        if(defaultControlBackgroundShader) delete defaultControlBackgroundShader;
+        if(defaultShader) defaultShader.reset();
+        if(frameShader) frameShader.reset();
+        if(defaultTextShader) defaultTextShader.reset();
+        if(defaultPlainColorShader) defaultPlainColorShader.reset();
+        if(defaultControlBackgroundShader) defaultControlBackgroundShader.reset();
         Logger::inst().logInfo("Default shaders terminated.");
     }
 

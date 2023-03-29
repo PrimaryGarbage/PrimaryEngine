@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include "typedefs.hpp"
 
 namespace prim
 {
@@ -17,8 +18,8 @@ private:
     inline static const unsigned int maxTextureSlots = 48u;
     inline static unsigned int textureMap[maxTextureSlots] {0u};
     inline static unsigned int boundTextureSlot = maxTextureSlots + 1;
-    inline static std::unordered_map<std::string, Texture*> textureCache;
-    inline static std::vector<Texture*> modifiedImageTextureCache;
+    inline static std::unordered_map<std::string, Unp<Texture>> textureCache;
+    inline static std::vector<Unp<Texture>> modifiedImageTextureCache;
     inline static Texture* defaultTexture = nullptr;
 
     unsigned int gl_id = 0u;

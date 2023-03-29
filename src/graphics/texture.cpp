@@ -69,52 +69,38 @@ namespace prim
         auto it = textureCache.find(resPath);    
         if(it == textureCache.end())
         {
-            Texture* texture = new Texture(resPath);
-            textureCache[resPath] = texture;
+            textureCache[resPath] = Unp<Texture>(new Texture(resPath));
             Logger::inst().logInfo("Texture loaded. Path: " + resPath);
-            return texture;
+            return textureCache[resPath].get();
         }
         
-        return it->second;
+        return it->second.get();
     }
     
     Texture* Texture::create(const Image& image) 
     {
         if(image.wasModified())
         {
-            Texture* texture = new Texture(image);
-            modifiedImageTextureCache.push_back(texture);
+            modifiedImageTextureCache.push_back(Unp<Texture>(new Texture(image)));
             Logger::inst().logInfo("Texture loaded from modified image");
-            return texture;
+            return modifiedImageTextureCache.back().get();
         }
         else
         {
-            auto it = textureCache.find(image.getResPath());    
-            if(it == textureCache.end())
-            {
-                std::string imageFilePath = image.getResPath();
-                Texture* texture = new Texture(imageFilePath);
-                Logger::inst().logInfo("Texture loaded. Path: " + imageFilePath);
-                textureCache[imageFilePath] = texture;
-                return texture;
-            }
-
-            return it->second;
+            return create(image.getResPath());
         }
     }
     
     Texture* Texture::create(const unsigned char* imageData, unsigned int length, ImageType type) 
     {
-        Texture* texture = new Texture(imageData, length, type);
-        modifiedImageTextureCache.push_back(texture);
-        return texture;
+        modifiedImageTextureCache.push_back(Unp<Texture>(new Texture(imageData, length, type)));
+        return modifiedImageTextureCache.back().get();
     }
     
     Texture* Texture::create(const unsigned char* data, unsigned int width, unsigned int height, ImageType type) 
     {
-        Texture* texture = new Texture(data, width, height, type);
-        modifiedImageTextureCache.push_back(texture);
-        return texture;
+        modifiedImageTextureCache.push_back(Unp<Texture>(new Texture(data, width, height, type)));
+        return modifiedImageTextureCache.back().get();
     }
     
     Texture* Texture::getDefaultTexture() 
@@ -130,10 +116,10 @@ namespace prim
     void Texture::terminate() 
     {
         for(auto& pair : textureCache)
-            delete pair.second;
+            pair.second.reset();
 
         for(auto& texture : modifiedImageTextureCache)
-            delete texture;
+            texture.reset();
 
         textureCache.clear();
     }
