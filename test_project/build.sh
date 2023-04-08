@@ -34,7 +34,20 @@ copy_res_dir() {
 
 configure() {
 	echo -e "Configuring Cmake..."
-	cmake -G Ninja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -S . -B $CMAKE_BUILD_DIR
+	CMAKE_VARS=( \
+		"CMAKE_BUILD_TYPE=$BUILD_TYPE" \
+		"CMAKE_EXPORT_COMPILE_COMMANDS=1" \
+		"CMAKE_C_COMPILER=clang" "CMAKE_CXX_COMPILER=clang++" \
+	)
+
+	CMAKE_VARS_STRING=""
+	for v in "${CMAKE_VARS[@]}"; do
+		CMAKE_VARS_STRING+=" -D$v"
+	done
+
+	echo "CMake variables: $CMAKE_VARS_STRING"
+
+	cmake -G Ninja $CMAKE_VARS_STRING -S . -B $CMAKE_BUILD_DIR
 }
 
 build() {
