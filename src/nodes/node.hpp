@@ -9,7 +9,7 @@
 
 #define NODE_FIXTURE(NODE_NAME) \
     private: inline static const NodeRegistration<NODE_NAME> nodeRegistration = NodeRegistration<NODE_NAME>(#NODE_NAME); \
-    public: virtual inline const char* type() const { return #NODE_NAME; }
+    public: virtual inline const char* type() const override { return #NODE_NAME; }
 
 
 namespace prim
@@ -46,7 +46,8 @@ namespace prim
             }
         };
 
-        NODE_FIXTURE(Node)
+        private: inline static const NodeRegistration<Node> nodeRegistration = NodeRegistration<Node>("Node"); \
+        public: virtual inline const char* type() const { return "Node"; }
 
         struct StateValues
         {
