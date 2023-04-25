@@ -19,14 +19,14 @@ namespace prim
     Sprite::Sprite(std::string name)
         : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), 
         width(defaultSize), height(defaultSize),
-        image(std::make_shared<Image>())
+        image(std::make_unique<Image>())
     {
     }
 
     Sprite::Sprite(std::string name, std::string imagePath)
         : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), 
         width(defaultSize), height(defaultSize),
-        image(std::make_shared<Image>())
+        image(std::make_unique<Image>())
     {
         image->load(imagePath);
         planeMesh.compositions[0].texture = Texture::create(*image);
@@ -35,7 +35,7 @@ namespace prim
     Sprite::Sprite(const Sprite& other) 
         : Drawable(other.name), planeMesh(Primitives::createSquareMesh(other.width)),
         width(other.width), height(other.height),
-        image(other.image)
+        image(std::make_unique<Image>(other.image->getResPath()))
     {
     }
 

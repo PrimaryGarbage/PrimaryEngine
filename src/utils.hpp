@@ -39,6 +39,7 @@ namespace prim
         static constexpr float radians(float degrees);
         static std::vector<std::string> splitString(std::string str, std::string delimiter);
         static std::vector<std::string> splitString(const std::string& str, const char delimiter);
+        static void trimEmptyStrings(std::vector<std::string>& strings);
         static bool contains(const std::string& str, const std::string& substr);
         static bool startsWith(const std::string& source, const std::string& str);
         static std::string createKeyValuePair(std::string key, std::string value);

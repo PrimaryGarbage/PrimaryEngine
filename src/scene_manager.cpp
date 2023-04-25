@@ -46,10 +46,10 @@ namespace prim
 
     void SceneManager::freeScene(Node* scene) const
     {
-        Logger::inst().logInfo("Scene freed: '" + scene->getName() + "'");
         for (Node* child : scene->getChildren())
             freeScene(child);
         delete scene;
+        Logger::inst().logInfo("Scene freed: '" + scene->getName() + "'");
         Globals::sceneEditor->setSelectedNode(nullptr);
     }
     

@@ -61,7 +61,8 @@ namespace prim
         int pos = -1, prevPos = -1;
         while ((pos = str.find(delimiter, pos + 1)) != std::string::npos)
         {
-            std::string substr = str.substr(prevPos, pos - prevPos - 1);
+            ++prevPos;
+            std::string substr = str.substr(prevPos, pos - prevPos);
             if (!substr.empty()) strings.emplace_back(std::move(substr));
             prevPos = pos;
         }
@@ -132,6 +133,11 @@ namespace prim
         lowerStr.reserve(str.size());
         for (const char& c : str) lowerStr.push_back(std::tolower(c));
         return lowerStr;
+    }
+    
+    void Utils::trimEmptyStrings(std::vector<std::string>& strings)
+    {
+        std::erase_if(strings, [](const std::string& str) { return str.empty(); });
     }
     
     bool Utils::contains(const std::string& str, const std::string& substr) 

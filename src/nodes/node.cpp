@@ -197,6 +197,7 @@ namespace prim
 
         Node* rootNode = nullptr;
         std::vector<std::string> lines = Utils::splitString(nodeStr, '\n');
+        Utils::trimEmptyStrings(lines);
         std::stack<Node*> parentNodes;
         std::unordered_map<std::string, std::string> fields;
 
