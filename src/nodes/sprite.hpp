@@ -25,7 +25,7 @@ namespace prim
 
         inline static const float defaultSize = 100.0f;
         Mesh planeMesh;
-        Unp<Image> image;
+        std::string imagePath;
         float width;
         float height;
         float zIndex = 0.0f;
@@ -34,7 +34,6 @@ namespace prim
         Sprite();
         Sprite(std::string name);
         Sprite(std::string name, std::string imagePath);
-        Sprite(const Sprite& other);
         virtual ~Sprite();
 
         virtual void start() override;
@@ -47,7 +46,7 @@ namespace prim
         void setSize(float width, float height);
         void setWidth(float width);
         void setHeight(float height);
-        void setImage(std::string path);
+        void setTexture(std::string path);
         void setZIndex(float value);
         inline float getWidth() const { return width; }
         inline float getHeight() const { return height; }
@@ -55,7 +54,6 @@ namespace prim
         float getRelativeHeight() const;
         inline glm::vec2 getSize() const { return glm::vec2(width, height); }
         inline float getZIndex() const { return zIndex; }
-        inline const Image* getImage() const { return &*image; }
 
         virtual std::string serialize(bool withChildren = true) const override;
         virtual void restore(NodeValues& nodeValues) override;

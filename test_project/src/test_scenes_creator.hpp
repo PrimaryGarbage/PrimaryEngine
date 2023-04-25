@@ -73,7 +73,7 @@ namespace prim
             uiChildLabel->setText("And this is a UI element child");
             uiLabel->setAnchor({ 0.0f, 1.0f });
             uiLabel->setSize({ 80.0f, 80.0f });
-            //uiLabel->move({480.0f, -130.0f});
+            uiLabel->move({480.0f, -130.0f});
             uiChildLabel->setPivot({ 1.0f, 0.0f });
             uiChildLabel->move(180.0f, -85.0f);
             uiChildLabel->setSize(60.0f, 60.0f);

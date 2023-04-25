@@ -18,25 +18,14 @@ namespace prim
 
     Sprite::Sprite(std::string name)
         : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), 
-        width(defaultSize), height(defaultSize),
-        image(std::make_unique<Image>())
-    {
-    }
+        width(defaultSize), height(defaultSize)
+    {}
 
     Sprite::Sprite(std::string name, std::string imagePath)
         : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), 
-        width(defaultSize), height(defaultSize),
-        image(std::make_unique<Image>())
+        width(defaultSize), height(defaultSize), imagePath(imagePath)
     {
-        image->load(imagePath);
-        planeMesh.compositions[0].texture = Texture::create(*image);
-    }
-    
-    Sprite::Sprite(const Sprite& other) 
-        : Drawable(other.name), planeMesh(Primitives::createSquareMesh(other.width)),
-        width(other.width), height(other.height),
-        image(std::make_unique<Image>(other.image->getResPath()))
-    {
+        setTexture(this->imagePath);
     }
 
     Sprite::~Sprite()
@@ -100,10 +89,9 @@ namespace prim
         this->height = height;
     }
 
-    void Sprite::setImage(std::string path)
+    void Sprite::setTexture(std::string path)
     {
-        image->load(path);
-        planeMesh.compositions[0].texture = Texture::create(*image);
+        planeMesh.compositions[0].texture = Texture::create(ResourceManager::createResourcePath(path));
     }
 
     void Sprite::setZIndex(float value)
@@ -130,7 +118,7 @@ namespace prim
         ss << Utils::createKeyValuePair(StateValues::width, std::to_string(width)) << std::endl;
         ss << Utils::createKeyValuePair(StateValues::height, std::to_string(height)) << std::endl;
         ss << Utils::createKeyValuePair(StateValues::zIndex, std::to_string(zIndex)) << std::endl;
-        ss << Utils::createKeyValuePair(StateValues::imagePath, image->getResPath()) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::imagePath, imagePath) << std::endl;
         
         if(withChildren) ss << serializeChildren();
         
@@ -143,8 +131,8 @@ namespace prim
 
         if (!nodeValues[StateValues::imagePath].empty())
         {
-            image->load(nodeValues[StateValues::imagePath]);
-            planeMesh.compositions[0].texture = Texture::create(nodeValues[StateValues::imagePath]);
+            imagePath = nodeValues[StateValues::imagePath];
+            setTexture(imagePath);
         }
         setWidth(std::stof(nodeValues[StateValues::width]));
         setHeight(std::stof(nodeValues[StateValues::height]));
@@ -159,7 +147,7 @@ namespace prim
         if(ImGui::DragFloat("Width", &width));
         if (ImGui::DragFloat("Height", &height))
         ImGui::DragFloat("Z-Index", &zIndex, 0.01f);
-        ImGui::LabelText("Image", image->getResPath().c_str());
+        ImGui::LabelText("Image", imagePath.c_str());
         ImGui::SameLine();
 
         if (ImGui::Button("...")) // change image button
@@ -174,7 +162,7 @@ namespace prim
             if (ImGuiFileDialog::Instance()->IsOk())
             {
                 std::string path = Utils::splitString(ImGuiFileDialog::Instance()->GetFilePathName(), ResourceManager::resDirName + ResourceManager::separator()).back();
-                setImage(ResourceManager::createResourcePath(path));
+                setTexture(ResourceManager::createResourcePath(path));
             }
             
             ImGuiFileDialog::Instance()->Close();
