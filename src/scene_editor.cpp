@@ -12,6 +12,9 @@
 
 namespace prim
 {
+    Node* nodeToAddNewNodeTo = nullptr;
+    Node* nodeToAddLoadedNodeTo = nullptr;
+
     SceneEditor::SceneEditor(Renderer* renderer):
         renderer(renderer), positionPointMesh(Primitives::createSquareMesh(positionPointSize))
     {
@@ -110,7 +113,7 @@ namespace prim
             drawSaveSceneButton();
 
             drawCreateNodeMenu();
-
+            drawLoadNodeMenu();
         }
         ImGui::End();
     }
@@ -273,6 +276,7 @@ namespace prim
 
     void SceneEditor::drawNodeTreeContextMenu(Node* node, bool hovered, bool cloningAllowed)
     {
+
         if (hovered && Input::isJustReleased(MouseButton::right))
             ImGui::OpenPopup(("Context Menu: " + std::to_string(node->getId())).c_str());
 
@@ -280,27 +284,34 @@ namespace prim
         {
             if (ImGui::MenuItem("Add Node"))
             {
-                nodeToAddChildTo = node;
+                nodeToAddNewNodeTo = node;
             }
-            if (cloningAllowed && ImGui::MenuItem("Clone Node"))
+            else if (ImGui::MenuItem("Load Node"))
+            {
+                ImGuiFileDialog::Instance()->OpenDialog("LoadNodeKey", "Load Node", ".psc", ResourceManager::getResourceDirPathAbsolute(), 1, nullptr, ImGuiFileDialogFlags_Modal);
+                nodeToAddLoadedNodeTo = node;
+            }
+            else if (cloningAllowed && ImGui::MenuItem("Clone Node"))
             {
                 Node* newNode = node->clone();
                 newNode->setName(node->getName() + "c");
                 newNode->orphanize();
                 node->insertAfter(newNode);
             }
-            if (ImGui::MenuItem("Delete Node"))
+            else if (ImGui::MenuItem("Delete Node"))
             {
                 node->orphanize();
                 Globals::sceneManager->freeScene(node);
             }
+
             ImGui::EndPopup();
+
         }
     }
 
     void SceneEditor::drawCreateNodeMenu()
     {
-        if (!nodeToAddChildTo) return;
+        if (!nodeToAddNewNodeTo) return;
         static char nodeNameBuf[INPUT_STRING_MAX_LENGTH] = "NewNode";
         static std::string selectedNodeType;
         std::vector<std::string> nodeTypes = Node::getAllNodeTypes();
@@ -315,16 +326,32 @@ namespace prim
         {
             Node* newNode = Node::createNode(selectedNodeType);
             newNode->setName(nodeNameBuf);
-            nodeToAddChildTo->addChild(newNode);
-            nodeToAddChildTo = nullptr;
+            nodeToAddNewNodeTo->addChild(newNode);
+            nodeToAddNewNodeTo = nullptr;
             ImGui::CloseCurrentPopup();
         }
         ImGui::SameLine(ImGui::GetWindowWidth() - 60.0f);
         if(ImGui::Button("Cancel"))
         {
-            nodeToAddChildTo = nullptr;
+            nodeToAddNewNodeTo = nullptr;
         }
         ImGui::End();
+    }
+    
+    void SceneEditor::drawLoadNodeMenu()
+    {
+        if(!nodeToAddLoadedNodeTo) return;
+
+        if (ImGuiFileDialog::Instance()->Display("LoadNodeKey", 32, Utils::castVec2<ImVec2>(fileExplorerMinSize)))
+        {
+            if (ImGuiFileDialog::Instance()->IsOk())
+            {
+                std::string resPath = Utils::splitString(ImGuiFileDialog::Instance()->GetFilePathName(), ResourceManager::resDirName + ResourceManager::separator()).back();
+                Node* loadedNode = Globals::sceneManager->loadScene(resPath);
+                nodeToAddLoadedNodeTo->addChild(loadedNode);
+            }
+            ImGuiFileDialog::Instance()->Close();
+        }
     }
 
 

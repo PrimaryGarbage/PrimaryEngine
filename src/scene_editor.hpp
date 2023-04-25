@@ -34,7 +34,6 @@ namespace prim
         std::vector<std::string> printLines;
         std::vector<DragFloat> dragFloats;
         Node* selectedNode = nullptr;
-        Node* nodeToAddChildTo = nullptr;
         Mesh positionPointMesh;
         
         void drawRightPanel();
@@ -45,6 +44,7 @@ namespace prim
         void drawSaveSceneButton();
         void drawNodeTreeContextMenu(Node* node, bool hovered, bool cloningAllowed = true);
         void drawCreateNodeMenu();
+        void drawLoadNodeMenu();
 
     public:
         static inline const char* dragNodePayloadType = "NODE";
