@@ -61,7 +61,7 @@ namespace prim
         int pos = -1, prevPos = -1;
         while ((pos = str.find(delimiter, pos + 1)) != std::string::npos)
         {
-            std::string substr = str.substr(prevPos, pos - ++prevPos);
+            std::string substr = str.substr(prevPos, pos - prevPos - 1);
             if (!substr.empty()) strings.emplace_back(std::move(substr));
             prevPos = pos;
         }

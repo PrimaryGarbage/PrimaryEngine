@@ -274,9 +274,9 @@ namespace prim
     void SceneEditor::drawNodeTreeContextMenu(Node* node, bool hovered, bool cloningAllowed)
     {
         if (hovered && Input::isJustReleased(MouseButton::right))
-            ImGui::OpenPopup("Context Menu: " + node->getId());
+            ImGui::OpenPopup(("Context Menu: " + std::to_string(node->getId())).c_str());
 
-        if (ImGui::BeginPopup("Context Menu: " + node->getId()))
+        if (ImGui::BeginPopup(("Context Menu: " + std::to_string(node->getId())).c_str()))
         {
             if (ImGui::MenuItem("Add Node"))
             {

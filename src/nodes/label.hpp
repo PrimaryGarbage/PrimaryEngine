@@ -49,7 +49,7 @@ namespace prim
         inline void setTextColor(glm::vec4 color) { this->textColor = color; }
         inline void setBackgroundColor(glm::vec4 color) { this->backgroundColor = color; }
         inline void setPadding(glm::vec2 padding) { this->padding = padding; }
-        inline void setBorderRadius(float radius) { this->borderRadius = borderRadius; }
+        inline void setBorderRadius(float radius) { this->borderRadius = radius; }
 
         virtual void start() override;
         virtual void update(float deltaTime) override;
