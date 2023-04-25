@@ -145,7 +145,7 @@ namespace prim
 
         if(ImGui::DragFloat2("Pivot", &transform.pivot.x, 0.01f));
         if(ImGui::DragFloat("Width", &width));
-        if (ImGui::DragFloat("Height", &height))
+        if (ImGui::DragFloat("Height", &height));
         ImGui::DragFloat("Z-Index", &zIndex, 0.01f);
         ImGui::LabelText("Image", imagePath.c_str());
         ImGui::SameLine();
