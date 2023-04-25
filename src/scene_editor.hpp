@@ -34,7 +34,7 @@ namespace prim
         std::vector<std::string> printLines;
         std::vector<DragFloat> dragFloats;
         Node* selectedNode = nullptr;
-        Node* nodeToAddTo = nullptr;
+        Node* nodeToAddChildTo = nullptr;
         Mesh positionPointMesh;
         
         void drawRightPanel();

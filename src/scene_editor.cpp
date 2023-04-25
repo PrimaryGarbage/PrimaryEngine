@@ -280,7 +280,7 @@ namespace prim
         {
             if (ImGui::MenuItem("Add Node"))
             {
-                nodeToAddTo = node;
+                nodeToAddChildTo = node;
             }
             if (cloningAllowed && ImGui::MenuItem("Clone Node"))
             {
@@ -300,7 +300,7 @@ namespace prim
 
     void SceneEditor::drawCreateNodeMenu()
     {
-        if (!nodeToAddTo) return;
+        if (!nodeToAddChildTo) return;
         static char nodeNameBuf[INPUT_STRING_MAX_LENGTH] = "NewNode";
         static std::string selectedNodeType;
         std::vector<std::string> nodeTypes = Node::getAllNodeTypes();
@@ -315,12 +315,16 @@ namespace prim
         {
             Node* newNode = Node::createNode(selectedNodeType);
             newNode->setName(nodeNameBuf);
-            nodeToAddTo->addChild(newNode);
-            nodeToAddTo = nullptr;
+            nodeToAddChildTo->addChild(newNode);
+            nodeToAddChildTo = nullptr;
             ImGui::CloseCurrentPopup();
         }
+        ImGui::SameLine(ImGui::GetWindowWidth() - 60.0f);
+        if(ImGui::Button("Cancel"))
+        {
+            nodeToAddChildTo = nullptr;
+        }
         ImGui::End();
-
     }
 
 
