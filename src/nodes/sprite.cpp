@@ -28,10 +28,6 @@ namespace prim
         setTexture(this->imagePath);
     }
 
-    Sprite::~Sprite()
-    {
-    }
-
     void Sprite::start()
     {
         startChildren();

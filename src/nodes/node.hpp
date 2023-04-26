@@ -110,6 +110,7 @@ namespace prim
         virtual void setGlobalScale(glm::vec2 s);
 
         virtual void addChild(Node* node);
+        virtual void addChildren(const std::vector<Node*>& children);
         virtual void insertBefore(Node* node);
         virtual void insertAfter(Node* node);
         virtual void addSibling(Node* node);

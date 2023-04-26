@@ -27,7 +27,7 @@ namespace prim
 
 	PrimaryApp::~PrimaryApp()
 	{
-		if (currentScene) sceneManager.freeScene(currentScene);
+		if (!currentScene.empty()) sceneManager.freeScene(currentScene);
 	}
 
 	int PrimaryApp::run()
@@ -60,11 +60,11 @@ namespace prim
 		}
 	}
 
-	void PrimaryApp::setCurrentScene(Node* scene)
+	void PrimaryApp::setCurrentScene(const std::vector<Node*>& scene)
 	{
-		if (currentScene) sceneManager.freeScene(currentScene);
+		if (!currentScene.empty()) sceneManager.freeScene(currentScene);
 		currentScene = scene;
-		currentScene->start();
+		std::for_each(currentScene.begin(), currentScene.end(), [](Node* node) { node->start(); });
 	}
 
 	void PrimaryApp::loadCurrentScene(std::string resPath)
@@ -74,42 +74,50 @@ namespace prim
 	
 	void PrimaryApp::saveCurrentScene(std::string resPath, bool overwrite)
 	{
-		if(!currentScene) return;
+		if(currentScene.empty()) return;
 		sceneManager.saveScene(currentScene, resPath, overwrite);
 	}
 	
-	Node* PrimaryApp::loadScene(std::string resPath)
+	std::vector<Node*> PrimaryApp::loadScene(std::string resPath)
 	{
 		return sceneManager.loadScene(resPath);
 	}
 
-	Node* PrimaryApp::getCurrentScene() const
+	std::vector<Node*> PrimaryApp::getCurrentScene() const
 	{
 		return currentScene;
 	}
 
 	Node* PrimaryApp::getNode(NodePath nodePath)
 	{
-		if (!currentScene) return nullptr;
-		Node* currentNode = currentScene;
-		if (nodePath.front() == currentScene->getName())
-			nodePath = nodePath.pop_front();
+		if (currentScene.empty()) return nullptr;
+
+		Node* currentNode = nullptr;
+		const std::vector<Node*>* currentLevel = &currentScene;
+
 	start:
-		while (!nodePath.empty())
+		while(!nodePath.empty())
 		{
-			std::string name = nodePath.front();
-			for (Node* child : currentNode->getChildren())
+			std::string currentName = nodePath.front();
+			for(Node* node : *currentLevel)
 			{
-				if (name == child->getName())
+				if(node->getName() == currentName)
 				{
-					currentNode = child;
+					currentLevel = &node->children;
+					currentNode = node;
 					nodePath = nodePath.pop_front();
 					goto start;
-					break;
 				}
+				return nullptr;
 			}
-			return nullptr;
+
+			for(Node* node : currentScene)
+			{
+				if(currentName == node->getName())
+					currentNode = node;
+			}
 		}
+
 		return currentNode;
 	}
 	
@@ -130,8 +138,6 @@ namespace prim
 
 	void PrimaryApp::mainLoop()
 	{
-		if(!currentScene) setCurrentScene(sceneManager.createEmptyScene());
-
 		float speed = 10.0f;
 
 		while (!renderer.windowShouldClose())
@@ -148,15 +154,14 @@ namespace prim
 			renderer.pollEvents();
 			Input::update();
 
-			if (currentScene)
-				currentScene->update(deltaTime);
+			std::for_each(currentScene.begin(), currentScene.end(), [this](Node* node) { node->update(this->deltaTime); });
 
 			executeDeferredFunctions();
 			/////////////////
 
 			///// Draw /////
 
-			currentScene->draw(renderer);
+			std::for_each(currentScene.begin(), currentScene.end(), [this](Node* node) { node->draw(this->renderer); });
 
 			drawEditor();
 

@@ -34,7 +34,6 @@ namespace prim
         Sprite();
         Sprite(std::string name);
         Sprite(std::string name, std::string imagePath);
-        virtual ~Sprite();
 
         virtual void start() override;
         virtual void update(float deltaTime) override;

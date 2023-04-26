@@ -2,8 +2,7 @@
 #include "prim_exception.hpp"
 #include <fstream>
 #include <sstream>
-#include <unordered_map>
-#include <stack>
+#include <algorithm>
 #include "nodes/node.hpp"
 #include "utils.hpp"
 #include "globals.hpp"
@@ -11,7 +10,7 @@
 
 namespace prim
 {
-    Node* SceneManager::loadScene(std::string resPath) const
+    std::vector<Node*> SceneManager::loadScene(std::string resPath) const
     {
         fs::path path(ResourceManager::createResourcePath(resPath, true));
 
@@ -21,10 +20,16 @@ namespace prim
         std::stringstream fileSs;
         fileSs << stream.rdbuf();
 
-        return Node::deserialize(fileSs.str());
+        Node* root = Node::deserialize(fileSs.str());
+
+        std::vector<Node*> nodes(root->children);
+        std::for_each(nodes.begin(), nodes.end(), [](Node* node) { node->orphanize(); });
+        delete root;
+
+        return nodes;
     }
 
-    void SceneManager::saveScene(Node* scene, std::string resPath, bool ovewrite) const
+    void SceneManager::saveScene(const std::vector<Node*>& scene, std::string resPath, bool ovewrite) const
     {
         fs::path path(ResourceManager::createResourcePath(resPath, ovewrite));
 
@@ -37,24 +42,23 @@ namespace prim
         std::ofstream stream(path.string(), std::ios::out | std::ios::trunc);
         if (!stream.good()) throw PRIM_EXCEPTION("Unable to open file stream.");
 
-        scene->setName(path.stem().string());
+        Node* root = Node::createNode("root");
+        root->addChildren(scene);
 
-        stream << scene->serialize();
+        root->setName(path.stem().string());
 
+        stream << root->serialize();
+
+        std::for_each(scene.begin(), scene.end(), [](Node* node) { node->orphanize(); });
+        delete root;
         stream.close();
     }
 
-    void SceneManager::freeScene(Node* scene) const
+    void SceneManager::freeScene(std::vector<Node*>& scene) const
     {
-        for (Node* child : scene->getChildren())
-            freeScene(child);
-        delete scene;
-        Logger::inst().logInfo("Scene freed: '" + scene->getName() + "'");
+        for (Node* node : scene)
+            delete node;
+        Logger::inst().logInfo("Scene freed.");
         Globals::sceneEditor->setSelectedNode(nullptr);
-    }
-    
-    Node* SceneManager::createEmptyScene() const
-    {
-        return new Node("Empty Scene");
     }
 }

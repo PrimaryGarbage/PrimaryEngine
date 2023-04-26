@@ -27,7 +27,6 @@ namespace prim
         Camera2D();
         Camera2D(std::string name);
         Camera2D(std::string name, float zNear, float zFar);
-        virtual ~Camera2D();
 
         virtual glm::mat4 calculateViewMatrix() const override;
         virtual glm::mat4 calculateProjectMatrix() const override;

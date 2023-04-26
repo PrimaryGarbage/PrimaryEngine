@@ -10,10 +10,6 @@
 
 namespace prim
 {
-    Node2D::~Node2D()
-    {
-    }
-
     void Node2D::start()
     {
         startChildren();

@@ -27,10 +27,6 @@ namespace prim
     {
     }
 
-    ActorCamera2D::~ActorCamera2D()
-    {
-    }
-
     void ActorCamera2D::start()
     {
         startChildren();

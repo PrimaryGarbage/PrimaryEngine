@@ -25,7 +25,6 @@ namespace prim
         Transform2D transform;
     public:
         using Node::Node;
-        virtual ~Node2D();
 
         virtual void start() override;
         virtual void update(float deltaTime) override;

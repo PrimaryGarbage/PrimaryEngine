@@ -13,7 +13,7 @@
 namespace prim
 {
     Node* nodeToAddNewNodeTo = nullptr;
-    Node* nodeToAddLoadedNodeTo = nullptr;
+    Node* nodeToAddLoadedSceneTo = nullptr;
 
     SceneEditor::SceneEditor(Renderer* renderer):
         renderer(renderer), positionPointMesh(Primitives::createSquareMesh(positionPointSize))
@@ -78,35 +78,13 @@ namespace prim
         {
             panelSize = ImVec2(ImGui::GetWindowSize().x, renderer->getWindowHeight());
 
-            Node* currentScene = Globals::app->getCurrentScene();
-            if (currentScene)
+            std::vector<Node*> currentScene = Globals::app->getCurrentScene();
+
+            for(Node* node : currentScene)
             {
-                if (ImGui::TreeNode(currentScene->getName().c_str()))
-                {
-                    // draw root node context menu
-                    drawNodeTreeContextMenu(currentScene, ImGui::IsItemHovered(), false);
-
-                    if (ImGui::BeginDragDropTarget())
-                    {
-                        const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(dragNodePayloadType);
-                        if (payload)
-                        {
-                            Node* payloadNode = *static_cast<Node**>(payload->Data);
-                            payloadNode->orphanize();
-                            currentScene->addChild(payloadNode);
-                        }
-                        ImGui::EndDragDropTarget();
-                    }
-
-                    for (Node* child : currentScene->getChildren())
-                    {
-                        drawNodeInTree(child);
-                    }
-
-                    ImGui::TreePop();
-                }
-
+                drawNodeInTree(node);
             }
+
             ImGui::Separator();
             drawLoadSceneButton();
             ImGui::SameLine();
@@ -216,7 +194,7 @@ namespace prim
         if (ImGui::Button("Save Scene"))
         {
             ImGui::OpenPopup("Save Scene");
-            strncpy(scenePathBuf, Globals::app->getCurrentScene()->getName().c_str(), INPUT_STRING_MAX_LENGTH - 1);
+            scenePathBuf[0] = '\0';
         }
 
         if (ImGui::BeginPopupModal("Save Scene", nullptr, ImGuiWindowFlags_NoResize))
@@ -289,7 +267,7 @@ namespace prim
             else if (ImGui::MenuItem("Load Node"))
             {
                 ImGuiFileDialog::Instance()->OpenDialog("LoadNodeKey", "Load Node", ".psc", ResourceManager::getResourceDirPathAbsolute(), 1, nullptr, ImGuiFileDialogFlags_Modal);
-                nodeToAddLoadedNodeTo = node;
+                nodeToAddLoadedSceneTo = node;
             }
             else if (cloningAllowed && ImGui::MenuItem("Clone Node"))
             {
@@ -301,7 +279,7 @@ namespace prim
             else if (ImGui::MenuItem("Delete Node"))
             {
                 node->orphanize();
-                Globals::sceneManager->freeScene(node);
+                delete node;
             }
 
             ImGui::EndPopup();
@@ -340,15 +318,15 @@ namespace prim
     
     void SceneEditor::drawLoadNodeMenu()
     {
-        if(!nodeToAddLoadedNodeTo) return;
+        if(!nodeToAddLoadedSceneTo) return;
 
         if (ImGuiFileDialog::Instance()->Display("LoadNodeKey", 32, Utils::castVec2<ImVec2>(fileExplorerMinSize)))
         {
             if (ImGuiFileDialog::Instance()->IsOk())
             {
                 std::string resPath = Utils::splitString(ImGuiFileDialog::Instance()->GetFilePathName(), ResourceManager::resDirName + ResourceManager::separator()).back();
-                Node* loadedNode = Globals::sceneManager->loadScene(resPath);
-                nodeToAddLoadedNodeTo->addChild(loadedNode);
+                std::vector<Node*> loadedScene = Globals::sceneManager->loadScene(resPath);
+                nodeToAddLoadedSceneTo->addChildren(loadedScene);
             }
             ImGuiFileDialog::Instance()->Close();
         }

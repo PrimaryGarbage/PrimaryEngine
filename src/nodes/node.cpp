@@ -1,12 +1,12 @@
 #include "node.hpp"
 #include "prim_exception.hpp"
-#include <algorithm>
 #include "graphics/renderer.hpp"
 #include "imgui.h"
-#include <sstream>
 #include "utils.hpp"
 #include "node_utils.hpp"
 #include "node_serialization.hpp"
+#include <sstream>
+#include <algorithm>
 
 namespace prim
 {
@@ -21,6 +21,7 @@ namespace prim
     Node::~Node()
     {
         freeUniqueId(id);
+        std::for_each(children.begin(), children.end(), [](Node* node) { delete node; });
     }
 
     unsigned int Node::getUniqueId()
@@ -98,6 +99,11 @@ namespace prim
         node->parent = this;
         children.push_back(node);
         node->updateNodePath();
+    }
+    
+    void Node::addChildren(const std::vector<Node*>& children)
+    {
+        std::for_each(children.begin(), children.end(), [this](Node* child) { this->addChild(child); });
     }
     
     void Node::insertAfter(Node* node) 

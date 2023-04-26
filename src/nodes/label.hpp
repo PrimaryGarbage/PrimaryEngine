@@ -37,7 +37,6 @@ namespace prim
         using Control::Control;
         Label();
         Label(std::string name);
-        virtual ~Label() {};
 
         inline std::string_view getText() const { return text; }
         inline glm::vec4 getTextColor() const { return textColor; }

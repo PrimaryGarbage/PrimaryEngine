@@ -3,6 +3,7 @@
 
 #include <string>
 #include <filesystem>
+#include <vector>
 #include "typedefs.hpp"
 
 namespace prim
@@ -14,10 +15,9 @@ namespace prim
     public:
         const static inline char* sceneFileExtension = ".psc";
 
-        Node* loadScene(std::string resPath) const;
-        void saveScene(Node* scene, std::string resPath, bool ovewrite = false) const;
-        void freeScene(Node* scene) const;
-        Node* createEmptyScene() const;
+        std::vector<Node*> loadScene(std::string resPath) const;
+        void saveScene(const std::vector<Node*>& scene, std::string resPath, bool ovewrite = false) const;
+        void freeScene(std::vector<Node*>& scene) const;
     };
 }
 

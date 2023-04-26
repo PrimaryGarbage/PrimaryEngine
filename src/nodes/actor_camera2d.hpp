@@ -30,7 +30,6 @@ namespace prim
         ActorCamera2D(std::string name);
         ActorCamera2D(std::string name, const NodePath& target);
         ActorCamera2D(std::string name, float zNear, float zFar, const NodePath& target);
-        virtual ~ActorCamera2D();
 
         virtual void start() override;
         virtual void update(float deltaTime) override;

@@ -2,6 +2,7 @@
 #define __TEST_SCENES_CREATOR_HPP__
 
 #include "primary_engine.hpp"
+#include <vector>
 
 namespace prim
 {
@@ -10,7 +11,7 @@ namespace prim
     class TestScenesCreator
     {
     public:
-        static inline Node* createScene1()
+        static inline std::vector<Node*> createScene1()
         {
             Node* scene = new Node("TestScene1");
             Sprite* background = new Sprite("TestBackground", "textures/abstract_stairs.png");
@@ -28,10 +29,10 @@ namespace prim
             scene->addChild(sprite2);
             scene->addChild(actorCamera);
 
-            return scene;
+            return std::vector<Node*> { scene };
         }
 
-        static inline Node* createScene2()
+        static inline std::vector<Node*> createScene2()
         {
             Node* scene = new Node("TestScene2");
             Sprite* background = new Sprite("TestBackground", "textures/abstract_stairs.png");
@@ -49,10 +50,10 @@ namespace prim
             sprite1->addChild(sprite2);
             scene->addChild(actorCamera);
 
-            return scene;
+            return std::vector<Node*> { scene };
         }
 
-        static inline Node* createScene3()
+        static inline std::vector<Node*> createScene3()
         {
             Node* scene = new Node("TestScene3");
             Sprite* background = new Sprite("TestBackground", "textures/abstract_stairs.png");
@@ -86,17 +87,17 @@ namespace prim
             uiLabel->addChild(uiChildLabel);
             scene->addChild(control);
 
-            return scene;
+            return std::vector<Node*> { scene };
         }
 
-        static inline Node* createLabelScene()
+        static inline std::vector<Node*> createLabelScene()
         {
             Node* scene = new Node("TestScene3");
             Label* label = new Label("TestLabel");
             label->setText("Test text");
             scene->addChild(label);
 
-            return scene;
+            return std::vector<Node*> { scene };
         }
     };
 }

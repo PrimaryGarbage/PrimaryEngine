@@ -12,11 +12,6 @@ namespace prim
     {
     }
     
-    Drawable::~Drawable() 
-    {
-        
-    }
-    
     void Drawable::draw(Renderer& renderer)
     {
         drawChildren(renderer);

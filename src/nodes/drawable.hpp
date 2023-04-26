@@ -14,7 +14,6 @@ namespace prim
 
         Drawable();
         Drawable(std::string name);
-        virtual ~Drawable();
 
         virtual void draw(Renderer& renderer) override;
         void drawWithShader(Renderer& renderer, Shader* shader);

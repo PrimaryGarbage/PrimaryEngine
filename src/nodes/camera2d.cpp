@@ -24,10 +24,6 @@ namespace prim
         setPivot(glm::vec2(0.5f, 0.5f));
     }
     
-    Camera2D::~Camera2D()
-    {
-    }
-
     glm::vec2 Camera2D::getWindowSize() const
     {
         return glm::vec2(static_cast<float>(renderer->getWindowWidth()), static_cast<float>(renderer->getWindowHeight()));

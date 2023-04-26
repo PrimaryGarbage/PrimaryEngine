@@ -26,7 +26,6 @@ namespace prim
     public:
         Control();
         Control(std::string name);
-        virtual ~Control() {};
 
         void move(glm::vec2 v);
         void move(float x, float y);
