@@ -10,19 +10,24 @@ namespace prim
     class Event
     {
     private:
-        std::vector<std::function<void(T...)>> subscribers;
+        std::vector<std::pair<std::string, std::function<void(T...)>>> subscribers;
     public:
         inline void invoke(T... args) const
         {
             for(auto& subscriber : subscribers)
             {
-                subscriber(args...);
+                subscriber.second(args...);
             }
         }
 
-        inline void subscribe(std::function<void(T...)> callback)
+        inline void subscribe(std::string key, std::function<void(T...)> callback)
         {
-            subscribers.push_back(callback);
+            subscribers.push_back({key, callback});
+        }
+
+        inline void unsubscribe(std::string key)
+        {
+            const auto iter = std::find_if(subscribers.begin(), subscribers.end(), [&key](const auto& pair) { return pair.first == key})
         }
     };
 }
