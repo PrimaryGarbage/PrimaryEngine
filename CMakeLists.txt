@@ -22,6 +22,7 @@ set(PRIMARY_SRC
 	ImGuiFileDialog.h ImGuiFileDialog.cpp ImGuiFileDialogConfig.h
 	typedefs.hpp
 	resource_manager.hpp resource_manager.cpp
+	event.hpp
 	)
 
 set(MISC_SRC

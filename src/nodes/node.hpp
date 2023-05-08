@@ -6,6 +6,7 @@
 #include "GLM/glm.hpp"
 #include "node_path.hpp"
 #include "utils.hpp"
+#include "event.hpp"
 
 #define NODE_FIXTURE(NODE_NAME) \
     private: inline static const NodeRegistration<NODE_NAME> nodeRegistration = NodeRegistration<NODE_NAME>(#NODE_NAME); \
