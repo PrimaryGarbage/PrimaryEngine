@@ -27,7 +27,11 @@ namespace prim
 
         inline void unsubscribe(std::string key)
         {
-            const auto iter = std::find_if(subscribers.begin(), subscribers.end(), [&key](const auto& pair) { return pair.first == key})
+            const auto iter = std::find_if(subscribers.begin(), subscribers.end(), [&key](const auto& pair) { return pair.first == key; });
+            if(iter != subscribers.end())
+            {
+                subscribers.erase(iter);
+            }
         }
     };
 }

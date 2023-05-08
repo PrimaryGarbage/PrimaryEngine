@@ -21,6 +21,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE external/primary_engine/inclu
 #target_link_options(${PROJECT_NAME} PRIVATE -static)
 
 # remove c++20 volatile varnings (they will be fixed in c++23)
-target_compile_options(${PROJECT_NAME} PUBLIC -Wno-volatile)
+target_compile_options(${PROJECT_NAME} PUBLIC -Wno-deprecated-volatile -Wno-volatile)
 
 target_link_libraries(${PROJECT_NAME} PrimaryEngine-d)
