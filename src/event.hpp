@@ -25,26 +25,6 @@ namespace prim
             subscribers.push_back(callback);
         }
     };
-
-    // template<>
-    // class Event<void>
-    // {
-    // private:
-    //     std::vector<std::function<void()>> subscribers;
-    // public:
-    //     inline void invoke() const
-    //     {
-    //         for(auto& subscriber : subscribers)
-    //         {
-    //             subscriber();
-    //         }
-    //     }
-
-    //     inline void subscribe(std::function<void()> callback)
-    //     {
-    //         subscribers.push_back(callback);
-    //     }
-    // };
 }
 
 #endif // __EVENT_HPP__
