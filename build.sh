@@ -3,8 +3,8 @@
 source /usr/local/bin/color.sh
 
 CMAKE_BUILD_DIR='./bin'
-PROJECT_NAME='libPrimaryEngine'
-LIB_EXTENSION='dll'
+PROJECT_NAME='PrimaryEngine'
+SYSTEM=''
 BUILD_TYPE=Debug
 POSTFIX='-d'
 C_COMPILER=clang
@@ -35,11 +35,11 @@ compile_include_files() {
 	echo "Include files folder compiled ($PWD/$INCLUDE_EXPORT_DIR)"
 }
 
-determine_lib_extension() {
+determine_system() {
 	if [[ $(uname -s) == "Linux" ]]; then
-		LIB_EXTENSION='so'
+		SYSTEM='Linux'
 	else
-		LIB_EXTENSION='dll'
+		SYSTEM='Windows'
 	fi
 }
 
@@ -47,7 +47,18 @@ copy_lib_to_test_project() {
 	# create lib dir for test project if it doesn't exist
 	mkdir -p $TEST_PROJECT_LIB_PATH
 
-	cp "$CMAKE_BUILD_DIR/$PROJECT_NAME$POSTFIX.$LIB_EXTENSION" $TEST_PROJECT_LIB_PATH/
+	# copy library
+	if [[ $SYSTEM == "Linux" ]]; then
+		cp "$CMAKE_BUILD_DIR/lib$PROJECT_NAME$POSTFIX.so" $TEST_PROJECT_LIB_PATH/
+	else
+		cp "$CMAKE_BUILD_DIR/$PROJECT_NAME$POSTFIX.dll" $TEST_PROJECT_LIB_PATH/
+		cp "$CMAKE_BUILD_DIR/$PROJECT_NAME$POSTFIX.lib" $TEST_PROJECT_LIB_PATH/
+		if [[ $BUILD_TYPE == "Debug" ]]; then
+			cp "$CMAKE_BUILD_DIR/$PROJECT_NAME$POSTFIX.pdb" $TEST_PROJECT_LIB_PATH/
+		fi
+	fi
+
+	# copy include files
 	rm -rf $TEST_PROJECT_INCLUDE_PATH
 	mkdir -p $TEST_PROJECT_INCLUDE_PATH
 	cp -r $INCLUDE_EXPORT_DIR/* $TEST_PROJECT_INCLUDE_PATH/
@@ -70,6 +81,10 @@ configure() {
 		"CMAKE_CXX_COMPILER=$CXX_COMPILER" \
 		"CMAKE_COLOR_DIAGNOSTICS=ON"
 	)
+
+	if [[ $SYSTEM == "Windows" ]]; then
+		CMAKE_VARS+=("CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON")
+	fi
 
 	CMAKE_VARS_STRING=""
 	for v in "${CMAKE_VARS[@]}"; do
@@ -126,7 +141,7 @@ change_build_type() {
 
 ##### Script Start #####
 
-determine_lib_extension
+determine_system
 
 while true
 do

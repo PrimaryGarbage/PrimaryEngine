@@ -8,6 +8,6 @@ libPrimaryEngine.dll
 libPrimaryEngine-d.so
 libPrimaryEngine.so
 include/
-test_project/project/external/
+test_project/external/
 build/
 bin

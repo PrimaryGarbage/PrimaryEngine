@@ -9,22 +9,24 @@ C_COMPILER=clang
 CXX_COMPILER=clang++
 RES_DIR_TARGET="$CMAKE_BUILD_DIR"
 RES_DIR_SOURCE="./resources"
-PRIMARY_LIB_EXTENSION=""
-PRIMARY_LIB_NAME="libPrimaryEngine-d";
+SYSTEM=''
+PRIMARY_LIB_NAME="PrimaryEngine-d";
 PRIMARY_LIB_PATH="external/lib"
 
-determine_lib_extension() {
+determine_system() {
 	if [[ $(uname -s) == "Linux" ]]; then
-		PRIMARY_LIB_EXTENSION='so'
-		echo Linux
+		SYSTEM='Linux'
 	else
-		PRIMARY_LIB_EXTENSION='dll'
-		echo Windows
+		SYSTEM='Windows'
 	fi
 }
 
 copy_lib() {
-	cp $PRIMARY_LIB_PATH/$PRIMARY_LIB_NAME.$PRIMARY_LIB_EXTENSION $RES_DIR_TARGET
+	if [[ $SYSTEM == 'Linux' ]]; then
+		cp $PRIMARY_LIB_PATH/lib$PRIMARY_LIB_NAME.so $RES_DIR_TARGET
+	else
+		cp $PRIMARY_LIB_PATH/$PRIMARY_LIB_NAME.dll $RES_DIR_TARGET
+	fi
 }
 
 copy_res_dir() {
