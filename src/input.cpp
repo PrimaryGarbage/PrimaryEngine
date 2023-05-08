@@ -346,6 +346,11 @@ float Input::getAxis(const std::string axisName)
 	return result;
 }
 
+glm::vec2 Input::getCursorPos()
+{
+	return glm::vec2(mouse.x, Globals::mainRenderer->getWindowHeight() - mouse.y);
+}
+
 void Input::addAction(const std::string name, std::initializer_list<ActionCause> actionCauses)
 {
 	auto actionSearch = std::find_if(actions.begin(), actions.end(), [&name](const Action& a) { return a.name == name; });

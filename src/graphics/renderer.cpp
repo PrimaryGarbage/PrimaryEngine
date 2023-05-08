@@ -5,6 +5,7 @@
 #include "nodes/drawable.hpp"
 #include "nodes/camera_base.hpp"
 #include "glfw_extensions.hpp"
+#include "primitives.hpp"
 
 
 namespace prim
@@ -119,6 +120,16 @@ namespace prim
 		node->drawWithShader(*this, Shader::getDefaultShader(DefaultShader::frame));
 		
 		GL_CALL(glDisable(GL_STENCIL_TEST));
+	}
+	
+	// NOT WORKING
+	void Renderer::drawRectangle(glm::vec2 position, glm::vec2 size, glm::vec4 color)
+	{
+		glm::vec2 windowSize = getWindowSize();
+		glm::vec2 viewportPos = position / windowSize;
+		glm::vec2 viewportSize = size / windowSize;
+		glColor4f(color.r, color.g, color.b, color.a);
+		glRectf(viewportPos.x, viewportPos.y + viewportSize.y, viewportPos.x + viewportSize.x, viewportPos.y);
 	}
 
 	void Renderer::drawMesh(const Mesh& mesh)

@@ -1,36 +1,45 @@
 #include "rectangle.hpp"
+#include "GLM/gtx/rotate_vector.hpp"
 
 namespace prim
 {
+    Rectangle::Rectangle(glm::vec2 position, glm::vec2 size, glm::vec2 pivot, float rotation) 
+        :
+        position(position), size(size), pivot(pivot), rotation(rotation) 
+    {
+        calculateInternalValues();
+    }
+
     float Rectangle::getArea() const
     {
-        return getWidth() * getHeight();
+        return size.x * size.y;
     }
     
     bool Rectangle::inside(glm::vec2 point) const
     {
-        return point.x > luPoint.x && point.x < rlPoint.y
-            && point.y > rlPoint.y && point.y < luPoint.y;
+        // rotate point around pivot
+        point = glm::rotate(point - pivotPosition, -rotation) + pivotPosition;
+
+        return point.x > llPoint.x && point.x < ruPoint.x
+            && point.y > llPoint.y && point.y < ruPoint.y;
     }
     
     bool Rectangle::inside(float x, float y) const
     {
-        return x > luPoint.x && x < rlPoint.y
-            && y > rlPoint.y && y < luPoint.y;
+        // rotate point around pivot
+        glm::vec2 point = glm::rotate(glm::vec2(x, y) - pivotPosition, -rotation) + pivotPosition;
+
+        return point.x > llPoint.x && point.x < ruPoint.x
+            && point.y > llPoint.y && point.y < ruPoint.y;
     }
-    
-    float Rectangle::getWidth() const
+
+    void Rectangle::calculateInternalValues()
     {
-        return rlPoint.x - luPoint.x;   
-    }
-    
-    float Rectangle::getHeight() const
-    {
-        return luPoint.y - rlPoint.y;
-    }
-    
-    glm::vec2 Rectangle::getSize() const
-    {
-        return glm::vec2(getWidth(), getHeight());
+        // vector from rect position to pivot point
+        pivotOffset = size * pivot;
+        // pivot vector from the coordinate center
+        pivotPosition = position + pivotOffset;
+        llPoint = glm::rotate(-pivotOffset, -rotation) + pivotPosition;
+        ruPoint = glm::rotate(position + size - pivotPosition, -rotation) + pivotPosition;
     }
 }

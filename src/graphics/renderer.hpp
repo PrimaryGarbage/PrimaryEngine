@@ -45,6 +45,7 @@ public:
 	void drawMesh(const Mesh& mesh);
 	void drawMesh(const Mesh& mesh, const Shader* shader);
 	void drawNodeFrame(Drawable* node, glm::vec4 color, float frameScale);
+	void drawRectangle(glm::vec2 position, glm::vec2 size, glm::vec4 color);
 	void addMesh(Mesh* mesh);
 	void clear();
 	bool windowShouldClose();

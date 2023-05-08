@@ -5,8 +5,9 @@
 
 namespace prim
 {
-    struct Shape2D
+    class Shape2D
     {
+    public:
         virtual float getArea() const = 0;
         virtual bool inside(glm::vec2 point) const = 0;
         virtual bool inside(float x, float y) const = 0;

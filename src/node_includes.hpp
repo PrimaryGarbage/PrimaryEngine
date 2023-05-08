@@ -6,8 +6,10 @@
 #include "nodes/sprite.hpp"
 #include "nodes/camera2d.hpp"
 #include "nodes/actor_camera2d.hpp"
+
 #include "nodes/control.hpp"
 #include "nodes/label.hpp"
 #include "nodes/panel.hpp"
+#include "nodes/button.hpp"
 
 #endif // __NODE_INCLUDES_HPP__

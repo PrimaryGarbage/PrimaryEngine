@@ -14,6 +14,7 @@ public:
     Shp<VertexBuffer> vb;
     std::vector<MeshComposition> compositions;
 
+    Mesh() = default;
     Mesh(Shp<VertexBuffer> vb);
     void addComposition(MeshComposition&& composition);
 };

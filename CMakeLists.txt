@@ -44,6 +44,7 @@ set(NODES_SRC
 	control.hpp control.cpp
 	panel.hpp panel.cpp
 	label.hpp label.cpp
+	button.hpp button.cpp
 )
 
 set(GRAPHICS_SRC

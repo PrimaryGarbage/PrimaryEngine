@@ -6,6 +6,8 @@
 
 namespace prim
 {
+    enum class ControlState{ Idle, Selected, Active, __count };
+    inline const char* ControlState_str[] { "Idle", "Selected", "Active" };
 
     class Control : public Node
     {

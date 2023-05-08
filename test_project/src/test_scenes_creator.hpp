@@ -65,6 +65,9 @@ namespace prim
             sprite2->move(200.0f, 200.0f);
             ActorCamera2D* actorCamera = new ActorCamera2D("TestActorCamera");
             actorCamera->setStiffness(0.3f);
+            Button* button = new Button("Button");
+            button->setText("Click");
+            button->move({600.0f, 600.0f});
             Label* uiLabel = new Label("UILabel");
             Label* uiChildLabel = new Label("UIChildLabel");
             Panel* uiPanel = new Panel("UIPanel");
@@ -93,6 +96,7 @@ namespace prim
             uiPanel->addChild(uiLabel);
             scene->addChild(control);
             actorCamera->setTarget(sprite1);
+            scene->addChild(button);
 
             return std::vector<Node*> { scene };
         }

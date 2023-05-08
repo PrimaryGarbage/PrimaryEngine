@@ -90,7 +90,7 @@ namespace prim
     
     StringFontInfo Font::calculateStringInfo(const std::string& str) const
     {
-        StringFontInfo info;
+        StringFontInfo info{};
         int emSize = getEmSizeInPixels();
 
         for(const char& ch : str)

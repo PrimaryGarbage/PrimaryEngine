@@ -125,14 +125,13 @@ namespace prim
     {
         Node2D::restore(nodeValues);
 
-        if (!nodeValues[StateValues::imagePath].empty())
-        {
-            imagePath = nodeValues[StateValues::imagePath];
-            setTexture(imagePath);
-        }
+        imagePath = nodeValues[StateValues::imagePath];
         setWidth(std::stof(nodeValues[StateValues::width]));
         setHeight(std::stof(nodeValues[StateValues::height]));
         setZIndex(std::stof(nodeValues[StateValues::zIndex]));
+
+        if (!nodeValues[StateValues::imagePath].empty())
+            setTexture(imagePath);
     }
 
     void Sprite::renderFields(SceneEditor* sceneEditor)

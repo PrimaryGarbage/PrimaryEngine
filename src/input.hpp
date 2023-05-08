@@ -56,6 +56,8 @@ public:
 	static float getAxis(const std::pair<GamepadButton, GamepadButton> buttons);
 	static float getAxis(const std::string axisName);
 
+	static glm::vec2 getCursorPos();
+
 	static void addAction(const std::string name, std::initializer_list<ActionCause> actionCauses);
 	static void addAxis(const std::string name, std::initializer_list<AxisCause> axisCauses);
 	static void removeAction(const std::string name);
