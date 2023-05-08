@@ -8,5 +8,6 @@
 #include "nodes/actor_camera2d.hpp"
 #include "nodes/control.hpp"
 #include "nodes/label.hpp"
+#include "nodes/panel.hpp"
 
 #endif // __NODE_INCLUDES_HPP__

@@ -41,6 +41,7 @@ set(NODES_SRC
 	node_path.hpp node_path.cpp
 	drawable.hpp drawable.cpp
 	control.hpp control.cpp
+	panel.hpp panel.cpp
 	label.hpp label.cpp
 )
 

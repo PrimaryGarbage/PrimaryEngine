@@ -131,7 +131,8 @@ namespace prim
 
         if (nodeIsOpen)
         {
-            for (Node* child : node->getChildren()) drawNodeInTree(child);
+            for(int i = 0; i < node->children.size(); ++i)
+                drawNodeInTree(node->children[i]);
             ImGui::TreePop();
         }
 
@@ -280,10 +281,10 @@ namespace prim
             {
                 node->orphanize();
                 delete node;
+                selectedNode = nullptr;
             }
 
             ImGui::EndPopup();
-
         }
     }
 

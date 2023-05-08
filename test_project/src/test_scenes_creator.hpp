@@ -63,29 +63,36 @@ namespace prim
             Sprite* sprite2 = new Sprite("TestSprite2");
             sprite2->setCenterPivot();
             sprite2->move(200.0f, 200.0f);
-            ActorCamera2D* actorCamera = new ActorCamera2D("TestActorCamera", sprite1->getNodePath());
+            ActorCamera2D* actorCamera = new ActorCamera2D("TestActorCamera");
             actorCamera->setStiffness(0.3f);
             Label* uiLabel = new Label("UILabel");
             Label* uiChildLabel = new Label("UIChildLabel");
+            Panel* uiPanel = new Panel("UIPanel");
             Control* control = new Control("Control");
-            control->addChild(uiLabel);
+            control->setAnchor({0.0f, 1.0f});
+            control->addChild(uiPanel);
             uiLabel->setText("Imagine this is a UI element");
-            uiLabel->setBackgroundColor({ 0.0f, 0.6f, 0.9f, 1.0f});
+            uiLabel->setBackgroundColor({ 0.0f, 0.6f, 0.9f, 0.1f});
             uiChildLabel->setText("And this is a UI element child");
             uiLabel->setAnchor({ 0.0f, 1.0f });
             uiLabel->setSize({ 80.0f, 80.0f });
-            uiLabel->move({480.0f, -130.0f});
+            uiLabel->move({-90.0f, 500.0f});
             uiChildLabel->setPivot({ 1.0f, 0.0f });
             uiChildLabel->move(180.0f, -85.0f);
             uiChildLabel->setSize(60.0f, 60.0f);
             uiChildLabel->setTextColor({0.1f, 1.0f, 0.1f, 1.0f});
+            uiPanel->setBackgroundColor({0.7f, 0.7f, 0.9f, 0.5f});
+            uiPanel->setSize({800.0f, 600.0f});
+            uiPanel->move({150.0f, -600.0f});
 
             scene->addChild(background);
             scene->addChild(sprite1);
             sprite1->addChild(sprite2);
             scene->addChild(actorCamera);
             uiLabel->addChild(uiChildLabel);
+            uiPanel->addChild(uiLabel);
             scene->addChild(control);
+            actorCamera->setTarget(sprite1);
 
             return std::vector<Node*> { scene };
         }

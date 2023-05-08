@@ -12,7 +12,7 @@ namespace prim
     }
 
     Camera2D::Camera2D(std::string name)
-        : Camera2D(name, 0.1f, 1.0f)
+        : Camera2D(name, 0.0f, 1.0f)
     {
     }
 

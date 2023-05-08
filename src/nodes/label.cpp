@@ -8,11 +8,8 @@
 
 namespace prim
 {
-    Label::Label(): Control(), glyphMesh(Primitives::createGlyphMesh()), 
-        backgroundMesh(Primitives::createSquareMesh(1.0f))
-    {
-        backgroundMesh.compositions.front().shader = Shader::getDefaultShader(DefaultShader::controlBackground);
-    }
+    Label::Label(): Label("NewLabel") 
+    {}
     
     Label::Label(std::string name): Control(name), glyphMesh(Primitives::createGlyphMesh()),
         backgroundMesh(Primitives::createSquareMesh(1.0f))
@@ -32,8 +29,6 @@ namespace prim
     
     void Label::draw(Renderer& renderer) 
     {
-        drawChildren(renderer);
-
         glm::vec2 globalPosition = getGlobalPosition();
         glm::vec2 globalSize = getSize();
         const glm::mat4& rendererViewMat = renderer.getViewMat();
@@ -70,6 +65,8 @@ namespace prim
         }
 
         renderer.setViewMat(rendererViewMat);
+
+        drawChildren(renderer);
     }
 
     std::string Label::serialize(bool withChildren) const 
