@@ -26,6 +26,9 @@ copy_lib() {
 		cp $PRIMARY_LIB_PATH/lib$PRIMARY_LIB_NAME.so $RES_DIR_TARGET
 	else
 		cp $PRIMARY_LIB_PATH/$PRIMARY_LIB_NAME.dll $RES_DIR_TARGET
+		if [[ $BUILD_TYPE == 'Debug' ]]; then
+			cp $PRIMARY_LIB_PATH/$PRIMARY_LIB_NAME.pdb $RES_DIR_TARGET
+		fi
 	fi
 }
 

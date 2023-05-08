@@ -102,7 +102,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/external/lib)
 
 # remove c++20 volatile varnings (they will be fixed in c++23)
-target_compile_options(${PROJECT_NAME} PUBLIC -Wno-deprecated-volatile)
+# target_compile_options(${PROJECT_NAME} PUBLIC -Wno-deprecated-volatile)
 
 # build type specifics
 if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")

@@ -20,6 +20,7 @@ namespace prim
 
     Node::~Node()
     {
+        // Logger::inst().logInfo("Deleting node: '" + this->name + "'");
         freeUniqueId(id);
         std::for_each(children.begin(), children.end(), [](Node* node) { delete node; });
     }

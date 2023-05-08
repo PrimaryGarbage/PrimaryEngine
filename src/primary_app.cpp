@@ -108,14 +108,9 @@ namespace prim
 					nodePath = nodePath.pop_front();
 					goto start;
 				}
-				return nullptr;
 			}
 
-			for(Node* node : currentScene)
-			{
-				if(currentName == node->getName())
-					currentNode = node;
-			}
+			return nullptr;
 		}
 
 		return currentNode;
