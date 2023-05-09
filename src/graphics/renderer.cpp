@@ -18,10 +18,10 @@ namespace prim
 		}
 
 		glfwWindowHint(GLFW_SAMPLES, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		// glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		// glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		// glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		// glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		window = glfwCreateWindow(windowWidth, windowHeight, windowName.c_str(), nullptr, nullptr);
 		if (window == nullptr)
@@ -122,14 +122,14 @@ namespace prim
 		GL_CALL(glDisable(GL_STENCIL_TEST));
 	}
 	
-	// NOT WORKING
 	void Renderer::drawRectangle(glm::vec2 position, glm::vec2 size, glm::vec4 color)
 	{
-		glm::vec2 windowSize = getWindowSize();
-		glm::vec2 viewportPos = position / windowSize;
-		glm::vec2 viewportSize = size / windowSize;
-		glColor4f(color.r, color.g, color.b, color.a);
-		glRectf(viewportPos.x, viewportPos.y + viewportSize.y, viewportPos.x + viewportSize.x, viewportPos.y);
+		setModelMat(glm::translate(glm::mat4(1.0f), Utils::toVec3(position)));
+		Mesh mesh = Primitives::createRectangleMesh(size.x, size.y);
+		Shader* shader = Shader::getDefaultShader(DefaultShader::plainColor);
+		shader->setUniform4f("u_color", color);
+		mesh.compositions.front().shader = shader;
+		drawMesh(mesh);
 	}
 
 	void Renderer::drawMesh(const Mesh& mesh)
@@ -152,6 +152,7 @@ namespace prim
 
 			GL_CALL(glDrawElements(GL_TRIANGLES, composition.getCount(), GL_UNSIGNED_INT, nullptr));
 		}
+
 	}
 
 	void Renderer::drawMesh(const Mesh& mesh, const Shader* shader)

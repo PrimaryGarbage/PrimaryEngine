@@ -38,11 +38,12 @@ namespace prim
         Rectangle rect(getGlobalPosition(), getSize(), getPivot(), getRotation());
         glm::vec2 mousePos = Input::getCursorPos();
         Globals::mainRenderer->drawRectangle(rect.getPosition(), rect.getSize(), Utils::Color::Red);
-        // Logger::inst().logInfo(Utils::serializeVec2(mousePos));
-        // if(rect.inside(mousePos))
-        // {
-        //     Logger::inst().logInfo("INSIDE!!!");
-        // }
+
+        //Logger::inst().logInfo(Utils::serializeVec2(mousePos));
+        if(rect.inside(mousePos))
+        {
+            Logger::inst().logInfo("INSIDE!!!");
+        }
     }
 
     void Button::draw(Renderer& renderer)

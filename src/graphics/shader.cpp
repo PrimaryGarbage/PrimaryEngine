@@ -129,7 +129,7 @@ namespace prim
         }
     }
 
-    void Shader::unbind() const
+    void Shader::unbind()
     {
         GL_CALL(glUseProgram(0u));
         currentBoundShader = 0u;
