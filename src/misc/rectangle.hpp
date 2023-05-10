@@ -9,9 +9,7 @@ namespace prim
     class Rectangle final : public Shape2D
     {
     private:
-        // internal transient values
-        glm::vec2 pivotOffset;
-        glm::vec2 pivotPosition;
+        // internal values
         glm::vec2 llPoint;
         glm::vec2 ruPoint;
 

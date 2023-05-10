@@ -39,6 +39,7 @@ namespace prim
         modelMat = glm::scale(modelMat, glm::vec3(globalSize.x, globalSize.y, 1.0f));
         backgroundMesh.compositions.front().shader->setUniform4f("u_color", backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
         backgroundMesh.compositions.front().shader->setUniform1f("u_borderRadius", borderRadius);
+        backgroundMesh.compositions.front().shader->setUniform1i("u_sampleTexture", static_cast<int>(useTexture));
         renderer.setModelMat(std::move(modelMat));
         renderer.drawMesh(backgroundMesh);
 
@@ -82,7 +83,6 @@ namespace prim
         ImGui::ColorEdit4("Background Color", &backgroundColor.x);
         ImGui::DragFloat("BorderRadius", &borderRadius, 0.1f, 0.0f, 100.0f);
 
-        ImGui::SameLine();
         ImGui::LabelText("Image", imagePath.c_str());
         if (ImGui::Button("...")) // change image button
         {
@@ -112,11 +112,11 @@ namespace prim
     void Panel::setTexture(std::string path)
     {
         backgroundMesh.compositions.front().texture = Texture::create(ResourceManager::createResourcePath(path));
-        backgroundMesh.compositions.front().shader->setUniform1i("sampleTexture", 1);
+        useTexture = true;
     }
     
     void Panel::removeTexture()
     {
-        backgroundMesh.compositions.front().shader->setUniform1i("sampleTexture", 0);
+        useTexture = false;
     }
 }

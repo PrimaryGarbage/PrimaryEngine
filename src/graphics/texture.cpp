@@ -70,7 +70,7 @@ namespace prim
         if(it == textureCache.end())
         {
             textureCache[resPath] = Unp<Texture>(new Texture(resPath));
-            Logger::inst().logInfo("Texture loaded. Path: " + resPath);
+            Logger::inst().logInfo("New texture loaded. Path: " + resPath);
             return textureCache[resPath].get();
         }
         
@@ -82,7 +82,7 @@ namespace prim
         if(image.wasModified())
         {
             modifiedImageTextureCache.push_back(Unp<Texture>(new Texture(image)));
-            Logger::inst().logInfo("Texture loaded from modified image");
+            Logger::inst().logInfo("New texture loaded from modified image");
             return modifiedImageTextureCache.back().get();
         }
         else

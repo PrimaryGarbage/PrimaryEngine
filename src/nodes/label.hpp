@@ -32,6 +32,7 @@ namespace prim
         glm::vec4 textColor = glm::vec4(1.0f);
         glm::vec4 backgroundColor {0.0f, 0.0f, 0.0f, 1.0f};
         glm::vec2 padding { 1.0f, 1.0f };
+        StringFontInfo stringInfo;
         float borderRadius = 0.0f;
     public:
         using Control::Control;
@@ -44,7 +45,7 @@ namespace prim
         inline glm::vec2 getPadding() const { return padding; }
         inline float getBorderRadius() const { return borderRadius; }
 
-        inline void setText(std::string text) { this->text = text; }
+        void setText(std::string text);
         inline void setTextColor(glm::vec4 color) { this->textColor = color; }
         inline void setBackgroundColor(glm::vec4 color) { this->backgroundColor = color; }
         inline void setPadding(glm::vec2 padding) { this->padding = padding; }

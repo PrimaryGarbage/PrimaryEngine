@@ -19,12 +19,73 @@ namespace prim
         {
             controlStateValues[i].backgroundMesh = Primitives::createSquareMesh(1.0f);
             controlStateValues[i].backgroundMesh.compositions.front().shader = defaultShader;
+            controlStateValues[i].stringInfo = font.calculateStringInfo(" ");
+        }
+    }
+
+    void Button::setTexture(std::string path)
+    {
+        for(int i = 0; i < static_cast<int>(ControlState::__count); ++i)
+        {
+            controlStateValues[i].backgroundMesh.compositions[0].texture = Texture::create(ResourceManager::createResourcePath(path));
+            controlStateValues[i].useTexture = true;
         }
     }
 
     void Button::setTexture(std::string path, ControlState state)
     {
-        controlStateValues[static_cast<int>(state)].backgroundMesh.compositions[0].texture = Texture::create(ResourceManager::createResourcePath(path));
+        ButtonState& st = controlStateValues[static_cast<int>(state)];
+        st.backgroundMesh.compositions[0].texture = Texture::create(ResourceManager::createResourcePath(path));
+        st.useTexture = true;
+    }
+    
+    void Button::removeTexture()
+    {
+        for(int i = 0; i < static_cast<int>(ControlState::__count); ++i)
+        {
+            controlStateValues[i].useTexture = false;
+        }
+    }
+    
+    void Button::removeTexture(ControlState state)
+    {
+        controlStateValues[static_cast<int>(state)].useTexture = false;
+    }
+
+    void Button::setTextColor(glm::vec4 color)
+    {
+        for(int i = 0; i < static_cast<int>(ControlState::__count); ++i)
+        {
+            controlStateValues[i].textColor = color;
+        }
+    }
+    
+    void Button::setTextColor(glm::vec4 color, ControlState state)
+    {
+        controlStateValues[static_cast<int>(state)].textColor = color;
+    }
+
+    void Button::setBackgroundColor(glm::vec4 color)
+    {
+        for(int i = 0; i < static_cast<int>(ControlState::__count); ++i)
+        {
+            controlStateValues[i].backgroundColor = color;
+        }
+    }
+    
+    void Button::setBackgroundColor(glm::vec4 color, ControlState state)
+    {
+        controlStateValues[static_cast<int>(state)].backgroundColor = color;
+    }
+    
+    void Button::setText(std::string text)
+    {
+        for(int i = 0; i < static_cast<int>(ControlState::__count); ++i)
+        {
+            ButtonState& stateValues = controlStateValues[i];
+            stateValues.text = text;
+            stateValues.stringInfo = font.calculateStringInfo(text);
+        }
     }
 
     void Button::setText(std::string text, ControlState state)
@@ -34,6 +95,45 @@ namespace prim
         stateValues.stringInfo = font.calculateStringInfo(text);
     }
 
+    void Button::updateControlState()
+    {
+        glm::vec2 globalSize = getSize();
+        ButtonState& currentState = controlStateValues[static_cast<int>(state)];
+        const StringFontInfo& stringInfo = currentState.stringInfo;
+        glm::vec2 size(globalSize.x * stringInfo.emSize.x + padding.x * 2.0f, globalSize.y * (stringInfo.emSize.y + stringInfo.emMaxDescend) + padding.y * 2.0f);
+        Rectangle rect(getGlobalPosition(), size, {0.0f, 0.0f}, getRotation());
+
+        bool active = state == ControlState::Active;
+        if(rect.inside(Input::getCursorPos()))
+        {
+            if(Input::isPressed(MouseButton::left))
+            {
+                if(!active) buttonPressedEvent.invoke();
+                state = ControlState::Active;
+            }
+            else
+            {
+                if(active) buttonReleasedEvent.invoke();
+                state = ControlState::Selected;
+            }
+        }
+        else
+        {
+            if(active)
+            {
+                if(Input::isJustReleased(MouseButton::left))
+                {
+                    buttonReleasedEvent.invoke();
+                    state = ControlState::Idle;
+                }
+            }
+            else
+            {
+                state = ControlState::Idle;
+            }
+        }
+    }
+    
     void Button::start()
     {
         startChildren();
@@ -43,32 +143,17 @@ namespace prim
     {
         updateChildren(deltaTime);
 
-        glm::vec2 mousePos = Input::getCursorPos();
-        CameraBase* camera = Globals::mainRenderer->getCurrentCamera();
-        glm::vec2 globalSize = getSize();
-        ButtonState& currentState = controlStateValues[static_cast<int>(state)];
-        const StringFontInfo& stringInfo = currentState.stringInfo;
-        const glm::vec2& padding = currentState.padding;
-        glm::vec2 size(globalSize.x * stringInfo.emSize.x + padding.x * 2.0f, globalSize.y * (stringInfo.emSize.y + stringInfo.emMaxDescend) + padding.y * 2.0f);
-        Rectangle rect(getGlobalPosition(), size, {0.0f, 0.0f}, getRotation());
-        Globals::mainRenderer->drawRectangle(rect.getPosition(), rect.getSize(), Utils::Color::Red);
-
-        //Logger::inst().logInfo(Utils::serializeVec2(mousePos));
-        if(rect.inside(mousePos))
-        {
-            Logger::inst().logInfo("INSIDE!!!");
-        }
+        updateControlState();
     }
 
     void Button::draw(Renderer& renderer)
     {
-        ButtonState& currentState = controlStateValues[static_cast<int>(state)];
-        Mesh& backgroundMesh = currentState.backgroundMesh;
-        std::string& text = currentState.text;
-        glm::vec4& textColor = currentState.textColor;
-        glm::vec4& backgroundColor = currentState.backgroundColor;
-        glm::vec2& padding = currentState.padding;
-        StringFontInfo& stringInfo = currentState.stringInfo;
+        const ButtonState& currentState = controlStateValues[static_cast<int>(state)];
+        const Mesh& backgroundMesh = currentState.backgroundMesh;
+        const std::string& text = currentState.text.empty() ? " " : currentState.text;
+        const glm::vec4& textColor = currentState.textColor;
+        const glm::vec4& backgroundColor = currentState.backgroundColor;
+        const StringFontInfo& stringInfo = currentState.stringInfo;
 
         glm::vec2 globalPosition = getGlobalPosition();
         glm::vec2 globalSize = getSize();
@@ -81,10 +166,10 @@ namespace prim
         modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x, globalPosition.y, transform.zIndex));
         modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
         modelMat = glm::scale(modelMat, glm::vec3(globalSize.x * stringInfo.emSize.x + padding.x * 2.0f, globalSize.y * (stringInfo.emSize.y + stringInfo.emMaxDescend) + padding.y * 2.0f, 1.0f));
-        Globals::mainRenderer->drawRectangle(globalPosition, glm::vec2(globalSize.x * stringInfo.emSize.x + padding.x * 2.0f, globalSize.y * (stringInfo.emSize.y + stringInfo.emMaxDescend) + padding.y * 2.0f), Utils::Color::Red);
         backgroundMesh.compositions.front().shader->setUniform4f("u_color", backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
         backgroundMesh.compositions.front().shader->setUniform2f("u_resolution", stringInfo.pxSize);
         backgroundMesh.compositions.front().shader->setUniform1f("u_borderRadius", borderRadius);
+        backgroundMesh.compositions.front().shader->setUniform1i("u_sampleTexture", static_cast<int>(currentState.useTexture));
         renderer.setModelMat(std::move(modelMat));
         renderer.drawMesh(backgroundMesh);
 
@@ -126,9 +211,9 @@ namespace prim
             ss << Utils::createKeyValuePair(StateValues::textColor + statePostfix, Utils::serializeVec4(st.textColor)) << std::endl;
             ss << Utils::createKeyValuePair(StateValues::backgroundColor + statePostfix, Utils::serializeVec4(st.backgroundColor)) << std::endl;
             ss << Utils::createKeyValuePair(StateValues::imagePath + statePostfix, st.imagePath) << std::endl;
-            ss << Utils::createKeyValuePair(StateValues::padding + statePostfix, Utils::serializeVec2(st.padding)) << std::endl;
         }
 
+        ss << Utils::createKeyValuePair(StateValues::padding, Utils::serializeVec2(padding)) << std::endl;
         ss << Utils::createKeyValuePair(StateValues::borderRadius, std::to_string(borderRadius)) << std::endl;
 
         if (withChildren) ss << serializeChildren();
@@ -149,9 +234,9 @@ namespace prim
             st.textColor = Utils::deserializeVec4(nodeValues[StateValues::textColor + statePostfix]);
             st.backgroundColor = Utils::deserializeVec4(nodeValues[StateValues::backgroundColor + statePostfix]);
             st.imagePath = nodeValues[StateValues::imagePath + statePostfix];
-            st.padding = Utils::deserializeVec2(nodeValues[StateValues::padding + statePostfix]);
         }
 
+        padding = Utils::deserializeVec2(nodeValues[StateValues::padding]);
         borderRadius = std::stof(nodeValues[StateValues::borderRadius]);
 
         if (!controlStateValues[0].imagePath.empty())
@@ -166,28 +251,35 @@ namespace prim
         const std::string& text = controlStateValues[static_cast<int>(state)].text;
         std::copy(text.begin(), text.end(), textBuffers[static_cast<int>(state)]);
 
+        ImGui::DragFloat2("Padding", &padding.x, 0.1f, 0.0f, std::numeric_limits<float>::max());
+        ImGui::DragFloat("Border Radius", &borderRadius, 0.1f, 0.0f, 100.0f);
+
         for (int i = 0; i < static_cast<int>(ControlState::__count); ++i)
         {
             ButtonState& st = controlStateValues[i];
             if (ImGui::CollapsingHeader(ControlState_str[i]))
             {
+                ImGui::PushID(i);
+
                 if (ImGui::InputText("Text", textBuffers[i], textBufferSize))
                 {
-                    st.text = textBuffers[i];
+                    setText(textBuffers[i], static_cast<ControlState>(i));
                 }
-                ImGui::DragFloat2("Padding", &st.padding.x, 0.1f, 0.0f, std::numeric_limits<float>::max());
                 ImGui::ColorEdit4("Text Color", &st.textColor.x);
                 ImGui::ColorEdit4("Background Color", &st.backgroundColor.x);
-                ImGui::DragFloat("Border Radius", &borderRadius, 0.1f, 0.0f, 100.0f);
 
                 ImGui::LabelText("Image", st.imagePath.c_str());
-                ImGui::SameLine();
-
                 if (ImGui::Button("...")) // change image button
                 {
                     ImGuiFileDialog::Instance()->OpenDialog("ChooseImageKey", "Open Image",
                         "Image files (*.png *.jpg *.jpeg){.png,.jpg,.jpeg}", ResourceManager::getResourceDirPathAbsolute(),
                         1, nullptr, ImGuiFileDialogFlags_Modal);
+                }
+
+                ImGui::SameLine();
+                if (ImGui::Button("Remove"))
+                {
+                    removeTexture(static_cast<ControlState>(i));
                 }
 
                 if (ImGuiFileDialog::Instance()->Display("ChooseImageKey"))
@@ -200,6 +292,8 @@ namespace prim
 
                     ImGuiFileDialog::Instance()->Close();
                 }
+                
+                ImGui::PopID();
             }
         }
     }

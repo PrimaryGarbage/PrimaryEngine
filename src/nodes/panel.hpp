@@ -23,6 +23,7 @@ namespace prim
         std::string imagePath;
         glm::vec4 backgroundColor{0.0f, 0.0f, 0.0f, 1.0f};
         float borderRadius{};
+        bool useTexture{};
 
     public:
         using Control::Control;

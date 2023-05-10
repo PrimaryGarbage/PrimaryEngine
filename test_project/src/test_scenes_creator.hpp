@@ -3,6 +3,7 @@
 
 #include "primary_engine.hpp"
 #include <vector>
+#include <iostream>
 
 namespace prim
 {
@@ -97,6 +98,9 @@ namespace prim
             scene->addChild(control);
             actorCamera->setTarget(sprite1);
             scene->addChild(button);
+
+            button->buttonPressedEvent.subscribe("testPressed", [](){ std::cout << "Button pressed!" << std::endl; });
+            button->buttonReleasedEvent.subscribe("testReleased", [](){ std::cout << "Button released!" << std::endl; });
 
             return std::vector<Node*> { scene };
         }

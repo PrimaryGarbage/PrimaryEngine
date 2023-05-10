@@ -177,7 +177,7 @@ in vec2 uv;
 
 uniform vec4 u_color;
 uniform float u_time;
-uniform int sampleTexture = 0;
+uniform int u_sampleTexture = 0;
 uniform sampler2D u_texture;
 uniform float u_borderRadius = 0.0;
 uniform vec2 u_resolution = vec2(1.0, 1.0);
@@ -218,7 +218,7 @@ void main()
 	float visible = notInLeftUpperCorner(uvScaled, bRad) * notInRightUpperCorner(uvScaled, bRad) * notInLeftLowerCorner(uvScaled, bRad) * notInRightLowerCorner(uvScaled, bRad);
 	vec4 texColor = texture(u_texture, uv);
 	color = vec4(u_color.xyz, visible * u_color.a);
-	if(sampleTexture == 1)
+	if(u_sampleTexture == 1)
 	{
 		color = color * texColor;
 	}
