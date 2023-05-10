@@ -234,6 +234,7 @@ namespace prim
             st.textColor = Utils::deserializeVec4(nodeValues[StateValues::textColor + statePostfix]);
             st.backgroundColor = Utils::deserializeVec4(nodeValues[StateValues::backgroundColor + statePostfix]);
             st.imagePath = nodeValues[StateValues::imagePath + statePostfix];
+            st.stringInfo = font.calculateStringInfo(st.text);
         }
 
         padding = Utils::deserializeVec2(nodeValues[StateValues::padding]);

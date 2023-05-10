@@ -148,26 +148,34 @@ namespace prim
 
     void Node2D::setGlobalPosition(glm::vec2 v)
     {
-        if (!parent) transform.position = v;
-        transform.position = v - parent->getGlobalPosition();
+        if (!parent)
+            transform.position = v;
+        else 
+            transform.position = v - parent->getGlobalPosition();
     }
 
     void Node2D::setGlobalRotation(float angle)
     {
-        if (!parent) transform.rotation = Utils::normalizeAngle(angle);
-        transform.rotation = Utils::normalizeAngle(angle - parent->getGlobalRotation());
+        if (!parent) 
+            transform.rotation = Utils::normalizeAngle(angle);
+        else 
+            transform.rotation = Utils::normalizeAngle(angle - parent->getGlobalRotation());
     }
     
     void Node2D::setGlobalScale(float s) 
     {
-        if (!parent) transform.scale = glm::vec2(s, s);
-        transform.scale = glm::vec2(s, s) / parent->getGlobalScale();
+        if (!parent) 
+            transform.scale = glm::vec2(s, s);
+        else
+            transform.scale = glm::vec2(s, s) / parent->getGlobalScale();
     }
 
     void Node2D::setGlobalScale(glm::vec2 s)
     {
-        if (!parent) transform.scale = s;
-        transform.scale = s / parent->getGlobalScale();
+        if (!parent) 
+            transform.scale = s;
+        else
+            transform.scale = s / parent->getGlobalScale();
     }
 
     std::string Node2D::serialize(bool withChildren) const

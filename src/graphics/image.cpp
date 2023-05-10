@@ -32,7 +32,9 @@ namespace prim
             { ".png", static_cast<int>(ImageType::png) },
         };
 
-        assert(std::filesystem::exists(std::filesystem::path(path)));
+        if(!std::filesystem::exists(std::filesystem::path(path)))
+            throw PRIM_EXCEPTION("Invalid image path: '" + path + "'");
+
         std::filesystem::path filePath(path);
         std::string extension = filePath.extension().string(); 
         switch(extensionMap.at(extension))

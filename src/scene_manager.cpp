@@ -22,11 +22,11 @@ namespace prim
 
         Node* root = Node::deserialize(fileSs.str());
 
-        std::vector<Node*> nodes(root->children);
-        std::for_each(nodes.begin(), nodes.end(), [](Node* node) { node->orphanize(); });
-        delete root;
+        // std::vector<Node*> nodes(root->children);
+        // std::for_each(nodes.begin(), nodes.end(), [](Node* node) { node->orphanize(); });
+        // delete root;
 
-        return nodes;
+        return std::vector<Node*>{root};
     }
 
     void SceneManager::saveScene(const std::vector<Node*>& scene, std::string resPath, bool ovewrite) const
@@ -42,7 +42,7 @@ namespace prim
         std::ofstream stream(path.string(), std::ios::out | std::ios::trunc);
         if (!stream.good()) throw PRIM_EXCEPTION("Unable to open file stream.");
 
-        Node* root = Node::createNode("root");
+        Node* root = Node::createNode("Node");
         root->addChildren(scene);
 
         root->setName(path.stem().string());

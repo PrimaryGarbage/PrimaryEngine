@@ -143,7 +143,6 @@ namespace prim
 			renderer.clear();
 
 			///// Update /////
-			deferredFunctions.clear();
 
 			Input::clear();
 			renderer.pollEvents();
@@ -171,6 +170,7 @@ namespace prim
 		std::sort(deferredFunctions.begin(), deferredFunctions.end(), [](const auto& pair1, const auto& pair2) { return pair1.second < pair2.second; });
 		for (int i = 0; i < deferredFunctions.size(); ++i)
 			deferredFunctions[i].first();
+		deferredFunctions.clear();
 	}
 
 	void PrimaryApp::drawEditor()
