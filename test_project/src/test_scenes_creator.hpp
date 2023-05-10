@@ -12,7 +12,7 @@ namespace prim
     class TestScenesCreator
     {
     public:
-        static inline std::vector<Node*> createScene1()
+        static inline Node* createScene1()
         {
             Node* scene = new Node("TestScene1");
             Sprite* background = new Sprite("TestBackground", "textures/abstract_stairs.png");
@@ -30,10 +30,10 @@ namespace prim
             scene->addChild(sprite2);
             scene->addChild(actorCamera);
 
-            return std::vector<Node*> { scene };
+            return scene;
         }
 
-        static inline std::vector<Node*> createScene2()
+        static inline Node* createScene2()
         {
             Node* scene = new Node("TestScene2");
             Sprite* background = new Sprite("TestBackground", "textures/abstract_stairs.png");
@@ -51,10 +51,10 @@ namespace prim
             sprite1->addChild(sprite2);
             scene->addChild(actorCamera);
 
-            return std::vector<Node*> { scene };
+            return scene;
         }
 
-        static inline std::vector<Node*> createScene3()
+        static inline Node* createScene3()
         {
             Node* scene = new Node("TestScene3");
             Sprite* background = new Sprite("TestBackground", "textures/abstract_stairs.png");
@@ -102,17 +102,17 @@ namespace prim
             button->buttonPressedEvent.subscribe("testPressed", [](){ std::cout << "Button pressed!" << std::endl; });
             button->buttonReleasedEvent.subscribe("testReleased", [](){ std::cout << "Button released!" << std::endl; });
 
-            return std::vector<Node*> { scene };
+            return scene;
         }
 
-        static inline std::vector<Node*> createLabelScene()
+        static inline Node* createLabelScene()
         {
             Node* scene = new Node("TestScene3");
             Label* label = new Label("TestLabel");
             label->setText("Test text");
             scene->addChild(label);
 
-            return std::vector<Node*> { scene };
+            return scene;
         }
     };
 }

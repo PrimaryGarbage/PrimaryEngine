@@ -78,12 +78,9 @@ namespace prim
         {
             panelSize = ImVec2(ImGui::GetWindowSize().x, renderer->getWindowHeight());
 
-            std::vector<Node*> currentScene = Globals::app->getCurrentScene();
+            Node* currentScene = Globals::app->getCurrentScene();
 
-            for(Node* node : currentScene)
-            {
-                drawNodeInTree(node);
-            }
+            drawNodeInTree(currentScene);
 
             ImGui::Separator();
             drawLoadSceneButton();
@@ -326,8 +323,11 @@ namespace prim
             if (ImGuiFileDialog::Instance()->IsOk())
             {
                 std::string resPath = Utils::splitString(ImGuiFileDialog::Instance()->GetFilePathName(), ResourceManager::resDirName + ResourceManager::separator()).back();
-                std::vector<Node*> loadedScene = Globals::sceneManager->loadScene(resPath);
-                nodeToAddLoadedSceneTo->addChildren(loadedScene);
+                Node* loadedScene = Globals::sceneManager->loadScene(resPath);
+                std::vector<Node*> children = loadedScene->children;
+                for(Node* child : children)
+                    child->orphanize();
+                nodeToAddLoadedSceneTo->addChildren(children);
             }
             ImGuiFileDialog::Instance()->Close();
         }

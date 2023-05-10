@@ -31,7 +31,7 @@ private:
 	Renderer renderer;
 	Input input;
 	SceneEditor sceneEditor;
-	std::vector<Node*> currentScene;
+	Node* currentScene = nullptr;
 	SceneManager sceneManager;
 	std::vector<std::pair<deferred_func_type, short>> deferredFunctions;
 
@@ -45,11 +45,11 @@ public:
 	~PrimaryApp();
 
 	int run();
-	void setCurrentScene(const std::vector<Node*>& scene);
+	void setCurrentScene(Node* scene);
 	void loadCurrentScene(std::string resPath);
 	void saveCurrentScene(std::string resPath, bool overwrite = false);
-	std::vector<Node*> loadScene(std::string resPath);
-	std::vector<Node*> getCurrentScene() const;
+	Node* loadScene(std::string resPath);
+	Node* getCurrentScene() const;
 	Node* getNode(NodePath nodePath);
 	float getDeltaTime() const;
 	float getElapsedTime() const;

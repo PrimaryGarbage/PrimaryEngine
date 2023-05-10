@@ -15,8 +15,10 @@ namespace prim
     public:
         const static inline char* sceneFileExtension = ".psc";
 
-        std::vector<Node*> loadScene(std::string resPath) const;
+        Node* loadScene(std::string resPath) const;
+        void saveScene(Node* scene, std::string resPath, bool ovewrite = false) const;
         void saveScene(const std::vector<Node*>& scene, std::string resPath, bool ovewrite = false) const;
+        void freeScene(Node* scene) const;
         void freeScene(std::vector<Node*>& scene) const;
     };
 }

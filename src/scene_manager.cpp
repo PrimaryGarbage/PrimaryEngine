@@ -10,7 +10,7 @@
 
 namespace prim
 {
-    std::vector<Node*> SceneManager::loadScene(std::string resPath) const
+    Node* SceneManager::loadScene(std::string resPath) const
     {
         fs::path path(ResourceManager::createResourcePath(resPath, true));
 
@@ -26,7 +26,25 @@ namespace prim
         // std::for_each(nodes.begin(), nodes.end(), [](Node* node) { node->orphanize(); });
         // delete root;
 
-        return std::vector<Node*>{root};
+        return root;
+    }
+    
+    void SceneManager::saveScene(Node* scene, std::string resPath, bool ovewrite) const
+    {
+        fs::path path(ResourceManager::createResourcePath(resPath, ovewrite));
+
+        if(fs::exists(path) && !ovewrite)
+            throw PRIM_EXCEPTION("Scene already exists, can't save. Path: " + resPath);
+
+        if(!path.has_extension())
+            path.replace_extension(sceneFileExtension);
+        
+        std::ofstream stream(path.string(), std::ios::out | std::ios::trunc);
+        if (!stream.good()) throw PRIM_EXCEPTION("Unable to open file stream.");
+
+        stream << scene->serialize();
+
+        stream.close();
     }
 
     void SceneManager::saveScene(const std::vector<Node*>& scene, std::string resPath, bool ovewrite) const
@@ -52,6 +70,13 @@ namespace prim
         std::for_each(scene.begin(), scene.end(), [](Node* node) { node->orphanize(); });
         delete root;
         stream.close();
+    }
+    
+    void SceneManager::freeScene(Node* scene) const
+    {
+        delete scene;
+        Logger::inst().logInfo("Scene freed.");
+        Globals::sceneEditor->setSelectedNode(nullptr);
     }
 
     void SceneManager::freeScene(std::vector<Node*>& scene) const

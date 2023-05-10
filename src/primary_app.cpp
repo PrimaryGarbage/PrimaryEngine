@@ -27,7 +27,7 @@ namespace prim
 
 	PrimaryApp::~PrimaryApp()
 	{
-		if (!currentScene.empty()) sceneManager.freeScene(currentScene);
+		if (currentScene) sceneManager.freeScene(currentScene);
 	}
 
 	int PrimaryApp::run()
@@ -60,11 +60,11 @@ namespace prim
 		}
 	}
 
-	void PrimaryApp::setCurrentScene(const std::vector<Node*>& scene)
+	void PrimaryApp::setCurrentScene(Node* scene)
 	{
-		if (!currentScene.empty()) sceneManager.freeScene(currentScene);
+		if (currentScene) sceneManager.freeScene(currentScene);
 		currentScene = scene;
-		std::for_each(currentScene.begin(), currentScene.end(), [](Node* node) { node->start(); });
+		currentScene->start();
 	}
 
 	void PrimaryApp::loadCurrentScene(std::string resPath)
@@ -74,26 +74,26 @@ namespace prim
 	
 	void PrimaryApp::saveCurrentScene(std::string resPath, bool overwrite)
 	{
-		if(currentScene.empty()) return;
+		if(!currentScene) return;
 		sceneManager.saveScene(currentScene, resPath, overwrite);
 	}
 	
-	std::vector<Node*> PrimaryApp::loadScene(std::string resPath)
+	Node* PrimaryApp::loadScene(std::string resPath)
 	{
 		return sceneManager.loadScene(resPath);
 	}
 
-	std::vector<Node*> PrimaryApp::getCurrentScene() const
+	Node* PrimaryApp::getCurrentScene() const
 	{
 		return currentScene;
 	}
 
 	Node* PrimaryApp::getNode(NodePath nodePath)
 	{
-		if (currentScene.empty()) return nullptr;
+		if (!currentScene) return nullptr;
 
 		Node* currentNode = nullptr;
-		const std::vector<Node*>* currentLevel = &currentScene;
+		const std::vector<Node*>* currentLevel = &(currentScene->children);
 
 	start:
 		while(!nodePath.empty())
@@ -148,14 +148,14 @@ namespace prim
 			renderer.pollEvents();
 			Input::update();
 
-			std::for_each(currentScene.begin(), currentScene.end(), [this](Node* node) { node->update(this->deltaTime); });
+			currentScene->update(deltaTime);	
 
 			executeDeferredFunctions();
 			/////////////////
 
 			///// Draw /////
 
-			std::for_each(currentScene.begin(), currentScene.end(), [this](Node* node) { node->draw(this->renderer); });
+			currentScene->draw(renderer);
 
 			drawEditor();
 
