@@ -5,6 +5,7 @@
 #include "resource_manager.hpp"
 #include "ImGuiFileDialog.h"
 #include "misc/rectangle.hpp"
+#include "camera_base.hpp"
 
 namespace prim
 {
@@ -26,6 +27,13 @@ namespace prim
         controlStateValues[static_cast<int>(state)].backgroundMesh.compositions[0].texture = Texture::create(ResourceManager::createResourcePath(path));
     }
 
+    void Button::setText(std::string text, ControlState state)
+    {
+        ButtonState& stateValues = controlStateValues[static_cast<int>(state)];
+        stateValues.text = text;
+        stateValues.stringInfo = font.calculateStringInfo(text);
+    }
+
     void Button::start()
     {
         startChildren();
@@ -35,8 +43,14 @@ namespace prim
     {
         updateChildren(deltaTime);
 
-        Rectangle rect(getGlobalPosition(), getSize(), getPivot(), getRotation());
         glm::vec2 mousePos = Input::getCursorPos();
+        CameraBase* camera = Globals::mainRenderer->getCurrentCamera();
+        glm::vec2 globalSize = getSize();
+        ButtonState& currentState = controlStateValues[static_cast<int>(state)];
+        const StringFontInfo& stringInfo = currentState.stringInfo;
+        const glm::vec2& padding = currentState.padding;
+        glm::vec2 size(globalSize.x * stringInfo.emSize.x + padding.x * 2.0f, globalSize.y * (stringInfo.emSize.y + stringInfo.emMaxDescend) + padding.y * 2.0f);
+        Rectangle rect(getGlobalPosition(), size, {0.0f, 0.0f}, getRotation());
         Globals::mainRenderer->drawRectangle(rect.getPosition(), rect.getSize(), Utils::Color::Red);
 
         //Logger::inst().logInfo(Utils::serializeVec2(mousePos));
@@ -54,6 +68,7 @@ namespace prim
         glm::vec4& textColor = currentState.textColor;
         glm::vec4& backgroundColor = currentState.backgroundColor;
         glm::vec2& padding = currentState.padding;
+        StringFontInfo& stringInfo = currentState.stringInfo;
 
         glm::vec2 globalPosition = getGlobalPosition();
         glm::vec2 globalSize = getSize();
@@ -63,10 +78,10 @@ namespace prim
 
         // render background
         glm::mat4 modelMat(1.0f);
-        StringFontInfo stringInfo = font.calculateStringInfo(text);
         modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x, globalPosition.y, transform.zIndex));
         modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
         modelMat = glm::scale(modelMat, glm::vec3(globalSize.x * stringInfo.emSize.x + padding.x * 2.0f, globalSize.y * (stringInfo.emSize.y + stringInfo.emMaxDescend) + padding.y * 2.0f, 1.0f));
+        Globals::mainRenderer->drawRectangle(globalPosition, glm::vec2(globalSize.x * stringInfo.emSize.x + padding.x * 2.0f, globalSize.y * (stringInfo.emSize.y + stringInfo.emMaxDescend) + padding.y * 2.0f), Utils::Color::Red);
         backgroundMesh.compositions.front().shader->setUniform4f("u_color", backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
         backgroundMesh.compositions.front().shader->setUniform2f("u_resolution", stringInfo.pxSize);
         backgroundMesh.compositions.front().shader->setUniform1f("u_borderRadius", borderRadius);

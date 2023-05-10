@@ -19,6 +19,7 @@ namespace prim
             glm::vec4 textColor = glm::vec4(1.0f);
             glm::vec4 backgroundColor {0.0f, 0.0f, 0.0f, 1.0f};
             glm::vec2 padding = glm::vec2(1.0f);
+            StringFontInfo stringInfo;
         };
 
     protected:
@@ -54,7 +55,7 @@ namespace prim
         inline float getBorderRadius() const { return borderRadius; }
         inline bool isPressed() const { return pressed; }
 
-        inline void setText(std::string text, ControlState state = ControlState::Idle) { controlStateValues[static_cast<int>(state)].text = text; }
+        void setText(std::string text, ControlState state = ControlState::Idle);
         inline void setTextColor(glm::vec4 color, ControlState state = ControlState::Idle) { controlStateValues[static_cast<int>(state)].textColor = color; }
         inline void setBackgroundColor(glm::vec4 color, ControlState state = ControlState::Idle) { controlStateValues[static_cast<int>(state)].backgroundColor = color; }
         inline void setPadding(glm::vec2 padding, ControlState state = ControlState::Idle) { controlStateValues[static_cast<int>(state)].padding = padding; }

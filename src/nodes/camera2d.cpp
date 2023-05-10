@@ -101,5 +101,20 @@ namespace prim
             renderer->setCurrentCamera(current ? this : nullptr);
         }
     }
+    
+    glm::vec2 Camera2D::worldToScreen(glm::vec3 point)
+    {
+        glm::mat4 viewMat = calculateViewMatrix();
+        glm::vec4 result = viewMat * glm::vec4(point.x, point.y, point.z, 1.0f);
+        return glm::vec2(result.x, result.y);
+    }
+    
+    glm::vec3 Camera2D::screenToWorld(glm::vec2 point)
+    {
+        glm::mat4 viewMat = calculateViewMatrix();
+        glm::mat4 viewMatInv = glm::inverse(viewMat);
+        glm::vec4 result = viewMatInv * glm::vec4(point.x, point.y, 0.0f, 1.0f);
+        return glm::vec3(result.x, result.y, result.z);
+    }
 
 }

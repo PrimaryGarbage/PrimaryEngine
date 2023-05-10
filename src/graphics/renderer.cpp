@@ -97,8 +97,8 @@ namespace prim
 		}
 		else
 		{
-			setViewMat(glm::mat4(1.0f));
-			setProjectMat(glm::ortho(0.0f, static_cast<float>(windowWidth), 0.0f, static_cast<float>(windowHeight)));
+			if(!viewMatIsRelevant) setViewMat(glm::mat4(1.0f));
+			if(!projectMatIsRelevant) setProjectMat(glm::ortho(0.0f, static_cast<float>(windowWidth), 0.0f, static_cast<float>(windowHeight)));
 		}
 	}
 

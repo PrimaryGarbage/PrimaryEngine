@@ -38,6 +38,9 @@ namespace prim
         virtual std::string serialize(bool withChildren = true) const override;
         virtual void restore(NodeValues& nodeValues) override;
         virtual void renderFields(SceneEditor* sceneEditor) override;
+
+        virtual glm::vec2 worldToScreen(glm::vec3 point) override;
+        virtual glm::vec3 screenToWorld(glm::vec2 point) override;
     };
 
 }

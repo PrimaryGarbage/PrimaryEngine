@@ -34,6 +34,7 @@ namespace prim
         constexpr static inline char vecSeparator = ',';
 
         static glm::vec3 toVec3(glm::vec2 vec, float z = 0.0f);
+        static glm::vec2 toVec2(glm::vec3 vec);
         static float normalizeAngle(float angle);
         static float lerpAngle(float a, float b, float t, bool normalizeAngles = false);
         static constexpr float degrees(float radians);

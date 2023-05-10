@@ -103,7 +103,7 @@ change_build_type() {
 
 ##### Script Start #####
 
-determine_lib_extension
+determine_system
 
 # while true
 # do

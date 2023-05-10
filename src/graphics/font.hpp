@@ -13,7 +13,7 @@ namespace prim
 
     struct Glyph
     {
-        // relative metrics are relative to the EM
+        // relative (em) metrics are relative to the EM
 
         glm::vec2 pxSize;
         glm::vec2 emSize;

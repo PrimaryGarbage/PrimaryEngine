@@ -6,6 +6,11 @@ namespace prim
     {
         return glm::vec3(vec.x, vec.y, z);
     }
+    
+    glm::vec2 Utils::toVec2(glm::vec3 vec)
+    {
+        return glm::vec2(vec.x, vec.y);
+    }
 
     float Utils::normalizeAngle(float angle)
     {
