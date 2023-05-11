@@ -1,5 +1,5 @@
 #include "vertex_buffer_layout.hpp"
-#include "renderer.hpp"
+#include "glfw_extensions.hpp"
 
 namespace prim
 {

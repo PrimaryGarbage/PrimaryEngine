@@ -1,5 +1,5 @@
 #include "primitives.hpp"
-#include "mesh.hpp"
+#include "graphics/mesh.hpp"
 
 namespace prim
 {
@@ -7,7 +7,7 @@ namespace prim
 
     Mesh Primitives::createCubeMesh(float size)
     {
-        const static float vertices[] = {
+        const float vertices[] = {
         0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
         size, 0.0f, 0.0f, 1.0f, 0.0f,
         size, size, 0.0f, 1.0f, 1.0f,
@@ -18,7 +18,7 @@ namespace prim
         0.0f, size, size, 0.0f, 1.0f
         };
 
-        const static unsigned int indices[] = {
+        const unsigned int indices[] = {
             0, 1, 2,
             0, 2, 3,
             4, 0, 3,
@@ -37,32 +37,32 @@ namespace prim
         layout.push<float>(3);
         layout.push<float>(2);
 
-        shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 40 * sizeof(float), layout);
+        Shp<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 40 * sizeof(float), layout);
 
-        shptr<Shader> shader = std::make_shared<Shader>("res/shaders/default.shader");
+        Shader* shader = Shader::getDefaultShader();
         shader->bind();
 
         shader->setUniform1i("u_texture", 0);
 
-        shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 36);
+        Shp<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 36);
 
         Mesh mesh(std::move(vb));
-        MeshComposition meshComposition(std::move(ib), std::move(shader));
+        MeshComposition meshComposition(std::move(ib), shader, Texture::getDefaultTexture());
         mesh.addComposition(std::move(meshComposition));
 
-        return mesh;
+        return std::move(mesh);
     }
 
     Mesh Primitives::createRectangleMesh(float width, float height)
     {
-        const static float vertices[] = {
+        const float vertices[] = {
         0.0f, 0.0f, 0.0f, 0.0f,
         width, 0.0f, 1.0f, 0.0f,
         width, height, 1.0f, 1.0f,
         0.0f, height, 0.0f, 1.0f
         };
 
-        const static unsigned int indices[] = {
+        const unsigned int indices[] = {
             0, 1, 2,
             0, 2, 3
         };
@@ -71,31 +71,31 @@ namespace prim
         layout.push<float>(2);
         layout.push<float>(2);
 
-        shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 16 * sizeof(float), layout);
+        Shp<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 16 * sizeof(float), layout);
 
-        shptr<Shader> shader = std::make_shared<Shader>("res/shaders/default.shader");
+        Shader* shader = Shader::getDefaultShader();
 
         shader->setUniform1i("u_texture", 0);
 
-        shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 6);
+        Shp<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 6);
 
         Mesh mesh(std::move(vb));
-        MeshComposition meshComposition(std::move(ib), std::move(shader));
+        MeshComposition meshComposition(std::move(ib), shader, Texture::getDefaultTexture());
         mesh.addComposition(std::move(meshComposition));
 
-        return mesh;
+        return std::move(mesh);
     }
 
     Mesh Primitives::createSquareMesh(float size)
     {
-        const static float vertices[] = {
+        const float vertices[] = {
         0.0f, 0.0f, 0.0f, 0.0f, -sinPiOver4, -sinPiOver4,
         size, 0.0f, 1.0f, 0.0f, sinPiOver4, -sinPiOver4,
         size, size, 1.0f, 1.0f, sinPiOver4, sinPiOver4,
         0.0f, size, 0.0f, 1.0f, -sinPiOver4, sinPiOver4
         };
 
-        const static unsigned int indices[] = {
+        const unsigned int indices[] = {
             0, 1, 2,
             0, 2, 3
         };
@@ -105,25 +105,59 @@ namespace prim
         layout.push<float>(2);
         layout.push<float>(2, true);
 
-        shptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 24 * sizeof(float), layout);
+        Shp<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 24 * sizeof(float), layout);
 
-        shptr<Shader> shader = std::make_shared<Shader>("res/shaders/default.shader");
+        Shader* shader = Shader::getDefaultShader();
 
         shader->setUniform1i("u_texture", 0);
 
-        shptr<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 6);
+        Shp<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 6);
 
         Mesh mesh(std::move(vb));
-        MeshComposition meshComposition(std::move(ib), std::move(shader));
+        MeshComposition meshComposition(std::move(ib), shader, Texture::getDefaultTexture());
         mesh.addComposition(std::move(meshComposition));
 
-        return mesh;
+        return std::move(mesh);
     }
-    
+
     Mesh Primitives::createSquareMesh(std::string imagePath, float size)
     {
         Mesh mesh(createSquareMesh());
-        mesh.compositions.front().texture->load(imagePath);
-        return mesh;
+        mesh.compositions.front().texture = Texture::create(imagePath);
+        return std::move(mesh);
+    }
+    
+    Mesh Primitives::createGlyphMesh() 
+    {
+        const float vertices[] = {
+        0.0f, 0.0f, 0.0f, 1.0f, -sinPiOver4, -sinPiOver4,
+        1.0f, 0.0f, 1.0f, 1.0f, sinPiOver4, -sinPiOver4,
+        1.0f, 1.0f, 1.0f, 0.0f, sinPiOver4, sinPiOver4,
+        0.0f, 1.0f, 0.0f, 0.0f, -sinPiOver4, sinPiOver4
+        };
+
+        const unsigned int indices[] = {
+            0, 1, 2,
+            0, 2, 3
+        };
+
+        VertexBufferLayout layout;
+        layout.push<float>(2);
+        layout.push<float>(2);
+        layout.push<float>(2, true);
+
+        Shp<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, 24 * sizeof(float), layout);
+
+        Shader* shader = Shader::getDefaultShader(DefaultShader::text);
+
+        shader->setUniform1i("u_texture", 0);
+
+        Shp<IndexBuffer> ib = std::make_shared<IndexBuffer>(indices, 6);
+
+        Mesh mesh(std::move(vb));
+        MeshComposition meshComposition(std::move(ib), shader);
+        mesh.addComposition(std::move(meshComposition));
+
+        return std::move(mesh);
     }
 }

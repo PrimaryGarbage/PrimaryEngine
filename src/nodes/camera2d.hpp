@@ -11,7 +11,7 @@ namespace prim
         NODE_FIXTURE(Camera2D)
     protected:
 
-        struct StateFields: public Node2D::StateFields
+        struct StateValues: public Node2D::StateValues
         {
             inline static const char* zNear = "zNear";
             inline static const char* zFar = "zFar";
@@ -27,20 +27,16 @@ namespace prim
         Camera2D();
         Camera2D(std::string name);
         Camera2D(std::string name, float zNear, float zFar);
-        virtual ~Camera2D();
 
         virtual glm::mat4 calculateViewMatrix() const override;
         virtual glm::mat4 calculateProjectMatrix() const override;
 
-        virtual void start() override;
-        virtual void update(float deltaTime) override;
-        virtual void draw(Renderer& renderer) override;
-
-        virtual inline const char* type() const override { return "Camera2D"; }
-
         virtual std::string serialize(bool withChildren = true) const override;
-        virtual void deserialize(FieldValues& fieldValues) override;
-        virtual void renderFields() override;
+        virtual void restore(NodeValues& nodeValues) override;
+        virtual void renderFields(SceneEditor* sceneEditor) override;
+
+        virtual glm::vec2 worldToScreen(glm::vec3 point) override;
+        virtual glm::vec3 screenToWorld(glm::vec2 point) override;
     };
 
 }

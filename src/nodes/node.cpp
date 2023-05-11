@@ -1,11 +1,12 @@
 #include "node.hpp"
 #include "prim_exception.hpp"
-#include <algorithm>
-#include "renderer.hpp"
+#include "graphics/renderer.hpp"
 #include "imgui.h"
-#include <sstream>
 #include "utils.hpp"
 #include "node_utils.hpp"
+#include "node_serialization.hpp"
+#include <sstream>
+#include <algorithm>
 
 namespace prim
 {
@@ -13,27 +14,87 @@ namespace prim
     {
     }
 
-    Node::Node(std::string name) : name(name), nodePath(this)
+    Node::Node(std::string name) : id(getUniqueId()), name(name), nodePath(this)
     {
     }
 
     Node::~Node()
     {
+        // Logger::inst().logInfo("Deleting node: '" + this->name + "'");
+        freeUniqueId(id);
+        std::for_each(children.begin(), children.end(), [](Node* node) { delete node; });
+    }
+
+    unsigned int Node::getUniqueId()
+    {
+        if (!freeIds.empty())
+        {
+            int newId = freeIds.top();
+            idPool[newId] = true;
+            freeIds.pop();
+            return newId;
+        }
+        else
+        {
+            for (unsigned int i = 0; i < maxId; ++i)
+            {
+                if (!idPool[i])
+                {
+                    idPool[i] = true;
+                    return i;
+                }
+            }
+        }
+
+        throw PRIM_EXCEPTION("There are no more free node IDs");
+    }
+
+    Node* Node::createNode(std::string type) 
+    {
+        auto iter = nodeTypeMap.find(type);
+        if(iter == nodeTypeMap.end()) throw PRIM_EXCEPTION("Couldn't find node type '" + type + "'");
+        Node* newNode = iter->second();
+        return newNode;
+    }
+    
+    std::vector<std::string> Node::getAllNodeTypes() 
+    {
+        std::vector<std::string> result;
+        result.reserve(nodeTypeMap.size());
+        for(const auto& pair : nodeTypeMap)
+            result.push_back(pair.first);
+        return result;
+    }
+
+    void Node::freeUniqueId(unsigned int id)
+    {
+        idPool[id] = false;
+        freeIds.push(id);
     }
 
     void Node::start()
     {
-        startChildren();
+        NODE_START
+    }
+
+    void Node::uiUpdate(float deltaTime)
+    {
+        NODE_UI_UPDATE
     }
 
     void Node::update(float deltaTime)
     {
-        updateChildren(deltaTime);
+        NODE_UPDATE
+    }
+
+    void Node::lateUpdate(float deltaTime)
+    {
+        NODE_LATE_UPDATE
     }
 
     void Node::draw(Renderer& renderer)
     {
-        drawChildren(renderer);
+        NODE_DRAW
     }
 
     void Node::updateNodePath()
@@ -49,6 +110,11 @@ namespace prim
         node->parent = this;
         children.push_back(node);
         node->updateNodePath();
+    }
+    
+    void Node::addChildren(const std::vector<Node*>& children)
+    {
+        std::for_each(children.begin(), children.end(), [this](Node* child) { this->addChild(child); });
     }
     
     void Node::insertAfter(Node* node) 
@@ -95,21 +161,6 @@ namespace prim
                 parent = nullptr;
         }
     }
-    
-    void Node::startChildren() 
-    {
-        for(Node* child : children) child->start();
-    }
-    
-    void Node::drawChildren(Renderer& renderer) 
-    {
-        for(Node* child : children) child->draw(renderer);
-    }
-    
-    void Node::updateChildren(float deltaTime) 
-    {
-        for(Node* child : children) child->update(deltaTime);
-    }
 
     const std::vector<Node*>& Node::getChildren() const
     {
@@ -124,8 +175,8 @@ namespace prim
     std::string Node::serialize(bool withChildren) const
     {
         std::stringstream ss;
-        ss << Utils::createKeyValuePair(StateFields::type, type()) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::name, name) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::type, type()) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::name, name) << std::endl;
 
         if (withChildren) ss << serializeChildren();
 
@@ -135,16 +186,60 @@ namespace prim
     std::string Node::serializeChildren() const
     {
         std::stringstream ss;
-        ss << StateFields::childrenStart << std::endl;
+        ss << StateValues::childrenStart << std::endl;
         for (Node* child : children)
             ss << child->serialize() << std::endl;
-        ss << StateFields::childrenEnd << std::endl;
+        ss << StateValues::childrenEnd << std::endl;
         return ss.str();
     }
     
-    void Node::deserialize(FieldValues& fieldValues) 
+    Node* Node::deserialize(const std::string& nodeStr) 
     {
-        setName(fieldValues[StateFields::name]);
+        using Symbols = NodeSerialization::Symbols;
+
+        Node* rootNode = nullptr;
+        std::vector<std::string> lines = Utils::splitString(nodeStr, '\n');
+        Utils::trimEmptyStrings(lines);
+        std::stack<Node*> parentNodes;
+        std::unordered_map<std::string, std::string> fields;
+
+        for (const std::string& line : lines)
+        {
+            if (line.empty()) continue;
+
+            if (line == Symbols::childrenStart)
+            {
+                Node* node = Node::createNode(fields[Symbols::type]);
+                node->restore(fields);
+                if (parentNodes.empty()) rootNode = node;
+                else parentNodes.top()->addChild(node);
+                parentNodes.push(node);
+                fields.clear();
+                continue;
+            }
+
+            if (line == Symbols::childrenEnd)
+            {
+                if (!fields.empty())
+                {
+                    Node* node = Node::createNode(fields[Symbols::type]);
+                    node->restore(fields);
+                    parentNodes.top()->addChild(node);
+                }
+                parentNodes.pop();
+                continue;
+            }
+
+            std::pair<std::string, std::string> keyValuePair = Utils::parseKeyValuePair(line);
+            fields.insert(keyValuePair);
+        }
+
+        return rootNode;
+    }
+    
+    void Node::restore(NodeValues& nodeValues) 
+    {
+        setName(nodeValues[StateValues::name]);
     }
 
     NodePath Node::getNodePath() const
@@ -178,7 +273,7 @@ namespace prim
         return child;
     }
 
-    void Node::renderFields()
+    void Node::renderFields(SceneEditor* sceneEditor)
     {
         static const unsigned int maxBufferSize = 100u;
         static const ImVec4 typeTextColor = { 0.1f, 0.9f, 0.1f, 1.0f };
@@ -192,14 +287,12 @@ namespace prim
         }
     }
     
-    void Node::unbind() 
+    Node* Node::clone() const
     {
-        if(bound)
-        {
-            bound = false;
-        }
+        std::string thisSerialized = serialize(true);   
+        return Node::deserialize(thisSerialized);
     }
-
+    
     glm::vec2 Node::getPosition() const
     { return glm::vec2(); }
     

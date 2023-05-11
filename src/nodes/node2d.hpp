@@ -14,7 +14,7 @@ namespace prim
         NODE_FIXTURE(Node2D)
     protected:
 
-        struct StateFields : public Node::StateFields
+        struct StateValues : public Node::StateValues
         {
             inline static const char* position = "position";
             inline static const char* rotation = "rotation";
@@ -25,13 +25,6 @@ namespace prim
         Transform2D transform;
     public:
         using Node::Node;
-        virtual ~Node2D();
-
-        virtual void start() override;
-        virtual void update(float deltaTime) override;
-        virtual void draw(Renderer& renderer) override;
-
-        virtual inline const char* type() const override { return "Node2D"; }
 
         void move(glm::vec2 v);
         void move(float x, float y);
@@ -67,8 +60,8 @@ namespace prim
         virtual void setGlobalScale(glm::vec2 s) override final;
 
         virtual std::string serialize(bool withChildren = true) const override;
-        virtual void deserialize(FieldValues& fieldValues) override;
-        virtual void renderFields() override;
+        virtual void restore(NodeValues& nodeValues) override;
+        virtual void renderFields(SceneEditor* sceneEditor) override;
     };
 
 }

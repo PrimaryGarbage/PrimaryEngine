@@ -1,6 +1,6 @@
 #include "camera2d.hpp"
-#include "renderer.hpp"
-#include "gtc/matrix_transform.hpp"
+#include "graphics/renderer.hpp"
+#include "GLM/gtc/matrix_transform.hpp"
 #include "utils.hpp"
 #include "imgui.h"
 #include "node_utils.hpp"
@@ -24,10 +24,6 @@ namespace prim
         setPivot(glm::vec2(0.5f, 0.5f));
     }
     
-    Camera2D::~Camera2D()
-    {
-    }
-
     glm::vec2 Camera2D::getWindowSize() const
     {
         return glm::vec2(static_cast<float>(renderer->getWindowWidth()), static_cast<float>(renderer->getWindowHeight()));
@@ -49,49 +45,34 @@ namespace prim
         return std::move(glm::ortho(0.0f, windowSize.x, 0.0f, windowSize.y, zNear, zFar));
     }
 
-    void Camera2D::start()
-    {
-        startChildren();
-    }
-
-    void Camera2D::update(float deltaTime)
-    {
-        updateChildren(deltaTime);
-    }
-
-    void Camera2D::draw(Renderer& renderer)
-    {
-        drawChildren(renderer);
-    }
-
     std::string Camera2D::serialize(bool withChildren) const
     {
         std::stringstream ss;
 
         ss << Node2D::serialize(false);
 
-        ss << Utils::createKeyValuePair(StateFields::zNear, std::to_string(zNear)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::zFar, std::to_string(zFar)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::zoom, std::to_string(zoom)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::zNear, std::to_string(zNear)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::zFar, std::to_string(zFar)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::zoom, std::to_string(zoom)) << std::endl;
 
         if(withChildren) ss << serializeChildren();
 
         return ss.str();
     }
     
-    void Camera2D::deserialize(FieldValues& fieldValues) 
+    void Camera2D::restore(NodeValues& nodeValues) 
     {
-        Node2D::deserialize(fieldValues);
+        Node2D::restore(nodeValues);
 
-        zNear = std::stof(fieldValues[StateFields::zNear]);
-        zFar = std::stof(fieldValues[StateFields::zFar]);
-        zoom = std::stof(fieldValues[StateFields::zoom]);
-        transform.pivot = Utils::deserializeVec2(fieldValues[StateFields::pivot]);
+        zNear = std::stof(nodeValues[StateValues::zNear]);
+        zFar = std::stof(nodeValues[StateValues::zFar]);
+        zoom = std::stof(nodeValues[StateValues::zoom]);
+        transform.pivot = Utils::deserializeVec2(nodeValues[StateValues::pivot]);
     }
     
-    void Camera2D::renderFields() 
+    void Camera2D::renderFields(SceneEditor* sceneEditor) 
     {
-        Node2D::renderFields();
+        Node2D::renderFields(sceneEditor);
 
         static bool current;
 
@@ -104,6 +85,21 @@ namespace prim
         {
             renderer->setCurrentCamera(current ? this : nullptr);
         }
+    }
+    
+    glm::vec2 Camera2D::worldToScreen(glm::vec3 point)
+    {
+        glm::mat4 viewMat = calculateViewMatrix();
+        glm::vec4 result = viewMat * glm::vec4(point.x, point.y, point.z, 1.0f);
+        return glm::vec2(result.x, result.y);
+    }
+    
+    glm::vec3 Camera2D::screenToWorld(glm::vec2 point)
+    {
+        glm::mat4 viewMat = calculateViewMatrix();
+        glm::mat4 viewMatInv = glm::inverse(viewMat);
+        glm::vec4 result = viewMatInv * glm::vec4(point.x, point.y, 0.0f, 1.0f);
+        return glm::vec3(result.x, result.y, result.z);
     }
 
 }

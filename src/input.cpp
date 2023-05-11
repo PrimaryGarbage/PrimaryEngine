@@ -9,12 +9,18 @@
 namespace prim
 {
 
+bool Input::initialized {};
 PressInfo Input::keys[350]{};
 MouseInfo Input::mouse;
 std::vector<Gamepad> Input::gamepads;
 std::vector<Action> Input::actions;
 std::vector<Axis> Input::axes;
 std::string Input::charInput;
+
+Input::Input(GLFWwindow* window)
+{
+	init(window);
+}
 
 void Input::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -86,7 +92,7 @@ void Input::registerAllGamepads()
 			if(glfwJoystickIsGamepad(i))
 			{
 				gamepads.push_back(Gamepad(i));
-				Globals::logger->log("Gamepad registered. id: [" + std::to_string(i) + "]; name: [" + gamepads.back().name + "]", true);
+				Logger::inst().logInfo("Gamepad registered. id: [" + std::to_string(i) + "]; name: [" + gamepads.back().name + "]", true);
 			}
 		}
 	}
@@ -125,14 +131,14 @@ void Input::joystick_callback(int jid, int event)
 			auto gamepad = std::find_if(gamepads.begin(), gamepads.end(), [jid](const Gamepad& gp) -> bool { return gp.id == jid; });
 			if(gamepad != gamepads.end()) return;		// gamepad is already registered
 			gamepads.push_back(Gamepad(jid));
-			Globals::logger->log("Gamepad registered. id: [" + std::to_string(jid) + "]; name: [" + gamepads.back().name + "]", true);
+			Logger::inst().logInfo("Gamepad registered. id: [" + std::to_string(jid) + "]; name: [" + gamepads.back().name + "]", true);
 		}
     }
     else if (event == GLFW_DISCONNECTED)
     {
 		auto gamepad = std::find_if(gamepads.begin(), gamepads.end(), [jid](const Gamepad& gp) -> bool { return gp.id == jid; });
 		if(gamepad == gamepads.end()) return;		// gamepad is already unregistered
-		Globals::logger->log("Gamepad unregistered. id: [" + std::to_string(jid) + "]; name: [" + gamepads.back().name + "]", true);
+		Logger::inst().logInfo("Gamepad unregistered. id: [" + std::to_string(jid) + "]; name: [" + gamepads.back().name + "]", true);
 		gamepads.erase(gamepad);
     }
 }
@@ -147,22 +153,26 @@ void Input::createDefaultActionsAndAxes()
 
 void Input::init(GLFWwindow* window)
 {
+	if(initialized) return;
+
 	glfwSetKeyCallback(window, key_callback);
-	Globals::logger->log("glfw key callback set");
+	Logger::inst().logInfo("glfw key callback set");
 	glfwSetCharCallback(window, char_callback);
-	Globals::logger->log("glfw char callback set");
+	Logger::inst().logInfo("glfw char callback set");
 	glfwSetCursorPosCallback(window, cursor_position_callback);
-	Globals::logger->log("glfw cursor pos callback set");
+	Logger::inst().logInfo("glfw cursor pos callback set");
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
-	Globals::logger->log("glfw mouse button callback set");
+	Logger::inst().logInfo("glfw mouse button callback set");
 	glfwSetScrollCallback(window, scroll_callback);
-	Globals::logger->log("glfw scroll callback set");
+	Logger::inst().logInfo("glfw scroll callback set");
 	glfwSetJoystickCallback(joystick_callback);
-	Globals::logger->log("glfw joystick callback set");
+	Logger::inst().logInfo("glfw joystick callback set");
 
 	registerAllGamepads();
 
 	createDefaultActionsAndAxes();
+
+	initialized = true;
 }
 
 // should be called from mainLoop
@@ -334,6 +344,11 @@ float Input::getAxis(const std::string axisName)
 	result = std::clamp(result, -1.0f, 1.0f);
 
 	return result;
+}
+
+glm::vec2 Input::getCursorPos()
+{
+	return glm::vec2(mouse.x, Globals::mainRenderer->getWindowHeight() - mouse.y);
 }
 
 void Input::addAction(const std::string name, std::initializer_list<ActionCause> actionCauses)

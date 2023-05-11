@@ -1,26 +1,61 @@
 #ifndef __NODE_HPP__
 #define __NODE_HPP__
 
-#include "node_factory.hpp"
 #include <vector>
-#include "node_base.hpp"
-#include "glm.hpp"
+#include <stack>
+#include "GLM/glm.hpp"
 #include "node_path.hpp"
 #include "utils.hpp"
+#include "event.hpp"
+
+#define NODE_FIXTURE(NODE_NAME) \
+    private: inline static const NodeRegistration<NODE_NAME> nodeRegistration = NodeRegistration<NODE_NAME>(#NODE_NAME); \
+    public: virtual inline const char* type() const override { return #NODE_NAME; }
+
+#define NODE_START for(Node* child : children) child->start();
+#define NODE_UI_UPDATE for(Node* child : children) child->uiUpdate(deltaTime);
+#define NODE_UPDATE for(Node* child : children) child->update(deltaTime);
+#define NODE_LATE_UPDATE for(Node* child : children) child->lateUpdate(deltaTime);
+#define NODE_DRAW for(Node* child : children) child->draw(renderer);
 
 namespace prim
 {
     class Renderer;
+    class SceneEditor;
 
-    class Node : public NodeBase
+    class Node
     {
-        NODE_FIXTURE(Node)
-
     private:
+        static inline std::unordered_map<std::string, Node* (*)()> nodeTypeMap;
+        static constexpr unsigned int maxId = 100000;
+        inline static bool idPool[maxId]{};
+        inline static std::stack<unsigned int> freeIds;
+
         void updateNodePath();
+
+        // helper function. Serves as a generic node factory
+        template<class T>
+        inline static Node* constructNode()
+        {
+            return new T();
+        }
+
     protected:
 
-        struct StateFields
+        template<class T>
+        class NodeRegistration
+        {
+        public:
+            NodeRegistration(const char* type)
+            {
+                nodeTypeMap.insert(std::make_pair(type, &constructNode<T>));
+            }
+        };
+
+        private: inline static const NodeRegistration<Node> nodeRegistration = NodeRegistration<Node>("Node"); \
+        public: virtual inline const char* type() const { return "Node"; }
+
+        struct StateValues
         {
             inline static const char* type = "type";
             inline static const char* name = "name";
@@ -28,22 +63,38 @@ namespace prim
             inline static const char* childrenEnd = "children_end";
         };
 
+        const unsigned int id;
         std::string name;
         Node* parent = nullptr;
         std::vector<Node*> children;
         NodePath nodePath;
-        bool bound = false;
+
+        static unsigned int getUniqueId();
+        void freeUniqueId(unsigned int id);
 
     public:
+        struct SerializationSymbols
+        {
+            inline static const char* header = "Node";
+            inline static const char* type = "type";
+            inline static const char* childrenStart = "children_start";
+            inline static const char* childrenEnd = "children_end";
+        };
+
         Node();
         Node(std::string name);
         virtual ~Node();
 
-        virtual void start();
-        virtual void update(float deltaTime);
-        virtual void draw(Renderer& renderer);
+        static Node* createNode(std::string type);
+        static std::vector<std::string> getAllNodeTypes();
 
-        virtual inline const char* type() const { return "Node"; }
+        inline uint getId() const { return id; }
+
+        virtual void start();
+        virtual void uiUpdate(float deltaTime);
+        virtual void update(float deltaTime);
+        virtual void lateUpdate(float deltaTime);
+        virtual void draw(Renderer& renderer);
 
         virtual glm::vec2 getPosition() const;
         virtual float getRotation() const;
@@ -67,54 +118,35 @@ namespace prim
         virtual void setGlobalScale(glm::vec2 s);
 
         virtual void addChild(Node* node);
+        virtual void addChildren(const std::vector<Node*>& children);
         virtual void insertBefore(Node* node);
         virtual void insertAfter(Node* node);
         virtual void addSibling(Node* node);
         virtual void removeChild(Node* node);
         virtual bool hasChild(Node* node);
         virtual void orphanize();
-        virtual void startChildren();
-        virtual void drawChildren(Renderer& renderer);
-        virtual void updateChildren(float deltaTime);
         virtual const std::vector<Node*>& getChildren() const;
         virtual const Node* getParent() const;
-        virtual std::string serialize(bool withChildren = true) const override;
-        virtual std::string serializeChildren() const override;
-        virtual void deserialize(FieldValues& fieldValues) override;
+
+        static Node* deserialize(const std::string& nodeStr);
+        virtual std::string serialize(bool withChildren = true) const;
+        std::string serializeChildren() const;
+        virtual void restore(NodeValues& nodeValues);
+
         NodePath getNodePath() const;
         std::string getName() const;
         void setName(std::string name);
         Node* findChild(std::string name) const;
-        virtual void renderFields();
-        inline bool isBound() const noexcept { return bound; };
-        virtual void unbind();
+        virtual void renderFields(SceneEditor* sceneEditor);
+        Node* clone() const;
 
         template<class T>
-        T* findChild(std::string name = "") const
-        {
-            T* childT = nullptr;
-            for (Node* child : children)
-            {
-                childT = dynamic_cast<T*>(child);
-                if (childT)
-                {
-                    if (!name.empty())
-                        if (childT->name == name)
-                            return childT;
-                        else
-                            childT = nullptr;
-                    else
-                        return childT;
-                }
+        T* findChild(std::string name) const;
 
-                childT = child->findChild<T>(name);
-                if (childT) return childT;
-            }
-
-            return childT;
-        }
     };
 
 }
+
+#include "node.tpp"
 
 #endif // __NODE_HPP__

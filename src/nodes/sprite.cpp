@@ -1,12 +1,14 @@
 #include "sprite.hpp"
-#include "primitives.hpp"
-#include "renderer.hpp"
-#include "gtc/matrix_transform.hpp"
+#include "graphics/primitives.hpp"
+#include "graphics/renderer.hpp"
+#include "GLM/gtc/matrix_transform.hpp"
 #include "utils.hpp"
 #include "imgui.h"
 #include "ImGuiFileDialog.h"
 #include "globals.hpp"
 #include "node_utils.hpp"
+#include "resource_manager.hpp"
+#include <sstream>
 
 namespace prim
 {
@@ -16,50 +18,33 @@ namespace prim
 
     Sprite::Sprite(std::string name)
         : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), 
-        width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f),
-        image(std::make_shared<Image>())
-    {
-    }
+        width(defaultSize), height(defaultSize)
+    {}
 
     Sprite::Sprite(std::string name, std::string imagePath)
         : Drawable(name), planeMesh(Primitives::createSquareMesh(defaultSize)), 
-        width(defaultSize), height(defaultSize), relativeWidth(1.0f), relativeHeight(1.0f),
-        image(std::make_shared<Image>())
+        width(defaultSize), height(defaultSize), imagePath(imagePath)
     {
-        image->load(imagePath);
-        planeMesh.compositions[0].texture->load(*image);
-    }
-
-    Sprite::~Sprite()
-    {
-    }
-
-    void Sprite::start()
-    {
-        startChildren();
-    }
-
-    void Sprite::update(float deltaTime)
-    {
-        updateChildren(deltaTime);
+        setTexture(this->imagePath);
     }
 
     void Sprite::draw(Renderer& renderer)
     {
-        drawChildren(renderer);
+        NODE_DRAW
 
         glm::vec2 globalPosition = getGlobalPosition();
         glm::vec2 globalScale = getGlobalScale();
         glm::mat4 modelMat(1.0f);
-        modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x, globalPosition.y, zIndex));
+        planeMesh.compositions.front().shader->setUniform4f("u_color", tint);
+        modelMat = glm::translate(modelMat, Utils::toVec3(globalPosition, zIndex));
         modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
-        modelMat = glm::scale(modelMat, glm::vec3(globalScale.x * relativeWidth, globalScale.y * relativeHeight, 1.0f));
+        modelMat = glm::scale(modelMat, glm::vec3(globalScale.x * getRelativeWidth(), globalScale.y * getRelativeHeight(), 1.0f));
         modelMat = glm::translate(modelMat, -Utils::toVec3(getPivot() * defaultSize));
 
         renderer.setModelMat(std::move(modelMat));
 
         if(customShader)
-            renderer.drawMesh(planeMesh, customShader.get());
+            renderer.drawMesh(planeMesh, customShader);
         else
             renderer.drawMesh(planeMesh);
     }
@@ -83,24 +68,31 @@ namespace prim
     void Sprite::setWidth(float width)
     {
         this->width = width;
-        relativeWidth = width / defaultSize;
     }
 
     void Sprite::setHeight(float height)
     {
         this->height = height;
-        relativeHeight = height / defaultSize;
     }
 
-    void Sprite::setImage(std::string path)
+    void Sprite::setTexture(std::string path)
     {
-        image->load(path);
-        planeMesh.compositions[0].texture->load(*image);
+        planeMesh.compositions[0].texture = Texture::create(ResourceManager::createResourcePath(path));
     }
 
     void Sprite::setZIndex(float value)
     {
         zIndex = value;
+    }
+    
+    float Sprite::getRelativeWidth() const
+    {
+        return width / defaultSize;
+    }
+    
+    float Sprite::getRelativeHeight() const
+    {
+        return height / defaultSize;
     }
 
     std::string Sprite::serialize(bool withChildren) const
@@ -109,91 +101,56 @@ namespace prim
 
         ss << Node2D::serialize(false);
 
-        ss << Utils::createKeyValuePair(StateFields::width, std::to_string(width)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::height, std::to_string(height)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::zIndex, std::to_string(zIndex)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::imagePath, image->getFilePath()) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::width, std::to_string(width)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::height, std::to_string(height)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::zIndex, std::to_string(zIndex)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::imagePath, imagePath) << std::endl;
         
         if(withChildren) ss << serializeChildren();
         
         return ss.str();
     }
     
-    void Sprite::deserialize(FieldValues& fieldValues) 
+    void Sprite::restore(NodeValues& nodeValues) 
     {
-        Node2D::deserialize(fieldValues);
+        Node2D::restore(nodeValues);
 
-        if (!fieldValues[StateFields::imagePath].empty())
-        {
-            image->load(fieldValues[StateFields::imagePath]);
-            planeMesh.compositions[0].texture->load(*image);
-        }
-        setWidth(std::stof(fieldValues[StateFields::width]));
-        setHeight(std::stof(fieldValues[StateFields::height]));
-        setZIndex(std::stof(fieldValues[StateFields::zIndex]));
+        imagePath = nodeValues[StateValues::imagePath];
+        setWidth(std::stof(nodeValues[StateValues::width]));
+        setHeight(std::stof(nodeValues[StateValues::height]));
+        setZIndex(std::stof(nodeValues[StateValues::zIndex]));
+
+        if (!nodeValues[StateValues::imagePath].empty())
+            setTexture(imagePath);
     }
 
-    void Sprite::renderFields()
+    void Sprite::renderFields(SceneEditor* sceneEditor)
     {
-        Node2D::renderFields();
+        Node2D::renderFields(sceneEditor);
 
-        static float pivotBuffer[2];
-        static float widthBuffer;
-
-        pivotBuffer[0] = transform.pivot.x;
-        pivotBuffer[1] = transform.pivot.y;
-        widthBuffer = width;
-
-        if(ImGui::DragFloat2("Pivot", pivotBuffer))
-        {
-            setPivot(glm::vec2(pivotBuffer[0], pivotBuffer[1]));
-        }
-        if (ImGui::DragFloat("Width", &widthBuffer))
-        {
-            setWidth(widthBuffer);
-        }
-        static float heightBuffer;
-        heightBuffer = height;
-        if (ImGui::DragFloat("Height", &heightBuffer))
-        {
-            setHeight(heightBuffer);
-        }
+        if(ImGui::DragFloat2("Pivot", &transform.pivot.x, 0.01f));
+        if(ImGui::DragFloat("Width", &width));
+        if (ImGui::DragFloat("Height", &height));
         ImGui::DragFloat("Z-Index", &zIndex, 0.01f);
-        ImGui::LabelText("Image", image->getFilePath().c_str());
+        ImGui::LabelText("Image", imagePath.c_str());
         ImGui::SameLine();
 
         if (ImGui::Button("...")) // change image button
-            ImGuiFileDialog::Instance()->OpenDialog("ChooseImageKey", "Open Image", "Image files (*.png *.jpg *.jpeg){.png,.jpg,.jpeg}", ".", 1, nullptr, ImGuiFileDialogFlags_Modal);
+        {
+            ImGuiFileDialog::Instance()->OpenDialog("ChooseImageKey", "Open Image", 
+                "Image files (*.png *.jpg *.jpeg){.png,.jpg,.jpeg}", ResourceManager::getResourceDirPathAbsolute(),
+                1, nullptr, ImGuiFileDialogFlags_Modal);
+        }
 
         if(ImGuiFileDialog::Instance()->Display("ChooseImageKey"))
         {
             if (ImGuiFileDialog::Instance()->IsOk())
             {
-                setImage(ImGuiFileDialog::Instance()->GetFilePathName());
+                std::string path = Utils::splitString(ImGuiFileDialog::Instance()->GetFilePathName(), ResourceManager::resDirName + ResourceManager::separator()).back();
+                setTexture(ResourceManager::createResourcePath(path));
             }
             
             ImGuiFileDialog::Instance()->Close();
         }
-
-        if(bound)
-        {
-            if(ImGui::Button("Unbind"))
-            {
-                unbind();
-            }
-        }
     }
-    
-    void Sprite::unbind() 
-    {
-        Node2D::unbind();
-
-        std::string oldImagePath = image->empty() ? "" : image->getFilePath();
-        image = std::make_shared<Image>();
-        planeMesh = Primitives::createSquareMesh(defaultSize);
-
-        if(!oldImagePath.empty())
-            setImage(oldImagePath);
-    }
-
 }

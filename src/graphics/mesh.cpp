@@ -4,7 +4,7 @@
 
 namespace prim
 {
-    Mesh::Mesh(shptr<VertexBuffer> vb) : vb(vb)
+    Mesh::Mesh(Shp<VertexBuffer> vb) : vb(vb)
     {
     }
     

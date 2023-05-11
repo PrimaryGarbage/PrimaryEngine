@@ -10,7 +10,7 @@ namespace prim
         NODE_FIXTURE(ActorCamera2D)
     protected:
 
-        struct StateFields: public Camera2D::StateFields
+        struct StateValues: public Camera2D::StateValues
         {
             inline static const char* targetPath = "targetPath";
             inline static const char* initialOffset = "initialOffset";
@@ -18,7 +18,7 @@ namespace prim
             inline static const char* rotateWithTarget = "rotateWithTarget";
         };
 
-        Node2D* target = nullptr;
+        const Node2D* target = nullptr;
         NodePath targetPath;
         glm::vec2 initialOffset { 0.0f, 0.0f };
         float stiffness = 1.0f;
@@ -30,23 +30,21 @@ namespace prim
         ActorCamera2D(std::string name);
         ActorCamera2D(std::string name, const NodePath& target);
         ActorCamera2D(std::string name, float zNear, float zFar, const NodePath& target);
-        virtual ~ActorCamera2D();
 
         virtual void start() override;
         virtual void update(float deltaTime) override;
         virtual void draw(Renderer& renderer) override;
 
-        virtual inline const char* type() const override { return "ActorCamera2D"; }
-
         void setTarget(const NodePath& target);
+        void setTarget(const Node2D* target);
         inline NodePath getTarget() const { return targetPath; }
         void setStiffness(float value);
         inline float getStiffness() const { return stiffness; }
         inline glm::vec2 getInitialOffset() const { return initialOffset; }
 
         virtual std::string serialize(bool withChildren = true) const override;
-        virtual void deserialize(FieldValues& fieldValues) override;
-        virtual void renderFields() override;
+        virtual void restore(NodeValues& nodeValues) override;
+        virtual void renderFields(SceneEditor* sceneEditor) override;
     };
 }
 

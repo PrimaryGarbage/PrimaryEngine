@@ -1,7 +1,7 @@
 #ifndef __TRANSFORM2D_HPP__
 #define __TRANSFORM2D_HPP__
 
-#include "glm.hpp"
+#include "GLM/glm.hpp"
 
 namespace prim
 {

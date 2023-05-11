@@ -1,40 +1,16 @@
 #include "renderer.hpp"
 #include "logger.hpp"
-#include "gtc/matrix_transform.hpp"
+#include "GLM/gtc/matrix_transform.hpp"
 #include "globals.hpp"
-#include "drawable.hpp"
+#include "nodes/drawable.hpp"
+#include "nodes/camera_base.hpp"
+#include "glfw_extensions.hpp"
+#include "primitives.hpp"
+
 
 namespace prim
 {
-
-	void glClearError()
-	{
-		while (glGetError() != GL_NO_ERROR)
-			;
-	}
-
-	bool glLogCall(const char* function, const char* file, int line)
-	{
-		if (GLenum error = glGetError())
-		{
-			Globals::logger->log("[OpenGL Error] (" + std::to_string(error) + "): " + function + " " + file + ":" + std::to_string(line), true);
-			return false;
-		}
-		return true;
-	}
-
-	Renderer::Renderer()
-	{
-	}
-
-	Renderer::~Renderer()
-	{
-		selectShader.reset();
-		glfwTerminate();
-		Globals::logger->log("GLFW successfully terminated", true);
-	}
-
-	void Renderer::init(unsigned int windowWidth, unsigned int windowHeight, const char* windowName)
+	Renderer::Renderer(uint32_t windowWidth, uint32_t windowHeight, const std::string& windowName)
 	{
 		if (!glfwInit())
 		{
@@ -42,12 +18,12 @@ namespace prim
 		}
 
 		glfwWindowHint(GLFW_SAMPLES, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		// glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		// glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		// glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		// glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		window = glfwCreateWindow(windowWidth, windowHeight, windowName, nullptr, nullptr);
+		window = glfwCreateWindow(windowWidth, windowHeight, windowName.c_str(), nullptr, nullptr);
 		if (window == nullptr)
 		{
 			throw std::runtime_error("Failed to create glfw window!");
@@ -77,11 +53,17 @@ namespace prim
 		GL_CALL(glEnable(GL_DEPTH_TEST));
 		GL_CALL(glDepthFunc(GL_LEQUAL));
 
-		Globals::logger->log("GLFW and GLEW initialized successfully", true);
-		Globals::logger->log("OpenGL version: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))), true);
-		Globals::logger->log("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
+		Logger::inst().logInfo("GLFW and GLEW initialized successfully", true);
+		Logger::inst().logInfo("OpenGL version: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))), true);
+		Logger::inst().logInfo("GPU: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))), true);
+	}
 
-		selectShader = std::make_shared<Shader>("./res/shaders/select.shader");
+	Renderer::~Renderer()
+	{
+		Shader::terminate();
+		Texture::terminate();
+		glfwTerminate();
+		Logger::inst().logInfo("GLFW successfully terminated", true);
 	}
 
 	void Renderer::drawLists()
@@ -108,23 +90,19 @@ namespace prim
 
 	void Renderer::prepareForDrawing()
 	{
-		if (preparedForDrawing) return;
-
 		if (currentCamera)
 		{
-			setViewMat(currentCamera->calculateViewMatrix());
-			setProjectMat(currentCamera->calculateProjectMatrix());
+			if(!viewMatIsRelevant) setViewMat(currentCamera->calculateViewMatrix());
+			if(!projectMatIsRelevant) setProjectMat(currentCamera->calculateProjectMatrix());
 		}
 		else
 		{
-			setViewMat(glm::mat4(1.0f));
-			setProjectMat(glm::ortho(0.0f, static_cast<float>(windowWidth), 0.0f, static_cast<float>(windowHeight)));
+			if(!viewMatIsRelevant) setViewMat(glm::mat4(1.0f));
+			if(!projectMatIsRelevant) setProjectMat(glm::ortho(0.0f, static_cast<float>(windowWidth), 0.0f, static_cast<float>(windowHeight)));
 		}
-
-		preparedForDrawing = true;
 	}
 
-	void Renderer::drawSelectedNodeFraming(Drawable* node)
+	void Renderer::drawNodeFrame(Drawable* node, glm::vec4 color, float frameScale)
 	{
 		GL_CALL(glEnable(GL_STENCIL_TEST));
 
@@ -136,9 +114,22 @@ namespace prim
 		GL_CALL(glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE));
 		GL_CALL(glStencilFunc(GL_NOTEQUAL, 1, 0xFF));
 		GL_CALL(glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP));
-		node->drawWithShader(*this, selectShader);
+		Shader* frameShader = Shader::getDefaultShader(DefaultShader::frame);
+		frameShader->setUniform1f("u_frameWidth", frameScale);
+		frameShader->setUniform4f("u_color", color);
+		node->drawWithShader(*this, Shader::getDefaultShader(DefaultShader::frame));
 		
 		GL_CALL(glDisable(GL_STENCIL_TEST));
+	}
+	
+	void Renderer::drawRectangle(glm::vec2 position, glm::vec2 size, glm::vec4 color)
+	{
+		setModelMat(glm::translate(glm::mat4(1.0f), Utils::toVec3(position)));
+		Mesh mesh = Primitives::createRectangleMesh(size.x, size.y);
+		Shader* shader = Shader::getDefaultShader(DefaultShader::plainColor);
+		shader->setUniform4f("u_color", color);
+		mesh.compositions.front().shader = shader;
+		drawMesh(mesh);
 	}
 
 	void Renderer::drawMesh(const Mesh& mesh)
@@ -161,6 +152,7 @@ namespace prim
 
 			GL_CALL(glDrawElements(GL_TRIANGLES, composition.getCount(), GL_UNSIGNED_INT, nullptr));
 		}
+
 	}
 
 	void Renderer::drawMesh(const Mesh& mesh, const Shader* shader)
@@ -200,8 +192,8 @@ namespace prim
 
 	void Renderer::error_callback(int error, const char* description)
 	{
-		Globals::logger->log("GLFW error: " + std::to_string(error), true);
-		Globals::logger->log(description);
+		Logger::inst().logError("GLFW error: " + std::to_string(error), true);
+		Logger::inst().logError(description);
 		// std::cerr << "GLFW error: " << error << std::endl;
 		// std::cerr << description;
 	}
@@ -214,7 +206,9 @@ namespace prim
 	void Renderer::swapBuffers()
 	{
 		glfwSwapBuffers(window);
-		preparedForDrawing = false;
+
+		viewMatIsRelevant = false;
+		projectMatIsRelevant = false;
 	}
 
 	void Renderer::pollEvents()
@@ -225,6 +219,23 @@ namespace prim
 	const std::vector<Mesh*>& Renderer::getDrawList() const
 	{
 		return drawList;
+	}
+	
+	void Renderer::setProjectMat(glm::mat4 proj) 
+	{
+		projectMat = proj;
+		projectMatIsRelevant = true;
+	}
+	
+	void Renderer::setViewMat(glm::mat4 view) 
+	{
+		viewMat = view;
+		viewMatIsRelevant = true;
+	}
+	
+	void Renderer::setModelMat(glm::mat4 model) 
+	{
+		modelMat = model;
 	}
 
 }

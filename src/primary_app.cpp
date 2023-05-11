@@ -1,22 +1,28 @@
 #include "primary_app.hpp"
 #include "logger.hpp"
 #include "prim_exception.hpp"
-#include "input.hpp"
 #include <stdexcept>
 #include <cassert>
-#include <filesystem>
 #include <algorithm>
-#include "glm.hpp"
+#include "GLM/glm.hpp"
 #include "globals.hpp"
-#include "test_scenes_creator.hpp"
 #include "utils.hpp"
+#include "nodes/node.hpp"
 #include <iostream>
+
 
 namespace prim
 {
 
-	PrimaryApp::PrimaryApp() : deltaTime(0.0f), timeSinceStart(0.0f), sceneManager(Utils::getAppDirPath().string())
+	PrimaryApp::PrimaryApp(const PrimaryAppOptions& options) : 
+		deltaTime(0.0f), elapsedTime(0.0f), useEditor(options.useEditor),
+		renderer(options.windowWidth, options.windowHeight, options.windowName),
+		input(renderer.getWindow()), sceneEditor(&renderer)
 	{
+		Globals::app = this;
+		Globals::mainRenderer = &renderer;
+		Globals::sceneEditor = &sceneEditor;
+		Globals::sceneManager = &sceneManager;
 	}
 
 	PrimaryApp::~PrimaryApp()
@@ -24,20 +30,10 @@ namespace prim
 		if (currentScene) sceneManager.freeScene(currentScene);
 	}
 
-	void PrimaryApp::init()
-	{
-		initGlobals();
-		renderer.init(windowWidth, windowHeight, windowName);
-		Input::init(renderer.getWindow());
-		initEditor();
-	}
-
 	int PrimaryApp::run()
 	{
 		try
 		{
-			init();
-
 			timer.start();
 
 			mainLoop();
@@ -47,19 +43,19 @@ namespace prim
 		catch (const prim::Exception& e)
 		{
 			std::cerr << e.what() << '\n';
-			logger.log(e.what(), true);
+			Logger::inst().logError(e.what(), true);
 			return 1;
 		}
 		catch (const std::exception& e)
 		{
 			std::cerr << e.what() << '\n';
-			logger.log(e.what(), true);
+			Logger::inst().logError(e.what(), true);
 			return 1;
 		}
 		catch (...)
 		{
 			std::cerr << "Unknown exception was caught!" << '\n';
-			logger.log("Unknown exception was caught!");
+			Logger::inst().logError("Unknown exception was caught!");
 			return 1;
 		}
 	}
@@ -71,20 +67,20 @@ namespace prim
 		currentScene->start();
 	}
 
-	void PrimaryApp::loadCurrentScene(std::string name)
+	void PrimaryApp::loadCurrentScene(std::string resPath)
 	{
-		setCurrentScene(sceneManager.loadScene(name));
+		setCurrentScene(sceneManager.loadScene(resPath));
 	}
 	
-	void PrimaryApp::saveCurrentScene(std::string name, bool overwrite)
+	void PrimaryApp::saveCurrentScene(std::string resPath, bool overwrite)
 	{
 		if(!currentScene) return;
-		sceneManager.saveScene(currentScene, name, overwrite);
+		sceneManager.saveScene(currentScene, resPath, overwrite);
 	}
 	
-	Node* PrimaryApp::loadScene(std::string name)
+	Node* PrimaryApp::loadScene(std::string resPath)
 	{
-		return sceneManager.loadScene(name);
+		return sceneManager.loadScene(resPath);
 	}
 
 	Node* PrimaryApp::getCurrentScene() const
@@ -95,26 +91,38 @@ namespace prim
 	Node* PrimaryApp::getNode(NodePath nodePath)
 	{
 		if (!currentScene) return nullptr;
+
+		if(nodePath.front() != currentScene->getName()) return nullptr;
 		Node* currentNode = currentScene;
-		if (nodePath.front() == currentScene->getName())
-			nodePath = nodePath.pop_front();
+		nodePath = nodePath.pop_front();
+
 	start:
-		while (!nodePath.empty())
+		while(!nodePath.empty())
 		{
-			std::string name = nodePath.front();
-			for (Node* child : currentNode->getChildren())
+			std::string currentName = nodePath.front();
+			for(Node* node : currentNode->children)
 			{
-				if (name == child->getName())
+				if(node->getName() == currentName)
 				{
-					currentNode = child;
+					currentNode = node;
 					nodePath = nodePath.pop_front();
 					goto start;
-					break;
 				}
 			}
 			return nullptr;
 		}
+
 		return currentNode;
+	}
+	
+	float PrimaryApp::getDeltaTime() const
+	{
+		return deltaTime;
+	}
+	
+	float PrimaryApp::getElapsedTime() const
+	{
+		return elapsedTime;
 	}
 
 	void PrimaryApp::deferFunctionExecution(deferred_func_type function, short order)
@@ -124,28 +132,24 @@ namespace prim
 
 	void PrimaryApp::mainLoop()
 	{
-		Node* scene1 = sceneManager.loadScene("TestScene1");
-		//Node* scene1 = TestScenesCreator::createScene1();
-		setCurrentScene(scene1);
-
 		float speed = 10.0f;
 
 		while (!renderer.windowShouldClose())
 		{
 			deltaTime = timer.peekSinceLastPeek() * 0.001f;
-			timeSinceStart = timer.peek() * 0.001f;
+			elapsedTime = timer.peek() * 0.001f;
 
 			renderer.clear();
 
 			///// Update /////
-			deferredFunctions.clear();
 
 			Input::clear();
 			renderer.pollEvents();
 			Input::update();
 
-			if (currentScene)
-				currentScene->update(deltaTime);
+			currentScene->uiUpdate(deltaTime);
+			currentScene->update(deltaTime);	
+			currentScene->lateUpdate(deltaTime);	
 
 			executeDeferredFunctions();
 			/////////////////
@@ -167,6 +171,7 @@ namespace prim
 		std::sort(deferredFunctions.begin(), deferredFunctions.end(), [](const auto& pair1, const auto& pair2) { return pair1.second < pair2.second; });
 		for (int i = 0; i < deferredFunctions.size(); ++i)
 			deferredFunctions[i].first();
+		deferredFunctions.clear();
 	}
 
 	void PrimaryApp::drawEditor()
@@ -174,20 +179,4 @@ namespace prim
 		if(!useEditor) return;
 		sceneEditor.draw();
 	}
-
-	void PrimaryApp::initEditor()
-	{
-		if(!useEditor) return;
-		sceneEditor.init(&renderer);
-	}
-	
-	void PrimaryApp::initGlobals()
-	{
-		Globals::app = this;
-		Globals::mainRenderer = &renderer;
-		Globals::sceneEditor = &sceneEditor;
-		Globals::sceneManager = &sceneManager;
-		Globals::logger = &logger;
-	}
-
 }

@@ -12,19 +12,9 @@ namespace prim
     {
     }
     
-    Drawable::~Drawable() 
+    void Drawable::drawWithShader(Renderer& renderer, Shader* shader)
     {
-        
-    }
-    
-    void Drawable::draw(Renderer& renderer)
-    {
-        drawChildren(renderer);
-    }
-    
-    void Drawable::drawWithShader(Renderer& renderer, shptr<Shader>& shader)
-    {
-        shptr<Shader> oldCustomShader(customShader);
+        Shader* oldCustomShader = customShader;
         customShader = shader;
         this->draw(renderer);
         customShader = oldCustomShader;

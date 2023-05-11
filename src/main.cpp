@@ -3,9 +3,9 @@
 
 int main(int argc, char* argv[])
 {
-	prim::PrimaryApp app;
+	// prim::PrimaryApp app;
 
-	app.useEditor = true;
+	// app.useEditor = true;
 
-	return app.run();
+	// return app.run();
 }

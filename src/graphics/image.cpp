@@ -3,7 +3,9 @@
 #include <cassert>
 #include <unordered_map>
 #include "stb_image.h"
-#include "../prim_exception.hpp"
+#include "prim_exception.hpp"
+#include "typedefs.hpp"
+#include "resource_manager.hpp"
 
 namespace prim
 {
@@ -15,6 +17,8 @@ namespace prim
                 return 3;
             case ImageType::png:
                 return 4;
+            case ImageType::bitmap:
+                return 1;
             default:
                 return 4;
         }
@@ -28,7 +32,9 @@ namespace prim
             { ".png", static_cast<int>(ImageType::png) },
         };
 
-        assert(std::filesystem::exists(std::filesystem::path(path)));
+        if(!std::filesystem::exists(std::filesystem::path(path)))
+            throw PRIM_EXCEPTION("Invalid image path: '" + path + "'");
+
         std::filesystem::path filePath(path);
         std::string extension = filePath.extension().string(); 
         switch(extensionMap.at(extension))
@@ -42,29 +48,34 @@ namespace prim
         }
     }
 
-    Image::Image(std::string filePath): filePath(filePath)
+    Image::Image(std::string resPath): resPath(resPath)
     {
-        load(filePath);
+        load(resPath);
     }
     
     Image::Image(const Image& other)
-        : filePath(other.filePath), width(other.width), height(other.height), channelCount(other.channelCount), size(other.size)
+        : resPath(other.resPath), width(other.width), height(other.height), channelCount(other.channelCount), size(other.size)
     {
         std::copy(other.data, other.data + other.size - 1, data);
     }
     
     Image::Image(Image&& other)
-        : filePath(other.filePath), width(other.width), height(other.height), channelCount(other.channelCount), size(other.size)
+        : resPath(other.resPath), width(other.width), height(other.height), channelCount(other.channelCount), size(other.size)
     {
         other.data = nullptr;
-        other.filePath = "";
+        other.resPath = "";
         other.width = other.height = other.channelCount = 0;
         other.size = 0u;
     }
     
+    Image::Image(const unsigned char* data, unsigned int dataLength, ImageType type) 
+    {
+        load(data, dataLength, type);
+    }
+    
     Image& Image::operator=(const Image& other)
     {
-        filePath = other.filePath;
+        resPath = other.resPath;
         width = other.width;
         height = other.height;
         channelCount = other.channelCount;
@@ -76,14 +87,14 @@ namespace prim
     Image& Image::operator=(Image&& other)
     {
         data = other.data;
-        filePath = other.filePath;
+        resPath = other.resPath;
         width = other.width;
         height = other.height;
         channelCount = other.channelCount;
         size = other.size;
 
         other.data = nullptr;
-        other.filePath = "";
+        other.resPath = "";
         other.width = other.height = other.channelCount = 0;
         other.size = 0u;
 
@@ -95,16 +106,29 @@ namespace prim
         unload();
     }
     
-    void Image::load(std::string filePath)
+    void Image::load(std::string resPath)
     {
         unload();
-        if(!std::filesystem::exists(filePath)) throw PRIM_EXCEPTION("File not found. Path: '" + filePath + "'.");
+        std::string filePath = ResourceManager::createResourcePath(resPath);
         stbi_set_flip_vertically_on_load(1);
         type = parseType(filePath);
         data = stbi_load(filePath.c_str(), &width, &height, &channelCount, getChannelCountOfType(type));
         size = width * height * channelCount; 
-        this->filePath = filePath;
+        this->resPath = resPath;
+        modified = false;
         if(!data) throw PRIM_EXCEPTION("Couldn't load image with path '" + filePath + "'. Probably a file extension problem.");
+    }
+    
+    void Image::load(const unsigned char* data, unsigned int dataLength, ImageType type) 
+    {
+        unload();
+        stbi_set_flip_vertically_on_load(1);
+        this->type = type;
+        this->data = stbi_load_from_memory(data, dataLength, &width, &height, &channelCount, getChannelCountOfType(type));
+        size = width * height * channelCount; 
+        this->resPath = "";
+        modified = false;
+        if(!data) throw PRIM_EXCEPTION("Couldn't load image with path '" + resPath + "'. Probably a file extension problem.");
     }
     
     void Image::unload()
@@ -112,7 +136,7 @@ namespace prim
         if(data)
         {
             stbi_image_free(data);
-            filePath = "";
+            resPath = "";
             width = height = channelCount = 0;
             size = 0u;
             data = nullptr;

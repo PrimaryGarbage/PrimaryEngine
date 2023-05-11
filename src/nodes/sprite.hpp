@@ -2,8 +2,8 @@
 #define __SPRITE_HPP__
 
 #include "drawable.hpp"
-#include "mesh.hpp"
-#include "image.hpp"
+#include "graphics/mesh.hpp"
+#include "graphics/image.hpp"
 
 namespace prim
 {
@@ -15,7 +15,7 @@ namespace prim
         NODE_FIXTURE(Sprite)
     protected:
         
-        struct StateFields: public Node2D::StateFields
+        struct StateValues: public Node2D::StateValues
         {
             inline static const char* width = "width";
             inline static const char* height = "height";
@@ -25,24 +25,17 @@ namespace prim
 
         inline static const float defaultSize = 100.0f;
         Mesh planeMesh;
-        shptr<Image> image;
+        std::string imagePath;
         float width;
         float height;
-        float relativeWidth;
-        float relativeHeight;
         float zIndex = 0.0f;
+        glm::vec4 tint = glm::vec4(1.0f);
     public:
         Sprite();
         Sprite(std::string name);
         Sprite(std::string name, std::string imagePath);
-        Sprite(const Sprite& other) = default;
-        virtual ~Sprite();
 
-        virtual void start() override;
-        virtual void update(float deltaTime) override;
         virtual void draw(Renderer& renderer) override;
-
-        virtual inline const char* type() const override { return "Sprite"; }
 
         void setCenterPivot();
         void setCornerPivot();
@@ -50,18 +43,18 @@ namespace prim
         void setSize(float width, float height);
         void setWidth(float width);
         void setHeight(float height);
-        void setImage(std::string path);
+        void setTexture(std::string path);
         void setZIndex(float value);
         inline float getWidth() const { return width; }
         inline float getHeight() const { return height; }
+        float getRelativeWidth() const;
+        float getRelativeHeight() const;
         inline glm::vec2 getSize() const { return glm::vec2(width, height); }
         inline float getZIndex() const { return zIndex; }
-        inline const Image* getImage() const { return &*image; }
 
         virtual std::string serialize(bool withChildren = true) const override;
-        virtual void deserialize(FieldValues& fieldValues) override;
-        virtual void renderFields() override;
-        virtual void unbind() override;
+        virtual void restore(NodeValues& nodeValues) override;
+        virtual void renderFields(SceneEditor* sceneEditor) override;
 
     };
 

@@ -1,5 +1,8 @@
 #include "index_buffer.hpp"
-#include "renderer.hpp"
+#include "glfw_extensions.hpp"
+#include "GL/glew.h"
+#include "GLFW/glfw3.h"
+#include <cassert>
 
 
 namespace prim

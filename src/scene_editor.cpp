@@ -1,15 +1,40 @@
-#include "scene_editor.hpp"
-#include "renderer.hpp"
+#include "graphics/renderer.hpp"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "imgui.h"
 #include "globals.hpp"
 #include "input.hpp"
 #include "ImGuiFileDialog.h"
-#include "drawable.hpp"
-#include "node_utils.hpp"
+#include "nodes/drawable.hpp"
+#include "resource_manager.hpp"
+#include "graphics/primitives.hpp"
+#include "GLM/gtc/matrix_transform.hpp"
 
 namespace prim
 {
+    Node* nodeToAddNewNodeTo = nullptr;
+    Node* nodeToAddLoadedSceneTo = nullptr;
+
+    SceneEditor::SceneEditor(Renderer* renderer):
+        renderer(renderer), positionPointMesh(Primitives::createSquareMesh(positionPointSize))
+    {
+        positionPointMesh.compositions.front().shader = Shader::getDefaultShader(DefaultShader::plainColor);
+        ImGui::CreateContext();
+        ImGui_ImplGlfw_InitForOpenGL(renderer->getWindow(), true);
+        ImGui_ImplOpenGL3_Init("#version 130");
+        ImGui::StyleColorsDark();
+        io = &ImGui::GetIO();
+        io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        Logger::inst().logInfo("Scene editor initialized");
+    }
+
+    SceneEditor::~SceneEditor()
+    {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+    }
+
     void SceneEditor::drawRightPanel()
     {
         const static ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove;
@@ -22,7 +47,7 @@ namespace prim
         {
             panelSize = ImVec2(ImGui::GetWindowSize().x, renderer->getWindowHeight());
 
-            if (selectedNode) selectedNode->renderFields();
+            if (selectedNode) selectedNode->renderFields(this);
 
             ImGui::Separator();
 
@@ -54,41 +79,16 @@ namespace prim
             panelSize = ImVec2(ImGui::GetWindowSize().x, renderer->getWindowHeight());
 
             Node* currentScene = Globals::app->getCurrentScene();
-            if (currentScene)
-            {
-                if (ImGui::TreeNode(currentScene->getName().c_str()))
-                {
-                    // draw root node context menu
-                    drawNodeTreeContextMenu(currentScene, ImGui::IsItemHovered(), false);
 
-                    if (ImGui::BeginDragDropTarget())
-                    {
-                        const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(dragNodePayloadType);
-                        if (payload)
-                        {
-                            Node* payloadNode = *static_cast<Node**>(payload->Data);
-                            payloadNode->orphanize();
-                            currentScene->addChild(payloadNode);
-                        }
-                        ImGui::EndDragDropTarget();
-                    }
+            drawNodeInTree(currentScene);
 
-                    for (Node* child : currentScene->getChildren())
-                    {
-                        drawNodeInTree(child);
-                    }
-
-                    ImGui::TreePop();
-                }
-
-            }
             ImGui::Separator();
             drawLoadSceneButton();
             ImGui::SameLine();
             drawSaveSceneButton();
 
             drawCreateNodeMenu();
-
+            drawLoadNodeMenu();
         }
         ImGui::End();
     }
@@ -128,7 +128,8 @@ namespace prim
 
         if (nodeIsOpen)
         {
-            for (Node* child : node->getChildren()) drawNodeInTree(child);
+            for(int i = 0; i < node->children.size(); ++i)
+                drawNodeInTree(node->children[i]);
             ImGui::TreePop();
         }
 
@@ -141,21 +142,43 @@ namespace prim
     {
         if (!selectedNode) return;
         Drawable* node = dynamic_cast<Drawable*>(selectedNode);
-        if (node) renderer->drawSelectedNodeFraming(node);
+        if (node) renderer->drawNodeFrame(node, Utils::Color::Green, 1.4f);
+    }
+
+    void SceneEditor::drawSelectedNodePositionPoint(glm::vec2 position)
+    {
+        const float elapsedTime = Globals::app->getElapsedTime();
+        const float sinTime = std::pow(std::sin(elapsedTime * 4.0f), 2);
+        const glm::vec4 color(sinTime, sinTime, sinTime, 1.0f);
+        static Shader* shader = positionPointMesh.compositions.front().shader;
+        static const glm::vec2 halfSizeVec = glm::vec2(positionPointSize) / 2.0f;
+        static constexpr float rotationSpeed = 0.2f;
+        static float rotation = 0.0f;
+
+        if (!selectedNode) return;
+        shader->setUniform4f("u_color", color);
+        shader->setUniform1f("u_time", Globals::app->getElapsedTime());
+        glm::mat4 modelMat(1.0f);
+        modelMat = glm::translate(modelMat, Utils::toVec3(position, 1.0f));
+        rotation += rotationSpeed;
+        if (rotation > Utils::twoPi) rotation -= Utils::twoPi;
+        modelMat = glm::rotate(modelMat, rotation, glm::vec3(0.0f, 0.0f, 1.0f));
+        modelMat = glm::translate(modelMat, Utils::toVec3(-halfSizeVec));
+        renderer->setModelMat(modelMat);
+        renderer->drawMesh(positionPointMesh);
     }
 
     void SceneEditor::drawLoadSceneButton()
     {
         if (ImGui::Button("Load Scene"))
-            ImGuiFileDialog::Instance()->OpenDialog("LoadSceneKey", "Open Scene", ".psc", Globals::sceneManager->getSceneDirPath().string(), 1, nullptr, ImGuiFileDialogFlags_Modal);
+            ImGuiFileDialog::Instance()->OpenDialog("LoadSceneKey", "Open Scene", ".psc", ResourceManager::getResourceDirPathAbsolute(), 1, nullptr, ImGuiFileDialogFlags_Modal);
 
-        if (ImGuiFileDialog::Instance()->Display("LoadSceneKey", 32, fileExplorerMinSize))
+        if (ImGuiFileDialog::Instance()->Display("LoadSceneKey", 32, Utils::castVec2<ImVec2>(fileExplorerMinSize)))
         {
             if (ImGuiFileDialog::Instance()->IsOk())
             {
-                std::string name = ImGuiFileDialog::Instance()->GetCurrentFileName();
-                name = Utils::removeSceneFileExtension(name);
-                Globals::app->loadCurrentScene(name);
+                std::string resPath = Utils::splitString(ImGuiFileDialog::Instance()->GetFilePathName(), ResourceManager::resDirName + ResourceManager::separator()).back();
+                Globals::app->loadCurrentScene(ResourceManager::createResourcePath(resPath));
             }
             ImGuiFileDialog::Instance()->Close();
         }
@@ -163,31 +186,31 @@ namespace prim
 
     void SceneEditor::drawSaveSceneButton()
     {
-        static char sceneNameBuf[INPUT_STRING_MAX_LENGTH];
+        static char scenePathBuf[INPUT_STRING_MAX_LENGTH];
         static bool openOverwritePopup = false;
 
         if (ImGui::Button("Save Scene"))
         {
             ImGui::OpenPopup("Save Scene");
-            strncpy(sceneNameBuf, Globals::app->getCurrentScene()->getName().c_str(), INPUT_STRING_MAX_LENGTH - 1);
+            scenePathBuf[0] = '\0';
         }
 
         if (ImGui::BeginPopupModal("Save Scene", nullptr, ImGuiWindowFlags_NoResize))
         {
-            ImGui::SetWindowSize(popupMinSize);
+            ImGui::SetWindowSize(Utils::castVec2<ImVec2>(popupMinSize));
 
-            ImGui::Text("Scene name:");
-            ImGui::InputText("##SceneNameInput", sceneNameBuf, INPUT_STRING_MAX_LENGTH, ImGuiInputTextFlags_AutoSelectAll);
+            ImGui::Text("Path to save:");
+            ImGui::InputText("##SceneNameInput", scenePathBuf, INPUT_STRING_MAX_LENGTH, ImGuiInputTextFlags_AutoSelectAll);
 
             if (ImGui::Button("Ok"))
             {
-                if (Globals::sceneManager->sceneExists(sceneNameBuf))
+                if (ResourceManager::resourceExists(scenePathBuf))
                 {
                     openOverwritePopup = true;
                 }
                 else
                 {
-                    Globals::app->saveCurrentScene(sceneNameBuf, false);
+                    Globals::app->saveCurrentScene(scenePathBuf, false);
                     ImGui::CloseCurrentPopup();
                 }
             }
@@ -208,13 +231,13 @@ namespace prim
 
         if (ImGui::BeginPopupModal("Overwrite warning", nullptr, ImGuiWindowFlags_NoResize))
         {
-            ImGui::SetWindowSize(popupMinSize);
+            ImGui::SetWindowSize(Utils::castVec2<ImVec2>(popupMinSize));
 
-            ImGui::TextWrapped(std::string("Scene with the name '" + std::string(sceneNameBuf) + "' already exists. Overwrite?").c_str());
+            ImGui::TextWrapped(std::string("File with the path '" + std::string(scenePathBuf) + "' already exists. Overwrite?").c_str());
 
             if (ImGui::Button("Yes"))
             {
-                Globals::app->saveCurrentScene(sceneNameBuf, true);
+                Globals::app->saveCurrentScene(scenePathBuf, true);
                 ImGui::CloseCurrentPopup();
             }
             ImGui::SameLine();
@@ -229,75 +252,87 @@ namespace prim
 
     void SceneEditor::drawNodeTreeContextMenu(Node* node, bool hovered, bool cloningAllowed)
     {
-        if(hovered && Input::isJustReleased(MouseButton::right))
-            ImGui::OpenPopup("Context Menu: " + node->getId());
 
-        if (ImGui::BeginPopup("Context Menu: " + node->getId()))
+        if (hovered && Input::isJustReleased(MouseButton::right))
+            ImGui::OpenPopup(("Context Menu: " + std::to_string(node->getId())).c_str());
+
+        if (ImGui::BeginPopup(("Context Menu: " + std::to_string(node->getId())).c_str()))
         {
             if (ImGui::MenuItem("Add Node"))
             {
-                nodeToAddTo = node;
+                nodeToAddNewNodeTo = node;
             }
-            if (cloningAllowed && ImGui::MenuItem("Clone Node"))
+            else if (ImGui::MenuItem("Load Node"))
+            {
+                ImGuiFileDialog::Instance()->OpenDialog("LoadNodeKey", "Load Node", ".psc", ResourceManager::getResourceDirPathAbsolute(), 1, nullptr, ImGuiFileDialogFlags_Modal);
+                nodeToAddLoadedSceneTo = node;
+            }
+            else if (cloningAllowed && ImGui::MenuItem("Clone Node"))
             {
                 Node* newNode = node->clone();
                 newNode->setName(node->getName() + "c");
                 newNode->orphanize();
                 node->insertAfter(newNode);
             }
-            if (ImGui::MenuItem("Delete Node"))
+            else if (ImGui::MenuItem("Delete Node"))
             {
                 node->orphanize();
-                Globals::sceneManager->freeScene(node);
+                delete node;
+                selectedNode = nullptr;
             }
+
             ImGui::EndPopup();
         }
     }
 
     void SceneEditor::drawCreateNodeMenu()
     {
-        if (!nodeToAddTo) return;
+        if (!nodeToAddNewNodeTo) return;
         static char nodeNameBuf[INPUT_STRING_MAX_LENGTH] = "NewNode";
         static std::string selectedNodeType;
-        std::vector<std::string> nodeTypes = NodeFactory::getAllNodeTypes();
+        std::vector<std::string> nodeTypes = Node::getAllNodeTypes();
         ImGui::Begin("Create Node");
         ImGui::InputText("Name", nodeNameBuf, INPUT_STRING_MAX_LENGTH, ImGuiInputTextFlags_AutoSelectAll);
         for (const auto& type : nodeTypes)
         {
-            if(ImGui::Selectable(type.c_str(), selectedNodeType == type))
+            if (ImGui::Selectable(type.c_str(), selectedNodeType == type))
                 selectedNodeType = type;
         }
         if (ImGui::Button("Create") && !selectedNodeType.empty())
         {
-            Node* newNode = NodeFactory::createNode(selectedNodeType);
+            Node* newNode = Node::createNode(selectedNodeType);
             newNode->setName(nodeNameBuf);
-            nodeToAddTo->addChild(newNode);
-            nodeToAddTo = nullptr;
+            nodeToAddNewNodeTo->addChild(newNode);
+            nodeToAddNewNodeTo = nullptr;
             ImGui::CloseCurrentPopup();
         }
+        ImGui::SameLine(ImGui::GetWindowWidth() - 60.0f);
+        if(ImGui::Button("Cancel"))
+        {
+            nodeToAddNewNodeTo = nullptr;
+        }
         ImGui::End();
-
     }
-
-    SceneEditor::~SceneEditor()
+    
+    void SceneEditor::drawLoadNodeMenu()
     {
-        if (!initialized) return;
-        ImGui_ImplOpenGL3_Shutdown();
-        ImGui_ImplGlfw_Shutdown();
-        ImGui::DestroyContext();
+        if(!nodeToAddLoadedSceneTo) return;
+
+        if (ImGuiFileDialog::Instance()->Display("LoadNodeKey", 32, Utils::castVec2<ImVec2>(fileExplorerMinSize)))
+        {
+            if (ImGuiFileDialog::Instance()->IsOk())
+            {
+                std::string resPath = Utils::splitString(ImGuiFileDialog::Instance()->GetFilePathName(), ResourceManager::resDirName + ResourceManager::separator()).back();
+                Node* loadedScene = Globals::sceneManager->loadScene(resPath);
+                std::vector<Node*> children = loadedScene->children;
+                for(Node* child : children)
+                    child->orphanize();
+                nodeToAddLoadedSceneTo->addChildren(children);
+            }
+            ImGuiFileDialog::Instance()->Close();
+        }
     }
 
-    void SceneEditor::init(Renderer* renderer)
-    {
-        this->renderer = renderer;
-        ImGui::CreateContext();
-        ImGui_ImplGlfw_InitForOpenGL(renderer->getWindow(), true);
-        ImGui_ImplOpenGL3_Init("#version 130");
-        ImGui::StyleColorsDark();
-        io = &ImGui::GetIO();
-        io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        initialized = true;
-    }
 
     void SceneEditor::draw()
     {

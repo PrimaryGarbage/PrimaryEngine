@@ -1,5 +1,5 @@
 #include "vertex_array.hpp"
-#include "renderer.hpp"
+#include "glfw_extensions.hpp"
 
 namespace prim
 {

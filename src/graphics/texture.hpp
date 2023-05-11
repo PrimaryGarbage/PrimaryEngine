@@ -2,6 +2,9 @@
 #define __TEXTURE_HPP__
 
 #include <string>
+#include <unordered_map>
+#include <vector>
+#include "typedefs.hpp"
 
 namespace prim
 {
@@ -14,27 +17,33 @@ class Texture
 private:
     inline static const unsigned int maxTextureSlots = 48u;
     inline static unsigned int textureMap[maxTextureSlots] {0u};
-    inline static unsigned int currentTextureSlot = maxTextureSlots + 1;
+    inline static unsigned int boundTextureSlot = maxTextureSlots + 1;
+    inline static std::unordered_map<std::string, Unp<Texture>> textureCache;
+    inline static std::vector<Unp<Texture>> modifiedImageTextureCache;
+    inline static Texture* defaultTexture = nullptr;
 
     unsigned int gl_id = 0u;
     int width;
     int height;
     int channelCount;
 
-    void loadIntoGpu(unsigned char* data, int widht, int height, ImageType type);
-
+    void loadIntoGpu(const unsigned char* data, int widht, int height, ImageType type);
     void unload();
 
-public:
-    Texture() = default;
     Texture(const std::string path);
     Texture(const Image& image);
-    Texture(Texture&& other);
-    Texture& operator=(Texture&& other);
+    Texture(const unsigned char* imageData, unsigned int length, ImageType type);
+    Texture(const unsigned char* data, unsigned int width, unsigned int height, ImageType type);
+public:
     ~Texture();
 
-    void load(std::string filePath);
-    void load(const Image& image);
+    static Texture* create(std::string resPath);
+    static Texture* create(const Image& image);
+    static Texture* create(const unsigned char* imageData, unsigned int length, ImageType type);
+    static Texture* create(const unsigned char* data, unsigned int width, unsigned int height, ImageType type);
+    static Texture* getDefaultTexture();
+    static void terminate();
+
     void bind(unsigned int slot = 0) const;
     void unbind() const;
 

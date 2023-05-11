@@ -2,127 +2,88 @@
 #include "prim_exception.hpp"
 #include <fstream>
 #include <sstream>
-#include <unordered_map>
-#include <stack>
-#include "node.hpp"
+#include <algorithm>
+#include "nodes/node.hpp"
 #include "utils.hpp"
 #include "globals.hpp"
+#include "resource_manager.hpp"
 
 namespace prim
 {
-    SceneManager::SceneManager(fs::path appDirPath) : savePath((appDirPath / sceneDirectory))
+    Node* SceneManager::loadScene(std::string resPath) const
     {
-        if (!fs::exists(savePath))
-        {
-            fs::create_directories(savePath);
-        }
-    }
-
-    fs::path SceneManager::createPathToScene(std::string sceneName)
-    {
-        fs::path path(savePath / sceneName);
-        if(!path.has_extension()) path += sceneFileExtension;
-        else if(path.extension().string() != sceneFileExtension) throw PRIM_EXCEPTION("File '" + sceneName + "' has wrong extension");
-        return path;
-    }
-
-    Node* SceneManager::loadScene(std::string name)
-    {
-        fs::path path = createPathToScene(name);
-        if (!sceneExists(name)) throw PRIM_EXCEPTION("File with the path '" + path.string() + "' doesn't exists.");
+        fs::path path(ResourceManager::createResourcePath(resPath, true));
 
         std::ifstream stream(path.string(), std::ios::in);
-        if (!stream.good()) throw PRIM_EXCEPTION("Unable to open file stream.");
+        if (!stream.good()) throw PRIM_EXCEPTION("Failed to load scene: Unable to open file stream.");
 
-        std::string line;
+        std::stringstream fileSs;
+        fileSs << stream.rdbuf();
 
-        Node* node = nullptr;
-        std::stack<Node*> parentNodes;
-        Node rootNode("Root");
-        parentNodes.push(&rootNode);
-        std::unordered_map<std::string, std::string> fields;
+        Node* root = Node::deserialize(fileSs.str());
 
-        while (true)
-        {
-            std::getline(stream, line);
-            if (stream.eof()) break;
+        // std::vector<Node*> nodes(root->children);
+        // std::for_each(nodes.begin(), nodes.end(), [](Node* node) { node->orphanize(); });
+        // delete root;
 
-            if (line.empty()) continue;
-
-            if (line == SceneFileSymbols::childrenStart)
-            {
-                node = NodeFactory::createNode(fields[SceneFileSymbols::type]);
-                node->deserialize(fields);
-                if (!parentNodes.empty()) parentNodes.top()->addChild(node);
-                parentNodes.push(node);
-                fields.clear();
-                continue;
-            }
-
-            if (line == SceneFileSymbols::childrenEnd)
-            {
-                if (!fields.empty())
-                {
-                    node = NodeFactory::createNode(fields[SceneFileSymbols::type]);
-                    node->deserialize(fields);
-                    parentNodes.top()->addChild(node);
-                }
-                parentNodes.pop();
-                node = nullptr;
-                continue;
-            }
-
-            std::pair<std::string, std::string> keyValuePair = Utils::parseKeyValuePair(line);
-            fields.insert(keyValuePair);
-        }
-
-        if (!fields.empty())
-        {
-            node = NodeFactory::createNode(fields[SceneFileSymbols::type]);
-            node->deserialize(fields);
-            parentNodes.top()->addChild(node);
-            fields.clear();
-            node = nullptr;
-        }
-
-        stream.close();
-
-        if(parentNodes.top()->getChildren().size() > 1) throw PRIM_EXCEPTION("Scene file is corrupted of was written badly. More than one root nodes");
-        rootNode.removeChild(parentNodes.top()->getChildren().front());
-        return parentNodes.top()->getChildren().front();
+        return root;
     }
-
-    void SceneManager::saveScene(Node* scene, std::string name, bool ovewrite)
+    
+    void SceneManager::saveScene(Node* scene, std::string resPath, bool ovewrite) const
     {
-        fs::path path = createPathToScene(name);
-        if (sceneExists(name) && !ovewrite) throw PRIM_EXCEPTION("File with the path '" + path.string() + "' already exists.");
+        fs::path path(ResourceManager::createResourcePath(resPath, ovewrite));
 
+        if(fs::exists(path) && !ovewrite)
+            throw PRIM_EXCEPTION("Scene already exists, can't save. Path: " + resPath);
+
+        if(!path.has_extension())
+            path.replace_extension(sceneFileExtension);
+        
         std::ofstream stream(path.string(), std::ios::out | std::ios::trunc);
         if (!stream.good()) throw PRIM_EXCEPTION("Unable to open file stream.");
-
-        scene->setName(name);
 
         stream << scene->serialize();
 
         stream.close();
     }
 
-    void SceneManager::freeScene(Node* scene)
+    void SceneManager::saveScene(const std::vector<Node*>& scene, std::string resPath, bool ovewrite) const
     {
-        for (Node* child : scene->getChildren())
-            freeScene(child);
+        fs::path path(ResourceManager::createResourcePath(resPath, ovewrite));
+
+        if(fs::exists(path) && !ovewrite)
+            throw PRIM_EXCEPTION("Scene already exists, can't save. Path: " + resPath);
+
+        if(!path.has_extension())
+            path.replace_extension(sceneFileExtension);
+        
+        std::ofstream stream(path.string(), std::ios::out | std::ios::trunc);
+        if (!stream.good()) throw PRIM_EXCEPTION("Unable to open file stream.");
+
+        Node* root = Node::createNode("Node");
+        root->addChildren(scene);
+
+        root->setName(path.stem().string());
+
+        stream << root->serialize();
+
+        std::for_each(scene.begin(), scene.end(), [](Node* node) { node->orphanize(); });
+        delete root;
+        stream.close();
+    }
+    
+    void SceneManager::freeScene(Node* scene) const
+    {
         delete scene;
+        Logger::inst().logInfo("Scene freed.");
         Globals::sceneEditor->setSelectedNode(nullptr);
     }
-    
-    bool SceneManager::sceneExists(std::string name)
+
+    void SceneManager::freeScene(std::vector<Node*>& scene) const
     {
-        fs::path path = createPathToScene(name);
-        return fs::exists(path);
-    }
-    
-    const fs::path& SceneManager::getSceneDirPath() const
-    {
-        return savePath;
+        for (Node* node : scene)
+            delete node;
+        Logger::inst().logInfo("Scene freed.");
+        Globals::sceneEditor->setSelectedNode(nullptr);
     }
 }

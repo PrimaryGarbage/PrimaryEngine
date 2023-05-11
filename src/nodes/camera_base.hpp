@@ -14,13 +14,10 @@ namespace prim
         CameraBase(std::string name);
         virtual ~CameraBase();
 
-        virtual inline const char* type() const override { return "CameraBase"; }
-
         virtual glm::mat4 calculateViewMatrix() const = 0;
         virtual glm::mat4 calculateProjectMatrix() const = 0;
-        virtual void start() override = 0;
-        virtual void update(float deltaTime) override = 0;
-        virtual void draw(Renderer& renderer) override = 0;
+        virtual glm::vec2 worldToScreen(glm::vec3 point) = 0;
+        virtual glm::vec3 screenToWorld(glm::vec2 point) = 0;
         void setAsCurrent();
         bool isCurrent() const;
     };

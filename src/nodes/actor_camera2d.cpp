@@ -1,10 +1,11 @@
 #include "actor_camera2d.hpp"
-#include "gtx/rotate_vector.hpp"
+#include "GLM/gtx/rotate_vector.hpp"
 #include "utils.hpp"
 #include "globals.hpp"
 #include "imgui.h"
 #include "utils.hpp"
 #include "node_utils.hpp"
+#include "math.h"
 
 namespace prim
 {
@@ -26,35 +27,31 @@ namespace prim
     {
     }
 
-    ActorCamera2D::~ActorCamera2D()
-    {
-    }
-
     void ActorCamera2D::start()
     {
-        startChildren();
+        NODE_START
 
+        if(!targetPath.empty())
             target = dynamic_cast<Node2D*>(Globals::app->getNode(targetPath));
-        if (!target) return;
-        //initialOffset = getGlobalPosition() - target->getGlobalPosition();
     }
 
     void ActorCamera2D::update(float deltaTime)
     {
-        updateChildren(deltaTime);
+        NODE_UPDATE
 
         if (target)
         {
             auto followTargetFunction = [this]() {
                 glm::vec2 position;
+                float modifiedStiffness = std::pow(stiffness, 4);
                 if (rotateWithTarget)
                 {
                     float targetAngle = target->getGlobalRotation();
-                    position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + glm::rotate(initialOffset, targetAngle), stiffness);
-                    setGlobalRotation(Utils::lerpAngle(getGlobalRotation(), targetAngle, stiffness));
+                    position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + glm::rotate(initialOffset, targetAngle), modifiedStiffness);
+                    setGlobalRotation(Utils::lerpAngle(getGlobalRotation(), targetAngle, modifiedStiffness));
                 }
                 else
-                    position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + initialOffset, stiffness);
+                    position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + initialOffset, modifiedStiffness);
 
                 setGlobalPosition(position);
             };
@@ -65,13 +62,18 @@ namespace prim
 
     void ActorCamera2D::draw(Renderer& renderer)
     {
-        drawChildren(renderer);
+        NODE_DRAW
     }
 
     void ActorCamera2D::setTarget(const NodePath& target)
     {
         targetPath = target;
         this->target = dynamic_cast<Node2D*>(Globals::app->getNode(targetPath));
+    }
+
+    void ActorCamera2D::setTarget(const Node2D* node)
+    {
+        this->target = node;
     }
 
     void ActorCamera2D::setStiffness(float value)
@@ -85,32 +87,32 @@ namespace prim
 
         ss << Camera2D::serialize(false);
 
-        ss << Utils::createKeyValuePair(StateFields::targetPath, targetPath.string()) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::initialOffset, Utils::serializeVec2(initialOffset)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::stiffness, std::to_string(stiffness)) << std::endl;
-        ss << Utils::createKeyValuePair(StateFields::rotateWithTarget, std::to_string((int)rotateWithTarget)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::targetPath, targetPath.string()) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::initialOffset, Utils::serializeVec2(initialOffset)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::stiffness, std::to_string(stiffness)) << std::endl;
+        ss << Utils::createKeyValuePair(StateValues::rotateWithTarget, std::to_string((int)rotateWithTarget)) << std::endl;
 
         if(withChildren) ss << serializeChildren();
 
         return ss.str();
     }
     
-    void ActorCamera2D::deserialize(FieldValues& fieldValues) 
+    void ActorCamera2D::restore(NodeValues& nodeValues) 
     {
-        Camera2D::deserialize(fieldValues);
+        Camera2D::restore(nodeValues);
 
-        stiffness = std::stof(fieldValues[StateFields::stiffness]);
-        initialOffset = Utils::deserializeVec2(fieldValues[StateFields::initialOffset]);
-        targetPath = fieldValues[StateFields::targetPath];
+        stiffness = std::stof(nodeValues[StateValues::stiffness]);
+        initialOffset = Utils::deserializeVec2(nodeValues[StateValues::initialOffset]);
+        targetPath = nodeValues[StateValues::targetPath];
     }
 
-    void ActorCamera2D::renderFields()
+    void ActorCamera2D::renderFields(SceneEditor* sceneEditor)
     {
-        Camera2D::renderFields();
+        Camera2D::renderFields(sceneEditor);
 
         ImGui::Checkbox("Rotate with target", &rotateWithTarget);
 
-        ImGui::PushStyleColor(ImGuiCol_Text, target ? Utils::Color::White : Utils::Color::Red);
+        ImGui::PushStyleColor(ImGuiCol_Text, Utils::castVec4<ImVec4>(target ? Utils::Color::White : Utils::Color::Red));
         ImGui::LabelText("Target", targetPath.string().c_str());
         ImGui::PopStyleColor();
 
@@ -126,14 +128,7 @@ namespace prim
             }
         }
 
-        static float initialOffsetBuffer[2];
-        initialOffsetBuffer[0] = initialOffset.x;
-        initialOffsetBuffer[1] = initialOffset.y;
-        if (ImGui::DragFloat2("Initial Offset", initialOffsetBuffer))
-        {
-            initialOffset = glm::vec2(initialOffsetBuffer[0], initialOffsetBuffer[1]);
-        }
-
+        ImGui::DragFloat2("Initial Offset", &initialOffset.x);
         ImGui::DragFloat("Stiffness", &stiffness, 0.01f, 0.0f, 1.0f);
     }
 
