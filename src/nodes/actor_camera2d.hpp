@@ -18,7 +18,7 @@ namespace prim
             inline static const char* rotateWithTarget = "rotateWithTarget";
         };
 
-        Node2D* target = nullptr;
+        const Node2D* target = nullptr;
         NodePath targetPath;
         glm::vec2 initialOffset { 0.0f, 0.0f };
         float stiffness = 1.0f;
@@ -36,6 +36,7 @@ namespace prim
         virtual void draw(Renderer& renderer) override;
 
         void setTarget(const NodePath& target);
+        void setTarget(const Node2D* target);
         inline NodePath getTarget() const { return targetPath; }
         void setStiffness(float value);
         inline float getStiffness() const { return stiffness; }

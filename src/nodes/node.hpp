@@ -12,6 +12,11 @@
     private: inline static const NodeRegistration<NODE_NAME> nodeRegistration = NodeRegistration<NODE_NAME>(#NODE_NAME); \
     public: virtual inline const char* type() const override { return #NODE_NAME; }
 
+#define NODE_START for(Node* child : children) child->start();
+#define NODE_UI_UPDATE for(Node* child : children) child->uiUpdate(deltaTime);
+#define NODE_UPDATE for(Node* child : children) child->update(deltaTime);
+#define NODE_LATE_UPDATE for(Node* child : children) child->lateUpdate(deltaTime);
+#define NODE_DRAW for(Node* child : children) child->draw(renderer);
 
 namespace prim
 {
@@ -86,7 +91,9 @@ namespace prim
         inline uint getId() const { return id; }
 
         virtual void start();
+        virtual void uiUpdate(float deltaTime);
         virtual void update(float deltaTime);
+        virtual void lateUpdate(float deltaTime);
         virtual void draw(Renderer& renderer);
 
         virtual glm::vec2 getPosition() const;
@@ -118,9 +125,6 @@ namespace prim
         virtual void removeChild(Node* node);
         virtual bool hasChild(Node* node);
         virtual void orphanize();
-        virtual void startChildren();
-        virtual void drawChildren(Renderer& renderer);
-        virtual void updateChildren(float deltaTime);
         virtual const std::vector<Node*>& getChildren() const;
         virtual const Node* getParent() const;
 

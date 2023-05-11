@@ -15,18 +15,10 @@ namespace prim
         backgroundMesh.compositions.front().shader = Shader::getDefaultShader(DefaultShader::controlBackground);
     }
     
-    void Panel::start()
-    {
-        startChildren();
-    }
-    
-    void Panel::update(float deltaTime)
-    {
-        updateChildren(deltaTime);
-    }
-    
     void Panel::draw(Renderer& renderer)
     {
+        NODE_DRAW
+
         glm::vec2 globalPosition = getGlobalPosition();
         glm::vec2 globalSize = getSize();
         const glm::mat4& rendererViewMat = renderer.getViewMat();
@@ -44,8 +36,6 @@ namespace prim
         renderer.drawMesh(backgroundMesh);
 
         renderer.setViewMat(rendererViewMat);
-
-        drawChildren(renderer);
     }
     
     std::string Panel::serialize(bool withChildren) const 

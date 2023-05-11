@@ -31,10 +31,6 @@ namespace prim
         virtual glm::mat4 calculateViewMatrix() const override;
         virtual glm::mat4 calculateProjectMatrix() const override;
 
-        virtual void start() override;
-        virtual void update(float deltaTime) override;
-        virtual void draw(Renderer& renderer) override;
-
         virtual std::string serialize(bool withChildren = true) const override;
         virtual void restore(NodeValues& nodeValues) override;
         virtual void renderFields(SceneEditor* sceneEditor) override;

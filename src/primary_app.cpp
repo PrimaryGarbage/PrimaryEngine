@@ -92,24 +92,23 @@ namespace prim
 	{
 		if (!currentScene) return nullptr;
 
-		Node* currentNode = nullptr;
-		const std::vector<Node*>* currentLevel = &(currentScene->children);
+		if(nodePath.front() != currentScene->getName()) return nullptr;
+		Node* currentNode = currentScene;
+		nodePath = nodePath.pop_front();
 
 	start:
 		while(!nodePath.empty())
 		{
 			std::string currentName = nodePath.front();
-			for(Node* node : *currentLevel)
+			for(Node* node : currentNode->children)
 			{
 				if(node->getName() == currentName)
 				{
-					currentLevel = &node->children;
 					currentNode = node;
 					nodePath = nodePath.pop_front();
 					goto start;
 				}
 			}
-
 			return nullptr;
 		}
 
@@ -148,7 +147,9 @@ namespace prim
 			renderer.pollEvents();
 			Input::update();
 
+			currentScene->uiUpdate(deltaTime);
 			currentScene->update(deltaTime);	
+			currentScene->lateUpdate(deltaTime);	
 
 			executeDeferredFunctions();
 			/////////////////

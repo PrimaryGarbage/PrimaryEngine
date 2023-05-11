@@ -35,8 +35,6 @@ namespace prim
         Sprite(std::string name);
         Sprite(std::string name, std::string imagePath);
 
-        virtual void start() override;
-        virtual void update(float deltaTime) override;
         virtual void draw(Renderer& renderer) override;
 
         void setCenterPivot();

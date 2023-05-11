@@ -28,19 +28,9 @@ namespace prim
         setTexture(this->imagePath);
     }
 
-    void Sprite::start()
-    {
-        startChildren();
-    }
-
-    void Sprite::update(float deltaTime)
-    {
-        updateChildren(deltaTime);
-    }
-
     void Sprite::draw(Renderer& renderer)
     {
-        drawChildren(renderer);
+        NODE_DRAW
 
         glm::vec2 globalPosition = getGlobalPosition();
         glm::vec2 globalScale = getGlobalScale();

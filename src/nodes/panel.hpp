@@ -33,8 +33,6 @@ namespace prim
         inline void setBackgroundColor(glm::vec4 color) { this->backgroundColor = color; }
         inline void setBorderRadius(float radius) { this->borderRadius = radius; }
 
-        virtual void start() override;
-        virtual void update(float deltaTime) override;
         virtual void draw(Renderer& renderer) override;
 
         virtual std::string serialize(bool withChildren = true) const override;

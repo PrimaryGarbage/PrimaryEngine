@@ -74,17 +74,27 @@ namespace prim
 
     void Node::start()
     {
-        startChildren();
+        NODE_START
+    }
+
+    void Node::uiUpdate(float deltaTime)
+    {
+        NODE_UI_UPDATE
     }
 
     void Node::update(float deltaTime)
     {
-        updateChildren(deltaTime);
+        NODE_UPDATE
+    }
+
+    void Node::lateUpdate(float deltaTime)
+    {
+        NODE_LATE_UPDATE
     }
 
     void Node::draw(Renderer& renderer)
     {
-        drawChildren(renderer);
+        NODE_DRAW
     }
 
     void Node::updateNodePath()
@@ -150,21 +160,6 @@ namespace prim
             else
                 parent = nullptr;
         }
-    }
-    
-    void Node::startChildren() 
-    {
-        for(Node* child : children) child->start();
-    }
-    
-    void Node::drawChildren(Renderer& renderer) 
-    {
-        for(Node* child : children) child->draw(renderer);
-    }
-    
-    void Node::updateChildren(float deltaTime) 
-    {
-        for(Node* child : children) child->update(deltaTime);
     }
 
     const std::vector<Node*>& Node::getChildren() const

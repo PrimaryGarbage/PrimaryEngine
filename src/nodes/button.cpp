@@ -134,20 +134,17 @@ namespace prim
         }
     }
     
-    void Button::start()
+    void Button::uiUpdate(float deltaTime)
     {
-        startChildren();
-    }
-
-    void Button::update(float deltaTime)
-    {
-        updateChildren(deltaTime);
+        NODE_UI_UPDATE
 
         updateControlState();
     }
 
     void Button::draw(Renderer& renderer)
     {
+        NODE_DRAW
+
         const ButtonState& currentState = controlStateValues[static_cast<int>(state)];
         const Mesh& backgroundMesh = currentState.backgroundMesh;
         const std::string& text = currentState.text.empty() ? " " : currentState.text;
@@ -192,8 +189,6 @@ namespace prim
         }
 
         renderer.setViewMat(rendererViewMat);
-
-        drawChildren(renderer);
     }
 
     std::string Button::serialize(bool withChildren) const

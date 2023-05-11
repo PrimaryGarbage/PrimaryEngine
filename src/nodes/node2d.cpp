@@ -10,21 +10,6 @@
 
 namespace prim
 {
-    void Node2D::start()
-    {
-        startChildren();
-    }
-
-    void Node2D::update(float deltaTime)
-    {
-        updateChildren(deltaTime);
-    }
-
-    void Node2D::draw(Renderer& renderer)
-    {
-        drawChildren(renderer);
-    }
-
     void Node2D::move(glm::vec2 v)
     {
         transform.position += v;

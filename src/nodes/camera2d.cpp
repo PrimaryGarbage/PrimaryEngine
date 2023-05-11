@@ -12,7 +12,7 @@ namespace prim
     }
 
     Camera2D::Camera2D(std::string name)
-        : Camera2D(name, 0.0f, 1.0f)
+        : Camera2D(name, -1.0f, 1.0f)
     {
     }
 
@@ -43,21 +43,6 @@ namespace prim
     {
         glm::vec2 windowSize = getWindowSize();
         return std::move(glm::ortho(0.0f, windowSize.x, 0.0f, windowSize.y, zNear, zFar));
-    }
-
-    void Camera2D::start()
-    {
-        startChildren();
-    }
-
-    void Camera2D::update(float deltaTime)
-    {
-        updateChildren(deltaTime);
-    }
-
-    void Camera2D::draw(Renderer& renderer)
-    {
-        drawChildren(renderer);
     }
 
     std::string Camera2D::serialize(bool withChildren) const

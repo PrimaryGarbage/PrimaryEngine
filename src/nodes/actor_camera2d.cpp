@@ -29,16 +29,15 @@ namespace prim
 
     void ActorCamera2D::start()
     {
-        startChildren();
+        NODE_START
 
+        if(!targetPath.empty())
             target = dynamic_cast<Node2D*>(Globals::app->getNode(targetPath));
-        if (!target) return;
-        //initialOffset = getGlobalPosition() - target->getGlobalPosition();
     }
 
     void ActorCamera2D::update(float deltaTime)
     {
-        updateChildren(deltaTime);
+        NODE_UPDATE
 
         if (target)
         {
@@ -63,13 +62,18 @@ namespace prim
 
     void ActorCamera2D::draw(Renderer& renderer)
     {
-        drawChildren(renderer);
+        NODE_DRAW
     }
 
     void ActorCamera2D::setTarget(const NodePath& target)
     {
         targetPath = target;
         this->target = dynamic_cast<Node2D*>(Globals::app->getNode(targetPath));
+    }
+
+    void ActorCamera2D::setTarget(const Node2D* node)
+    {
+        this->target = node;
     }
 
     void ActorCamera2D::setStiffness(float value)

@@ -51,8 +51,6 @@ namespace prim
         inline void setPadding(glm::vec2 padding) { this->padding = padding; }
         inline void setBorderRadius(float radius) { this->borderRadius = radius; }
 
-        virtual void start() override;
-        virtual void update(float deltaTime) override;
         virtual void draw(Renderer& renderer) override;
 
         virtual std::string serialize(bool withChildren = true) const override;

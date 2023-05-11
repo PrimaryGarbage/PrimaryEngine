@@ -96,7 +96,7 @@ namespace prim
             uiLabel->addChild(uiChildLabel);
             uiPanel->addChild(uiLabel);
             scene->addChild(control);
-            actorCamera->setTarget(sprite1);
+            actorCamera->setTarget(sprite1->getNodePath());
             scene->addChild(button);
 
             button->buttonPressedEvent.subscribe("testPressed", [](){ std::cout << "Button pressed!" << std::endl; });

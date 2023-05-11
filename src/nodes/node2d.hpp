@@ -26,10 +26,6 @@ namespace prim
     public:
         using Node::Node;
 
-        virtual void start() override;
-        virtual void update(float deltaTime) override;
-        virtual void draw(Renderer& renderer) override;
-
         void move(glm::vec2 v);
         void move(float x, float y);
         void rotate(float angle);
