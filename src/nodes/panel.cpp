@@ -17,7 +17,6 @@ namespace prim
     
     void Panel::draw(Renderer& renderer)
     {
-        NODE_DRAW
 
         glm::vec2 globalPosition = getGlobalPosition();
         glm::vec2 globalSize = getSize();
@@ -36,6 +35,8 @@ namespace prim
         renderer.drawMesh(backgroundMesh);
 
         renderer.setViewMat(rendererViewMat);
+
+        NODE_DRAW
     }
     
     std::string Panel::serialize(bool withChildren) const 

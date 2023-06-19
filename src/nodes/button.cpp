@@ -143,9 +143,7 @@ namespace prim
 
     void Button::draw(Renderer& renderer)
     {
-        NODE_DRAW
-
-        const ButtonState& currentState = controlStateValues[static_cast<int>(state)];
+        ButtonState& currentState = controlStateValues[static_cast<int>(state)];
         const Mesh& backgroundMesh = currentState.backgroundMesh;
         const std::string& text = currentState.text.empty() ? " " : currentState.text;
         const glm::vec4& textColor = currentState.textColor;
@@ -189,6 +187,8 @@ namespace prim
         }
 
         renderer.setViewMat(rendererViewMat);
+
+        NODE_DRAW
     }
 
     std::string Button::serialize(bool withChildren) const
