@@ -74,27 +74,27 @@ namespace prim
 
     void Node::start()
     {
-        NODE_START
+        NODE_START()
     }
 
     void Node::uiUpdate(float deltaTime)
     {
-        NODE_UI_UPDATE
+        NODE_UI_UPDATE()
     }
 
     void Node::update(float deltaTime)
     {
-        NODE_UPDATE
+        NODE_UPDATE()
     }
 
     void Node::lateUpdate(float deltaTime)
     {
-        NODE_LATE_UPDATE
+        NODE_LATE_UPDATE()
     }
 
     void Node::draw(Renderer& renderer)
     {
-        NODE_DRAW
+        NODE_DRAW()
     }
 
     void Node::updateNodePath()

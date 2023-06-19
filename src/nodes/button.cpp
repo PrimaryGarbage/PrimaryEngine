@@ -137,58 +137,60 @@ namespace prim
     void Button::uiUpdate(float deltaTime)
     {
         NODE_UI_UPDATE
-
-        updateControlState();
+        (
+            updateControlState();
+        )
     }
 
     void Button::draw(Renderer& renderer)
     {
-        ButtonState& currentState = controlStateValues[static_cast<int>(state)];
-        const Mesh& backgroundMesh = currentState.backgroundMesh;
-        const std::string& text = currentState.text.empty() ? " " : currentState.text;
-        const glm::vec4& textColor = currentState.textColor;
-        const glm::vec4& backgroundColor = currentState.backgroundColor;
-        const StringFontInfo& stringInfo = currentState.stringInfo;
+        NODE_DRAW
+        (
+            ButtonState& currentState = controlStateValues[static_cast<int>(state)];
+            const Mesh& backgroundMesh = currentState.backgroundMesh;
+            const std::string& text = currentState.text.empty() ? " " : currentState.text;
+            const glm::vec4& textColor = currentState.textColor;
+            const glm::vec4& backgroundColor = currentState.backgroundColor;
+            const StringFontInfo& stringInfo = currentState.stringInfo;
 
-        glm::vec2 globalPosition = getGlobalPosition();
-        glm::vec2 globalSize = getSize();
-        const glm::mat4& rendererViewMat = renderer.getViewMat();
-        renderer.setViewMat(glm::mat4(1.0f));
-        glyphMesh.compositions.front().shader->setUniform4f("u_color", textColor.r, textColor.g, textColor.b, textColor.a);
+            glm::vec2 globalPosition = getGlobalPosition();
+            glm::vec2 globalSize = getSize();
+            const glm::mat4& rendererViewMat = renderer.getViewMat();
+            renderer.setViewMat(glm::mat4(1.0f));
+            glyphMesh.compositions.front().shader->setUniform4f("u_color", textColor.r, textColor.g, textColor.b, textColor.a);
 
-        // render background
-        glm::mat4 modelMat(1.0f);
-        modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x, globalPosition.y, transform.zIndex));
-        modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
-        modelMat = glm::scale(modelMat, glm::vec3(globalSize.x * stringInfo.emSize.x + padding.x * 2.0f, globalSize.y * (stringInfo.emSize.y + stringInfo.emMaxDescend) + padding.y * 2.0f, 1.0f));
-        backgroundMesh.compositions.front().shader->setUniform4f("u_color", backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
-        backgroundMesh.compositions.front().shader->setUniform2f("u_resolution", stringInfo.pxSize);
-        backgroundMesh.compositions.front().shader->setUniform1f("u_borderRadius", borderRadius);
-        backgroundMesh.compositions.front().shader->setUniform1i("u_sampleTexture", static_cast<int>(currentState.useTexture));
-        renderer.setModelMat(std::move(modelMat));
-        renderer.drawMesh(backgroundMesh);
-
-        // render text
-        float offset = 0.0f;
-        for (const char& ch : text)
-        {
+            // render background
             glm::mat4 modelMat(1.0f);
-            const Glyph* glyph = font.getGlyph(ch);
-            const glm::vec2 glyphOffset = glyph->emOffset * globalSize;
-            const glm::vec3 pivotTranslation = glm::vec3(offset + glyphOffset.x + padding.x, glyphOffset.y + padding.y + stringInfo.emMaxDescend * globalSize.y, 0.0f);
             modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x, globalPosition.y, transform.zIndex));
             modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
-            modelMat = glm::translate(modelMat, pivotTranslation);
-            modelMat = glm::scale(modelMat, glm::vec3(globalSize.x * glyph->emSize.x, globalSize.y * glyph->emSize.y, 1.0f));
-            offset += globalSize.x * glyph->emAdvanceX;
+            modelMat = glm::scale(modelMat, glm::vec3(globalSize.x * stringInfo.emSize.x + padding.x * 2.0f, globalSize.y * (stringInfo.emSize.y + stringInfo.emMaxDescend) + padding.y * 2.0f, 1.0f));
+            backgroundMesh.compositions.front().shader->setUniform4f("u_color", backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
+            backgroundMesh.compositions.front().shader->setUniform2f("u_resolution", stringInfo.pxSize);
+            backgroundMesh.compositions.front().shader->setUniform1f("u_borderRadius", borderRadius);
+            backgroundMesh.compositions.front().shader->setUniform1i("u_sampleTexture", static_cast<int>(currentState.useTexture));
             renderer.setModelMat(std::move(modelMat));
-            glyphMesh.compositions.front().texture = glyph->texture;
-            renderer.drawMesh(glyphMesh);
-        }
+            renderer.drawMesh(backgroundMesh);
 
-        renderer.setViewMat(rendererViewMat);
+            // render text
+            float offset = 0.0f;
+            for (const char& ch : text)
+            {
+                glm::mat4 modelMat(1.0f);
+                const Glyph* glyph = font.getGlyph(ch);
+                const glm::vec2 glyphOffset = glyph->emOffset * globalSize;
+                const glm::vec3 pivotTranslation = glm::vec3(offset + glyphOffset.x + padding.x, glyphOffset.y + padding.y + stringInfo.emMaxDescend * globalSize.y, 0.0f);
+                modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x, globalPosition.y, transform.zIndex));
+                modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
+                modelMat = glm::translate(modelMat, pivotTranslation);
+                modelMat = glm::scale(modelMat, glm::vec3(globalSize.x * glyph->emSize.x, globalSize.y * glyph->emSize.y, 1.0f));
+                offset += globalSize.x * glyph->emAdvanceX;
+                renderer.setModelMat(std::move(modelMat));
+                glyphMesh.compositions.front().texture = glyph->texture;
+                renderer.drawMesh(glyphMesh);
+            }
 
-        NODE_DRAW
+            renderer.setViewMat(rendererViewMat);
+        )
     }
 
     std::string Button::serialize(bool withChildren) const

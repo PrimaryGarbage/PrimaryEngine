@@ -12,11 +12,11 @@
     private: inline static const NodeRegistration<NODE_NAME> nodeRegistration = NodeRegistration<NODE_NAME>(#NODE_NAME); \
     public: virtual inline const char* type() const override { return #NODE_NAME; }
 
-#define NODE_START for(Node* child : children) child->start();
-#define NODE_UI_UPDATE for(Node* child : children) child->uiUpdate(deltaTime);
-#define NODE_UPDATE for(Node* child : children) child->update(deltaTime);
-#define NODE_LATE_UPDATE for(Node* child : children) child->lateUpdate(deltaTime);
-#define NODE_DRAW for(Node* child : children) child->draw(renderer);
+#define NODE_START(code) code for(Node* child : children) child->start();
+#define NODE_UI_UPDATE(code) code for(Node* child : children) child->uiUpdate(deltaTime);
+#define NODE_UPDATE(code) code for(Node* child : children) child->update(deltaTime);
+#define NODE_LATE_UPDATE(code) code for(Node* child : children) child->lateUpdate(deltaTime);
+#define NODE_DRAW(code) code for(Node* child : children) child->draw(renderer);
 
 namespace prim
 {

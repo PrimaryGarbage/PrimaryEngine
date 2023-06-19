@@ -30,39 +30,41 @@ namespace prim
     void ActorCamera2D::start()
     {
         NODE_START
-
-        if(!targetPath.empty())
-            target = dynamic_cast<Node2D*>(Globals::app->getNode(targetPath));
+        (
+            if(!targetPath.empty())
+                target = dynamic_cast<Node2D*>(Globals::app->getNode(targetPath));
+        )
     }
 
     void ActorCamera2D::update(float deltaTime)
     {
         NODE_UPDATE
+        (
+            if (target)
+            {
+                auto followTargetFunction = [this]() {
+                    glm::vec2 position;
+                    float modifiedStiffness = std::pow(stiffness, 4);
+                    if (rotateWithTarget)
+                    {
+                        float targetAngle = target->getGlobalRotation();
+                        position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + glm::rotate(initialOffset, targetAngle), modifiedStiffness);
+                        setGlobalRotation(Utils::lerpAngle(getGlobalRotation(), targetAngle, modifiedStiffness));
+                    }
+                    else
+                        position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + initialOffset, modifiedStiffness);
 
-        if (target)
-        {
-            auto followTargetFunction = [this]() {
-                glm::vec2 position;
-                float modifiedStiffness = std::pow(stiffness, 4);
-                if (rotateWithTarget)
-                {
-                    float targetAngle = target->getGlobalRotation();
-                    position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + glm::rotate(initialOffset, targetAngle), modifiedStiffness);
-                    setGlobalRotation(Utils::lerpAngle(getGlobalRotation(), targetAngle, modifiedStiffness));
-                }
-                else
-                    position = glm::mix(getGlobalPosition(), target->getGlobalPosition() + initialOffset, modifiedStiffness);
+                    setGlobalPosition(position);
+                };
 
-                setGlobalPosition(position);
-            };
-
-            Globals::app->deferFunctionExecution(followTargetFunction);
-        }
+                Globals::app->deferFunctionExecution(followTargetFunction);
+            }
+        )
     }
 
     void ActorCamera2D::draw(Renderer& renderer)
     {
-        NODE_DRAW
+        NODE_DRAW()
     }
 
     void ActorCamera2D::setTarget(const NodePath& target)

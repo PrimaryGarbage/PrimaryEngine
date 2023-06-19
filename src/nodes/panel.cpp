@@ -17,26 +17,26 @@ namespace prim
     
     void Panel::draw(Renderer& renderer)
     {
-
-        glm::vec2 globalPosition = getGlobalPosition();
-        glm::vec2 globalSize = getSize();
-        const glm::mat4& rendererViewMat = renderer.getViewMat();
-        renderer.setViewMat(glm::mat4(1.0f));
-
-        // render background
-        glm::mat4 modelMat(1.0f);
-        modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x, globalPosition.y, transform.zIndex));
-        modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
-        modelMat = glm::scale(modelMat, glm::vec3(globalSize.x, globalSize.y, 1.0f));
-        backgroundMesh.compositions.front().shader->setUniform4f("u_color", backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
-        backgroundMesh.compositions.front().shader->setUniform1f("u_borderRadius", borderRadius);
-        backgroundMesh.compositions.front().shader->setUniform1i("u_sampleTexture", static_cast<int>(useTexture));
-        renderer.setModelMat(std::move(modelMat));
-        renderer.drawMesh(backgroundMesh);
-
-        renderer.setViewMat(rendererViewMat);
-
         NODE_DRAW
+        (
+            glm::vec2 globalPosition = getGlobalPosition();
+            glm::vec2 globalSize = getSize();
+            const glm::mat4& rendererViewMat = renderer.getViewMat();
+            renderer.setViewMat(glm::mat4(1.0f));
+
+            // render background
+            glm::mat4 modelMat(1.0f);
+            modelMat = glm::translate(modelMat, glm::vec3(globalPosition.x, globalPosition.y, transform.zIndex));
+            modelMat = glm::rotate(modelMat, getGlobalRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
+            modelMat = glm::scale(modelMat, glm::vec3(globalSize.x, globalSize.y, 1.0f));
+            backgroundMesh.compositions.front().shader->setUniform4f("u_color", backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
+            backgroundMesh.compositions.front().shader->setUniform1f("u_borderRadius", borderRadius);
+            backgroundMesh.compositions.front().shader->setUniform1i("u_sampleTexture", static_cast<int>(useTexture));
+            renderer.setModelMat(std::move(modelMat));
+            renderer.drawMesh(backgroundMesh);
+
+            renderer.setViewMat(rendererViewMat);
+        )
     }
     
     std::string Panel::serialize(bool withChildren) const 
